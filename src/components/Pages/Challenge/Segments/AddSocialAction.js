@@ -33,6 +33,9 @@ class AddSocialAction extends React.Component {
             // facebook Visit Options
             isFacebookVisitAllowToLikePage: false,
             isFacebookVisitEnabledrepeat: false,
+
+            sFacebookViewAllowToLikePage: false,
+            isFacebookViewEnabledrepeat: false,
             
             // twitter
             isTwitterFollowAUserEnabled: false,
@@ -46,6 +49,7 @@ class AddSocialAction extends React.Component {
 
             // youtube
             isYoutubeVisitChannelEnabled: false,
+            isYoutubeVisitChannelEnableRepeat: false,
 
             // instagram
             isInstagramSelectPhotoVideoEnabled: false,
@@ -53,7 +57,11 @@ class AddSocialAction extends React.Component {
             isInstagramSelectVisitAProfile: false,
             isInstagramShowPhotoVideoEnabledRepeat: false,
             isInstagramVisitaPostEnabledRepeat: false,
+            isTwitterSendAPostEnabledRepeat: false,
             isInstagramVisitaProfileEnabledRepeat: false,
+
+            // social settings values
+            socialSettingsValues: []
         }
 
         this.socialOpenOptions = this.socialOpenOptions.bind(this);
@@ -82,6 +90,7 @@ class AddSocialAction extends React.Component {
         // facebook view options
         this.toogleFacebookViewAllowToLikePage = this.toogleFacebookViewAllowToLikePage.bind(this);
         this.toogleFacebookViewEnableRepeat = this.toogleFacebookViewEnableRepeat.bind(this);
+        this.toogleFacebookVisitEnableRepeat = this.toogleFacebookVisitEnableRepeat.bind(this);
 
         // instagram options
         this.toogleInstagramSelectPhotoVideo = this.toogleInstagramSelectPhotoVideo.bind(this);
@@ -89,12 +98,15 @@ class AddSocialAction extends React.Component {
         this.toogleInstagramVisitAProfile = this.toogleInstagramVisitAProfile.bind(this);
         this.toogleInstagramShowPhotoVideoEnableRepeat = this.toogleInstagramShowPhotoVideoEnableRepeat.bind(this);
         this.toogleInstagramVisitaPostEnableRepeat = this.toogleInstagramVisitaPostEnableRepeat.bind(this);
+        this.toogleInstagramVisitaProfileEnableRepeat = this.toogleInstagramVisitaProfileEnableRepeat.bind(this);
 
         // twitter
         this.toogleTwitterFollowAUser = this.toogleTwitterFollowAUser.bind(this);
         this.toogleTwitterViewATweet = this.toogleTwitterViewATweet.bind(this);
         this.toogleTwitterRetweetaTweet = this.toogleTwitterRetweetaTweet.bind(this);
         this.toogleTwitterTweet = this.toogleTwitterTweet.bind(this);
+
+        this.toogleTweeterSendaTweetEnableRepeat = this.toogleTweeterSendaTweetEnableRepeat.bind(this);
 
         this.toogleTwitterFollowUserEnableRepeatAction = this.toogleTwitterFollowUserEnableRepeatAction.bind(this);
         this.toogleTwitterViewATweetEnableRepeat = this.toogleTwitterViewATweetEnableRepeat.bind(this);
@@ -103,6 +115,9 @@ class AddSocialAction extends React.Component {
 
         // youtube
         this.toogleYoutubeVisitChannel = this.toogleYoutubeVisitChannel.bind(this);
+
+        this.saveSocialSettings = this.saveSocialSettings.bind(this);
+        this.updateSocialValues = this.updateSocialValues.bind(this);
 
     }
 
@@ -145,19 +160,27 @@ class AddSocialAction extends React.Component {
     }
 
     toogleFacebookLogin(){
-        this.setState({isFacebookLoginEnabled: !this.state.isFacebookLoginEnabled});
+        let isFacebookAllow = !this.state.isFacebookLoginEnabled;
+        this.setState({isFacebookLoginEnabled: isFacebookAllow});
+        this.updateSocialValues('enable_login_with_facebook', isFacebookAllow);
     }
 
     toogleFacebookVisit(){
-        this.setState({isFacebookVisitEnabled: !this.state.isFacebookVisitEnabled});
+        let isFacebookVisitActive = !this.state.isFacebookVisitEnabled;
+        this.setState({isFacebookVisitEnabled: isFacebookVisitActive});
+        this.updateSocialValues('visit_on_facebook_is_active', isFacebookVisitActive);
     }
 
     toogleFacebookViewPost(){
-        this.setState({isFacebookViewPostEnabled: !this.state.isFacebookViewPostEnabled});
+        let isFacebookViewPostEnable = !this.state.isFacebookViewPostEnabled;
+        this.setState({isFacebookViewPostEnabled: isFacebookViewPostEnable});
+        this.updateSocialValues('view_facebook_post_is_active', isFacebookViewPostEnable);
     }
 
     toogleFacebookJoinGroup(){
-        this.setState({isFacebookJoinGroupEnabled: !this.state.isFacebookJoinGroupEnabled});
+        let isFacebookJoinGroup = !this.state.isFacebookJoinGroupEnabled;
+        this.setState({isFacebookJoinGroupEnabled: isFacebookJoinGroup});
+        this.updateSocialValues('join_facebook_enabled_is_active', isFacebookJoinGroup);
     }
 
     toogleFacebookSelectPhotoVideo(){
@@ -165,80 +188,152 @@ class AddSocialAction extends React.Component {
     }
 
     toogleFacebookLoginAllowToLikePage(){
-        this.setState({isFacebookLoginAllowToLikePage: !this.state.isFacebookLoginAllowToLikePage});
+        let allowToLikePage = !this.state.isFacebookLoginAllowToLikePage;
+        this.setState({isFacebookLoginAllowToLikePage: allowToLikePage});
+        this.updateSocialValues('facebook_login_allow_to_like_page', allowToLikePage);
     } 
 
     toogleFacebookLoginEnableRepeat(){
-        this.setState({isFacebookLoginEnabledrepeat: !this.state.isFacebookLoginEnabledrepeat});
+        let isEnableRepeat = !this.state.isFacebookLoginEnabledrepeat;
+        this.setState({isFacebookLoginEnabledrepeat: isEnableRepeat});
+        this.updateSocialValues('login_with_facebook_enable_repeat', isEnableRepeat);
     }
 
     toogleFacebookViewAllowToLikePage(){
+        let likePageAfterEntring = !this.state.isFacebookVisitAllowToLikePage
         this.setState({isFacebookVisitAllowToLikePage: !this.state.isFacebookVisitAllowToLikePage});
+        this.updateSocialValues('visit_on_facebook_allow_like_page', likePageAfterEntring);
     }
 
     toogleFacebookViewEnableRepeat(){
-        this.setState({isFacebookVisitEnabledrepeat: !this.state.isFacebookVisitEnabledrepeat});
+        let viewOnFacebookRepeatAction = !this.state.isFacebookViewEnabledrepeat;
+        this.setState({isFacebookViewEnabledrepeat: viewOnFacebookRepeatAction});
+        this.updateSocialValues('visit_facebook_post_enable_repeat_action', viewOnFacebookRepeatAction);
+    }
+
+    toogleFacebookVisitEnableRepeat(){
+        let visitOnFacebookRepeatAction = !this.state.isFacebookVisitEnabledrepeat;
+        this.setState({isFacebookVisitEnabledrepeat: visitOnFacebookRepeatAction});
+        this.updateSocialValues('visit_on_facebook_enable_repeat_action', visitOnFacebookRepeatAction);
     }
 
     // instagram options
     toogleInstagramSelectPhotoVideo(){
-        this.setState({isInstagramSelectPhotoVideoEnabled: !this.state.isInstagramSelectPhotoVideoEnabled});
+        let instaSelectPhotoEnable = !this.state.isInstagramSelectPhotoVideoEnabled;
+        this.setState({isInstagramSelectPhotoVideoEnabled: instaSelectPhotoEnable});
+        this.updateSocialValues('insta_show_photo_enabled', instaSelectPhotoEnable);
     }
 
     toogleInstagramVisitAPost(){
-        this.setState({isInstagramSelectVisitAPost: !this.state.isInstagramSelectVisitAPost});
+        let instaVisitPost = !this.state.isInstagramSelectVisitAPost;
+        this.setState({isInstagramSelectVisitAPost: instaVisitPost});
+        this.updateSocialValues('insta_visit_post_enabled', instaVisitPost);
     }
 
     toogleInstagramVisitAProfile(){
-        this.setState({isInstagramSelectVisitAProfile: !this.state.isInstagramSelectVisitAProfile});
+        let instaVisitProfile = !this.state.isInstagramSelectVisitAProfile;
+        this.setState({isInstagramSelectVisitAProfile: instaVisitProfile});
+        this.updateSocialValues('insta_visit_profile_enabled', instaVisitProfile);
     }
 
     toogleInstagramShowPhotoVideoEnableRepeat(){
         this.setState({isInstagramShowPhotoVideoEnableRepeat: !this.state.isInstagramShowPhotoVideoEnableRepeat});
     }
 
+    toogleYoutubeVisitChannelEnableRepeat(){
+        let youtubeVisitChannel = !this.state.isYoutubeVisitChannelEnableRepeat;
+        this.setState({isYoutubeVisitChannelEnableRepeat: youtubeVisitChannel});
+        this.updateSocialValues('youtube_visit_channel_enabled', youtubeVisitChannel);
+    }
+
     toogleInstagramVisitaPostEnableRepeat(){
-        this.setState({isInstagramVisitaPostEnabledRepeat: !this.state.isInstagramVisitaPostEnabledRepeat});
+        let instaVisitPost = !this.state.isInstagramVisitaPostEnabledRepeat;
+        this.setState({isInstagramVisitaPostEnabledRepeat: instaVisitPost});
+        this.updateSocialValues('insta_visit_post_enable_repeat_action', instaVisitPost);
+    }
+
+    toogleInstagramVisitaProfileEnableRepeat(){
+        let instaVisitProfile = !this.state.isInstagramVisitaProfileEnabledRepeat;
+        this.setState({isInstagramVisitaProfileEnabledRepeat: instaVisitProfile});
+        this.updateSocialValues('insta_visit_profile_enable_repeat_action', instaVisitProfile);
+    }
+
+    toogleTweeterSendaTweetEnableRepeat(){
+        let TwitterSendaTweetEnableRepeat = !this.state.isTwitterSendAPostEnabledRepeat
+        this.setState({isTwitterSendAPostEnabledRepeat: TwitterSendaTweetEnableRepeat});
+        this.updateSocialValues('twitter_send_a_tweet_enable_repeat_action', TwitterSendaTweetEnableRepeat);
     }
 
     // twitter
     toogleTwitterFollowAUser(){
-        this.setState({isTwitterFollowAUserEnabled: !this.state.isTwitterFollowAUserEnabled});
+        let TwitterFollowUser = !this.state.isTwitterFollowAUserEnabled;
+        this.setState({isTwitterFollowAUserEnabled: TwitterFollowUser});
+        this.updateSocialValues('twitter_follow_a_user_enabled', TwitterFollowUser);
     }
 
     toogleTwitterViewATweet(){
-        this.setState({isTwitterViewATweetEnabled: !this.state.isTwitterViewATweetEnabled});
+        let ViewATweet = !this.state.isTwitterViewATweetEnabled;
+        this.setState({isTwitterViewATweetEnabled: ViewATweet});
+        this.updateSocialValues('twitter_view_a_tweet_enabled', ViewATweet);
     }
 
     toogleTwitterRetweetaTweet(){
-        this.setState({isTwitterRetweetATweetEnabled: !this.state.isTwitterRetweetATweetEnabled});
+        let EnableRetweet = !this.state.isTwitterRetweetATweetEnabled;
+        this.setState({isTwitterRetweetATweetEnabled: EnableRetweet});
+        this.updateSocialValues('twitter_retweet_enabled', EnableRetweet);
     }
 
     toogleTwitterTweet(){
-        this.setState({isTwitterTweetEnabled: !this.state.isTwitterTweetEnabled});
+        let sendATweet = !this.state.isTwitterTweetEnabled;
+        this.setState({isTwitterTweetEnabled: sendATweet});
+        this.updateSocialValues('twitter_send_a_tweet_enabled', sendATweet);
     }
 
     // youtube
     toogleYoutubeVisitChannel(){
-        this.setState({isYoutubeVisitChannelEnabled: !this.state.isYoutubeVisitChannelEnabled});
+        let youtubeVisitChannel = !this.state.isYoutubeVisitChannelEnabled;
+        this.setState({isYoutubeVisitChannelEnabled: youtubeVisitChannel});
+        this.updateSocialValues('youtube_visit_channel_enabled', youtubeVisitChannel);
     }
 
     toogleTwitterFollowUserEnableRepeatAction(){
-        this.setState({isTheTwitterFollowUserEnableRepeatAction: !this.state.isTheTwitterFollowUserEnableRepeatAction});
+        let twitterFollowAUserEnableRepeat = !this.state.isTheTwitterFollowUserEnableRepeatAction;
+        this.setState({isTheTwitterFollowUserEnableRepeatAction: twitterFollowAUserEnableRepeat});
+        this.updateSocialValues('twitter_follow_user_enable_repeat', twitterFollowAUserEnableRepeat);
     }
 
     toogleTwitterViewATweetEnableRepeat(){
-        this.setState({isTwitterViewATweetEnabledRepeat: !this.state.isTwitterViewATweetEnabledRepeat});
+        let twitterViewATweekEnable = !this.state.isTwitterViewATweetEnabledRepeat;
+        this.setState({isTwitterViewATweetEnabledRepeat: twitterViewATweekEnable});
+        this.updateSocialValues('twitter_view_a_tweet_enable_repeat', twitterViewATweekEnable);
     }
 
     toogleTwitterRetweetatweetEnableRepeat(){
-        this.setState({isTwitterRetweetaTweetEnableRepeat: !this.state.isTwitterRetweetaTweetEnableRepeat});
+        let twitterRetweeterEnableRepeat = !this.state.isTwitterRetweetaTweetEnableRepeat;
+        this.setState({isTwitterRetweetaTweetEnableRepeat: twitterRetweeterEnableRepeat});
+        this.updateSocialValues('twitter_retweet_enable_repeat', twitterRetweeterEnableRepeat);
     }
 
     onSocialActionChange(){
         let socialActions = !this.state.socialActionSLide;
         this.setState({socialActionSLide: socialActions});
+        this.updateSocialValues('social_action_enabled', socialActions);
         // this.populateInput('social_action', socialActions)
+    }
+
+
+
+    saveSocialSettings(){
+        console.log('save settings');
+        this.props.getData(this.state.socialSettingsValues);
+    }
+
+    updateSocialValues(index, value){
+        let final_info = this.state.socialSettingsValues;
+        final_info[index] = value;
+        this.setState({socialSettingsValues: final_info});
+
+        console.log('info -> ', final_info);
     }
 
     render () {
@@ -246,7 +341,7 @@ class AddSocialAction extends React.Component {
             return (
                 <div className="d-reward-settings-ops">
                     <button className="cancelReward" onClick={() => this.socialCloseOptions()}>Cancel</button>
-                    <button className="saveReward">Save and Add actions</button>
+                    <button className="saveReward" onClick={() => this.saveSocialSettings()}>Save and Add actions</button>
                 </div>
             );
         }
@@ -259,7 +354,7 @@ class AddSocialAction extends React.Component {
                             <div className="d-social-value-section">
                                 <div className="d-social-value-item">
                                     <label htmlFor="">Instructions</label>
-                                    <input type="text" placeholder="Enter using Facebook"/>
+                                    <input type="text" placeholder="Enter using Facebook" onChange={(e) => this.updateSocialValues('login_with_facebook_instructions' ,e.target.value)}/>
                                 </div>
                                 <div className="d-social-item d-enable-user-to-like-page">
                                     <div className="d-social-item-text">After entering, give the user option to Like a Page?</div>
@@ -267,7 +362,7 @@ class AddSocialAction extends React.Component {
                                 </div>
                                 <div className={"d-social-value-item d-like-page-after-login" + (this.state.isFacebookLoginAllowToLikePage ? 'enabled-allow-like-page' : "")}>
                                     <label htmlFor="">Page URL</label>
-                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets"/>
+                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets" onChange={(e) => this.updateSocialValues('login_with_facebook_page_url' ,e.target.value)}/>
                                 </div>
                                 <div className="d-social-segmented-values">
                                     <div className="d-social-left-segment">
@@ -279,20 +374,20 @@ class AddSocialAction extends React.Component {
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('login_with_facebook_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isFacebookLoginEnabledrepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('login_with_facebook_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('login_with_facebook_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -306,11 +401,11 @@ class AddSocialAction extends React.Component {
                             <div className="d-social-value-section">
                                 <div className="d-social-value-item">
                                     <label htmlFor="">Enter URL</label>
-                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets"/>
+                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets" onChange={(e) => this.updateSocialValues('visit_on_facebook_url' ,e.target.value)}/>
                                 </div>
                                 <div className="d-social-value-item">
                                     <label htmlFor="">Instructions</label>
-                                    <input type="text" placeholder="Enter using Facebook"/>
+                                    <input type="text" placeholder="Enter using Facebook" onChange={(e) => this.updateSocialValues('visit_on_facebook_instructions' ,e.target.value)}/>
                                 </div>
                                 <div className="d-social-item d-enable-user-to-like-page">
                                     <div className="d-social-item-text">After entering, give the user option to Like a Page?</div>
@@ -318,32 +413,32 @@ class AddSocialAction extends React.Component {
                                 </div>
                                 <div className={"d-social-value-item d-like-page-after-login" + (this.state.isFacebookVisitAllowToLikePage ? 'enabled-allow-like-page' : "")}>
                                     <label htmlFor="">Page URL</label>
-                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets"/>
+                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets" onChange={(e) => this.updateSocialValues('visit_on_facebook_like_page_page_url' ,e.target.value)}/>
                                 </div>
                                 <div className="d-social-segmented-values">
                                     <div className="d-social-left-segment">
                                         <div className="d-social-item d-enable-repeat-action">
                                             <div className="d-social-item-text">Enable repeated action </div>
-                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleFacebookViewEnableRepeat} checked={this.state.isFacebookVisitEnabledrepeat} /></div>
+                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleFacebookVisitEnableRepeat} checked={this.state.isFacebookVisitEnabledrepeat} /></div>
                                         </div>
                                     </div>
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('visit_on_facebook_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isFacebookVisitEnabledrepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('visit_on_facebook_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('visit_on_facebook_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -357,40 +452,36 @@ class AddSocialAction extends React.Component {
                             <div className="d-social-value-section">
                                 <div className="d-social-value-item">
                                     <label htmlFor="">Enter Facebook post URL</label>
-                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets"/>
+                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets" onChange={(e) => this.updateSocialValues('view_facebook_post_url' ,e.target.value)}/>
                                 </div>
                                 <div className="d-social-value-item">
                                     <label htmlFor="">Instructions</label>
-                                    <input type="text" placeholder="Enter using Facebook"/>
-                                </div>
-                                <div className={"d-social-value-item d-like-page-after-login" + (this.state.isFacebookVisitAllowToLikePage ? 'enabled-allow-like-page' : "")}>
-                                    <label htmlFor="">Page URL</label>
-                                    <input type="text" placeholder="https://www.facebook.com/JanesWidgets"/>
+                                    <input type="text" placeholder="Enter using Facebook" onChange={(e) => this.updateSocialValues('view_facebook_post_instructions' ,e.target.value)}/>
                                 </div>
                                 <div className="d-social-segmented-values">
                                     <div className="d-social-left-segment">
                                         <div className="d-social-item d-enable-repeat-action">
                                             <div className="d-social-item-text">Enable repeated action </div>
-                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleFacebookViewEnableRepeat} checked={this.state.isFacebookVisitEnabledrepeat} /></div>
+                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleFacebookViewEnableRepeat} checked={this.state.isFacebookViewEnabledrepeat} /></div>
                                         </div>
                                     </div>
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('view_facebook_post_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
-                                <div className={"d-social-values-additional-options " + (this.state.isFacebookVisitEnabledrepeat ? 'repeated-action-enabled' : "")}>
+                                <div className={"d-social-values-additional-options " + (this.state.isFacebookViewEnabledrepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('view_facebook_post_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('view_facebook_post_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -404,7 +495,7 @@ class AddSocialAction extends React.Component {
                             <div className="d-social-value-section">
                                 <div className="d-social-value-item">
                                     <label htmlFor="">Enter Facebook Group API</label>
-                                    <input type="text" placeholder="****************************"/>
+                                    <input type="text" placeholder="****************************" onChange={(e) => this.updateSocialValues('facebook_group_api' ,e.target.value)}/>
                                 </div>
                             </div>
                         );
@@ -473,13 +564,13 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Instructions</label>
-                                        <input type="text" placeholder=""/>
+                                        <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('twitter_follow_a_instructions' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Username</label>
-                                        <input type="text" placeholder="@someone"/>
+                                        <input type="text" placeholder="@someone" onChange={(e) => this.updateSocialValues('twitter_username' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-segmented-values">
@@ -492,20 +583,20 @@ class AddSocialAction extends React.Component {
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_follow_user_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isTheTwitterFollowUserEnableRepeatAction ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('twitter_follow_user_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_follow_user_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -520,13 +611,13 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Instructions</label>
-                                        <input type="text" placeholder=""/>
+                                        <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('twitter_view_a_tweet_instructions' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Twitter Post URL</label>
-                                        <input type="text" placeholder="https://twitter.com/vici/status/1227713580572103"/>
+                                        <input type="text" placeholder="https://twitter.com/vici/status/1227713580572103" onChange={(e) => this.updateSocialValues('twitter_view_a_tweet_post_url' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-segmented-values">
@@ -539,20 +630,20 @@ class AddSocialAction extends React.Component {
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_view_a_tweet_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isTwitterViewATweetEnabledRepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('twitter_view_a_tweet_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_view_a_tweet_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -567,13 +658,13 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Instructions</label>
-                                        <input type="text" placeholder=""/>
+                                        <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('twitter_retweet_instructions' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Tweet URL</label>
-                                        <input type="text" placeholder="https://twitter.com/vici/status/1227713580572103"/>
+                                        <input type="text" placeholder="https://twitter.com/vici/status/1227713580572103" onChange={(e) => this.updateSocialValues('twitter_retweet_tweet_url' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-segmented-values">
@@ -586,20 +677,20 @@ class AddSocialAction extends React.Component {
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_retweet_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isTwitterRetweetaTweetEnableRepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('twitter_retweet_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_retweet_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -614,39 +705,39 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Instructions</label>
-                                        <input type="text" placeholder=""/>
+                                        <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('twitter_send_a_tweet_instructions' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Tweet</label>
-                                        <input type="text" placeholder="I'm in the running to win a Widget Pro thanks to @JanesWidgets! #win #widgets"/>
+                                        <input type="text" placeholder="I'm in the running to win a Widget Pro thanks to @JanesWidgets! #win #widgets" onChange={(e) => this.updateSocialValues('twitter_send_a_tweet_content' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-segmented-values">
                                     <div className="d-social-left-segment">
                                         <div className="d-social-item d-enable-repeat-action">
                                             <div className="d-social-item-text">Enable repeated action </div>
-                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleInstagramVisitaPostEnableRepeat} checked={this.state.isInstagramVisitaPostEnabledRepeat} /></div>
+                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleTweeterSendaTweetEnableRepeat} checked={this.state.isTwitterSendAPostEnabledRepeat} /></div>
                                         </div>
                                     </div>
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_send_a_tweet_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
-                                <div className={"d-social-values-additional-options " + (this.state.isInstagramVisitaPostEnabledRepeat ? 'repeated-action-enabled' : "")}>
+                                <div className={"d-social-values-additional-options " + (this.state.isTwitterSendAPostEnabledRepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('twitter_send_a_tweet_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('twitter_send_a_tweet_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -702,13 +793,13 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Instructions</label>
-                                        <input type="text" placeholder=""/>
+                                        <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('insta_visit_post_instructions' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Media URL</label>
-                                        <input type="text" placeholder="http://instagram.com/p/blDoYMvlZu/"/>
+                                        <input type="text" placeholder="http://instagram.com/p/blDoYMvlZu/" onChange={(e) => this.updateSocialValues('insta_visit_post_url' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-segmented-values">
@@ -721,20 +812,20 @@ class AddSocialAction extends React.Component {
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('insta_visit_post_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isInstagramVisitaPostEnabledRepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('insta_visit_post_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('insta_visit_post_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -749,39 +840,39 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Instructions</label>
-                                        <input type="text" placeholder=""/>
+                                        <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('insta_visit_profile_instructions' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Profile URL</label>
-                                        <input type="text" placeholder="Nike or http://instagram.com/nike"/>
+                                        <input type="text" placeholder="Nike or http://instagram.com/nike" onChange={(e) => this.updateSocialValues('insta_visit_profile_url' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-segmented-values">
                                     <div className="d-social-left-segment">
                                         <div className="d-social-item d-enable-repeat-action">
                                             <div className="d-social-item-text">Enable repeated action </div>
-                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleInstagramVisitaPostEnableRepeat} checked={this.state.isInstagramVisitaPostEnabledRepeat} /></div>
+                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleInstagramVisitaProfileEnableRepeat} checked={this.state.isInstagramVisitaProfileEnabledRepeat} /></div>
                                         </div>
                                     </div>
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('insta_visit_profile_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isInstagramVisitaPostEnabledRepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('insta_visit_profile_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('insta_visit_profile_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -796,32 +887,6 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">show options soon</label>
-                                    </div>
-                                </div>
-                                <div className="d-social-segmented-values">
-                                    <div className="d-social-left-segment">
-                                        <div className="d-social-item d-enable-repeat-action">
-                                            <div className="d-social-item-text">Enable repeated action </div>
-                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleInstagramShowPhotoVideoEnableRepeat} checked={this.state.isInstagramShowPhotoVideoEnableRepeat} /></div>
-                                        </div>
-                                    </div>
-                                    <div className="d-social-right-segment">
-                                        <div className="d-social-value-item d-value-points">
-                                            <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={"d-social-values-additional-options " + (this.state.isInstagramShowPhotoVideoEnableRepeat ? 'repeated-action-enabled' : "")}>
-                                    <div className="d-social-value-item d-max-points">
-                                        <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
-                                            <option >Day</option>
-                                            <option >Week</option>
-                                            <option >Month</option>
-                                            <option >Year</option>
-                                        </select>
-                                        <input type="number" defaultValue="0" />
                                     </div>
                                 </div>
                             </div>
@@ -867,39 +932,39 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Instructions</label>
-                                        <input type="text" placeholder=""/>
+                                        <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('youtube_visit_channel_instructions' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-value-section">
                                     <div className="d-social-value-item">
                                         <label htmlFor="">Channel URL</label>
-                                        <input type="text" placeholder="https://www.youtube.com/user/LondonGrammar"/>
+                                        <input type="text" placeholder="https://www.youtube.com/user/LondonGrammar" onChange={(e) => this.updateSocialValues('youtube_visit_channel_url' ,e.target.value)}/>
                                     </div>
                                 </div>
                                 <div className="d-social-segmented-values">
                                     <div className="d-social-left-segment">
                                         <div className="d-social-item d-enable-repeat-action">
                                             <div className="d-social-item-text">Enable repeated action</div>
-                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleInstagramShowPhotoVideoEnableRepeat} checked={this.state.isInstagramShowPhotoVideoEnableRepeat} /></div>
+                                            <div className="d-social-item-switch"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleYoutubeVisitChannelEnableRepeat} checked={this.state.isYoutubeVisitChannelEnableRepeat} /></div>
                                         </div>
                                     </div>
                                     <div className="d-social-right-segment">
                                         <div className="d-social-value-item d-value-points">
                                             <label htmlFor="">Points</label>
-                                            <input type="number" defaultValue="0"/>
+                                            <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('youtube_visit_channel_assign_points' ,e.target.value)}/>
                                         </div>
                                     </div>
                                 </div>
                                 <div className={"d-social-values-additional-options " + (this.state.isInstagramShowPhotoVideoEnableRepeat ? 'repeated-action-enabled' : "")}>
                                     <div className="d-social-value-item d-max-points">
                                         <label htmlFor="">Maximum points per</label>
-                                        <select name="" id="">
+                                        <select name="" id="" onChange={(e) => this.updateSocialValues('youtube_visit_channel_maximum_points_per_date' ,e.target.value)}>
                                             <option >Day</option>
                                             <option >Week</option>
                                             <option >Month</option>
                                             <option >Year</option>
                                         </select>
-                                        <input type="number" defaultValue="0" />
+                                        <input type="number" defaultValue="0" onChange={(e) => this.updateSocialValues('youtube_visit_channel_maximum_points_per_number' ,e.target.value)}/>
                                     </div>
                                 </div>
                             </div>
@@ -949,7 +1014,7 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-item-text">Action Name</div>
                             </div>
                             <div className="d-social-value">
-                                <input type="text" placeholder="Action Name" />
+                                <input type="text" placeholder="Action Name" onChange={(e) => this.updateSocialValues('custom_action_name' ,e.target.value)}/>
                             </div>
                         </div>
                         <div className="d-social-item">
@@ -957,7 +1022,7 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-item-text">URL if applicable</div>
                             </div>
                             <div className="d-social-value">
-                                <input type="text" placeholder="www.facebookpage.com" />
+                                <input type="text" placeholder="www.facebookpage.com" onChange={(e) => this.updateSocialValues('custom_action_url' ,e.target.value)}/>
                             </div>
                         </div>
                         <h3>Verify</h3>
@@ -966,7 +1031,7 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-item-text">Question</div>
                             </div>
                             <div className="d-social-value">
-                                <input type="text" placeholder="type here..." />
+                                <input type="text" placeholder="type here..." onChange={(e) => this.updateSocialValues('custom_action_question' ,e.target.value)}/>
                             </div>
                         </div>
                         <div className="d-social-item">
@@ -974,7 +1039,7 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-item-text">Answer</div>
                             </div>
                             <div className="d-social-value">
-                                <input type="text" placeholder="" />
+                                <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('custom_action_answer' ,e.target.value)}/>
                             </div>
                         </div>
                     </div>
@@ -990,7 +1055,7 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-item-text">Give points every:</div>
                             </div>
                             <div className="d-social-value">
-                                <input type="text" placeholder="" />
+                                <input type="text" placeholder="" onChange={(e) => this.updateSocialValues('invite_give_points_every' ,e.target.value)}/>
                             </div>
                         </div>
                         <div className="d-social-item">
@@ -998,7 +1063,7 @@ class AddSocialAction extends React.Component {
                                 <div className="d-social-item-text">Points per invite</div>
                             </div>
                             <div className="d-social-value">
-                                <input type="number" defaultValue="1" />
+                                <input type="number" defaultValue="1" onChange={(e) => this.updateSocialValues('invite_points_per_invite' ,e.target.value)}/>
                             </div>
                         </div>
                     </div>

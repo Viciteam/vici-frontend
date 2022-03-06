@@ -21,13 +21,25 @@ class StepTwo extends React.Component {
             mainGoalValue: 'single', 
             convertActionToPoints: false,
             allowPenalty: false,
-            convertActionToPoints: false,
+            allow_penalty: false,
+            actionList: [],
+            social_list: [],
+            penalty: []
         }
 
         this.createActive = this.createActive.bind(this);
         this.toogleMainGoalValues = this.toogleMainGoalValues.bind(this);
 
         this.toogleConvertActionToPoints = this.toogleConvertActionToPoints.bind(this);
+
+        this.toogleAllowPenalty = this.toogleAllowPenalty.bind(this);
+
+        this.proceedToNext = this.proceedToNext.bind(this);
+        this.proceedToPrev = this.proceedToPrev.bind(this);
+
+        this.pullChallengeAction = this.pullChallengeAction.bind(this);
+        this.pullSocialAction = this.pullSocialAction.bind(this);
+        this.pullPenalties = this.pullPenalties.bind(this);
         
 
 
@@ -50,6 +62,47 @@ class StepTwo extends React.Component {
         this.setState({convertActionToPoints: newState});
         
         // this.populateInput('convert_action_to_points', newState)
+        this.setState({allow_penalty: newState});
+    }
+
+    toogleAllowPenalty(){
+        let toogleAllowPenalty = !this.state.allowPenalty;
+        this.setState({allowPenalty: toogleAllowPenalty});
+    }
+
+    proceedToNext(){
+        let finalInfo = {
+            'main_goal': this.state.mainGoalValue,
+            'actions': this.state.actionList,
+            'social': this.state.social_list,
+            'allow_penalty': this.state.allowPenalty,
+            'penalty': this.state.penalty,
+            'convert_actions_to_points': this.state.convertActionToPoints,
+        }
+        this.props.callBack(finalInfo);
+    }
+
+    proceedToPrev(){
+        this.props.toBack(true);
+    }
+
+    pullChallengeAction(actionDetails){
+        let currentlist = this.state.actionList;
+        // currentlist.push(actionDetails);
+        currentlist['action'] = actionDetails;
+        this.setState({actionList: currentlist});
+    }
+
+    pullSocialAction(socialDetails){
+        let currentlist = this.state.social_list;
+        currentlist = socialDetails;
+        this.setState({social_list: currentlist});
+    }
+
+    pullPenalties (actionPenalties){
+        let currentlist = this.state.penalty;
+        currentlist = actionPenalties;
+        this.setState({penalty: currentlist});
     }
 
     
@@ -96,11 +149,11 @@ class StepTwo extends React.Component {
                 <div className={"cg-item " + (this.state.activepart === 'two_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_actions') }>
 
                     <div className="cg-label">Actions</div>
-                    <ChallengeGoalActions />
+                    <ChallengeGoalActions getData={this.pullChallengeAction} />
                 </div>
 
                 <div className={"cg-item " + (this.state.activepart === 'two_social_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_social_actions') }>
-                    <AddSocialAction />
+                    <AddSocialAction getData={this.pullSocialAction} />
                 </div>
 
                 <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_convert_actions') }>
@@ -114,7 +167,11 @@ class StepTwo extends React.Component {
                 </div>
 
                 <div className={"cg-item " + (this.state.activepart === 'two_penalty' ? 'active_item' : '')} onFocus={() => this.createActive('two_penalty') }>
-                    <ChallengePenalties />
+                    <div className="cg-label">
+                        <div className="cgl-name">Penalty</div>
+                        <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleAllowPenalty} checked={this.state.allowPenalty} /></div>
+                    </div>
+                    <ChallengePenalties getData={this.pullPenalties} showPenalties={this.state.allowPenalty} />
                 </div>
 
                 <div className="dnext-button">

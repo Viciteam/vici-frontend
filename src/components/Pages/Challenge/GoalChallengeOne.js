@@ -42,8 +42,8 @@ class GoalChallengeOne extends React.Component {
             challengeID: this.props.match.params.id,
             uinfo: this.props.uinfo,
             activepart: 'title',
-            stepnumber: 0,
-            menuActive: 1,
+            stepnumber: 2,
+            menuActive: 3,
             activityList: [{"activity": ""}],
             checked: false,
             showCountry: false,
@@ -69,7 +69,8 @@ class GoalChallengeOne extends React.Component {
             title: '',
 
             // challenge form
-            stepOneData: []
+            stepOneData: [],
+            stepTwoData: [],
         }
         this.createActive = this.createActive.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this);
@@ -82,6 +83,7 @@ class GoalChallengeOne extends React.Component {
         this.changePrevHeader = this.changePrevHeader.bind(this);
         
         
+        this.handleStepTwoPreviousStep = this.handleStepTwoPreviousStep.bind(this);
         
         
         this.toogleChangeChallengePrivacy = this.toogleChangeChallengePrivacy.bind(this);
@@ -93,6 +95,7 @@ class GoalChallengeOne extends React.Component {
         this.submitChallengeForm = this.submitChallengeForm.bind(this);
 
         this.handleStepOneCallback = this.handleStepOneCallback.bind(this);
+        this.handleStepTwoCallback = this.handleStepTwoCallback.bind(this);
 
         this.activity_list = [
             {"activity": ""}
@@ -148,6 +151,10 @@ class GoalChallengeOne extends React.Component {
         let menuitem = this.state.menuActive - 1;
         this.setState({stepnumber: stepnum})
         this.setState({menuActive: menuitem})
+    }
+
+    handleStepTwoPreviousStep(){
+        this.proceedToPrev();
     }
 
     handleChange(checked) {
@@ -289,6 +296,12 @@ class GoalChallengeOne extends React.Component {
         this.proceedToNext();
     }
 
+    handleStepTwoCallback(SteptwoInfo){
+        console.log('step two info -> ', SteptwoInfo);
+        this.setState({stepTwoData: SteptwoInfo});
+        this.proceedToNext();
+    }
+
     render () {
         const tip_images = [
             '/img/challenge_tip1.png',
@@ -346,7 +359,7 @@ class GoalChallengeOne extends React.Component {
 
                           <div className={"dstep step_one " + (this.state.stepnumber === 1 ? 'isactive_tab' : '')}>
                               <div className="cgoal-center-inner">
-                                  <StepTwo />
+                                  <StepTwo callBack={this.handleStepTwoCallback} toBack={this.handleStepTwoPreviousStep}/>
                               </div>
                           </div>
 
