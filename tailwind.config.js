@@ -79,6 +79,9 @@ module.exports = {
       vici_request: '#030612',
       vici_prof_bg: '#C4C4C4',
       vici_bg_button: '#ffffff33',
+      vici_success: '#7DCC88',
+      vici_error: '#eb5757',
+      vici_primary_text: '#1F1521',
     },
     extend: {
       width: {
