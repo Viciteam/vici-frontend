@@ -22,6 +22,7 @@ import AllChallengesSidebar from '../Clan/AllChallengesSidebar';
 import Friends from '../Clan/Friends';
 import auth from '../../../services/auth';
 import LoginModal from '../Auth/LoginModal';
+import MakeMyDay from './Modal/MakeMyDay';
 
 class mainProfileContent extends React.Component{
     constructor(props){
@@ -43,11 +44,21 @@ class mainProfileContent extends React.Component{
                 }
             },
             openModal: false,
+            toggleMakeMyDay: false,
             openLeftScroll: false,
         }
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.toggleMakeMyDay = this.toggleMakeMyDay.bind(this);
         this.boxRef = React.createRef();
+    }
+
+    toggleMakeMyDay () {
+        if(this.state.toggleMakeMyDay){
+            this.setState({ toggleMakeMyDay: false });
+        }else{
+            this.setState({ toggleMakeMyDay: true });
+        }
     }
 
     handleOpenModal () {
@@ -114,10 +125,13 @@ class mainProfileContent extends React.Component{
                                                         </div>
                                                     </div>
                                                     <div className="w-36 h-52 flex justify-center rounded-lg mx-3 p-3 shadow-vici">
-                                                        <div className="text-center mt-12 cursor-pointer">
+                                                        <div onClick={this.toggleMakeMyDay} className="text-center mt-12 cursor-pointer">
                                                             <div className="flex justify-center"><img src="/img/bi_sun-fill.png" /></div>
                                                             <div className="text-sm mt-3 font-bold text-vici_secondary">Make my day</div>
                                                         </div>
+                                                        {
+                                                          this.state.toggleMakeMyDay && <MakeMyDay closeModal={this.toggleMakeMyDay } />  
+                                                        }
                                                     </div>
 
                                                     <div className="w-36 h-52 flex justify-center rounded-lg shadow-vici">
