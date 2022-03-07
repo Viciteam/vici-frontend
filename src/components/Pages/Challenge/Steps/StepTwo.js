@@ -41,9 +41,6 @@ class StepTwo extends React.Component {
         this.pullSocialAction = this.pullSocialAction.bind(this);
         this.pullPenalties = this.pullPenalties.bind(this);
         
-
-
-        
     }
 
     createActive(setactive){
