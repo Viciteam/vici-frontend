@@ -8,6 +8,7 @@ import Comments from './Segments/Comments'
 
 import OtherChallenges from './Segments/OtherChallenges'
 import OtherMainSIde from './Segments/OtherMainSIde'
+import ManageChallenge from './Segments/ManageChallenge';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faEye, faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -148,6 +149,9 @@ class ViewChallenge extends React.Component {
                 </div>
                 <div className="dview-right">
                     <div className="dview-right-inner">
+                        <div>
+                           <ManageChallenge />
+                        </div>
                         <div className="dvr-notif-bar">
                             <span className="dvr-notif-eye"><FontAwesomeIcon icon={faEye} /></span>
                             <span className="dvr-notif-text">You are watching the challenge with 230 other people.</span>

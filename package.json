@@ -15,14 +15,17 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.4",
+    "chart.js": "^3.7.1",
     "heroicons": "^1.0.4",
     "mautic": "0.0.4",
     "moment": "^2.29.1",
     "mparticle": "^1.0.8",
     "react": "^17.0.2",
     "react-calendar": "^3.7.0",
+    "react-chartjs-2": "^4.0.1",
     "react-circular-progressbar": "^2.0.4",
     "react-colorful": "^5.5.0",
+    "react-date-range": "^1.4.0",
     "react-dom": "^17.0.2",
     "react-facebook-login": "^4.1.1",
     "react-google-login": "^5.2.2",
@@ -66,6 +69,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
+    "faker": "^5.5.3",
     "postcss": "^8.2.13",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7"
   }
