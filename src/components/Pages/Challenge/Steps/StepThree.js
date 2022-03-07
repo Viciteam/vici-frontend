@@ -3,7 +3,7 @@ import React from 'react';
 
 import Switch from "react-switch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faGlobeEurope, faMapMarkerAlt} from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faGlobeEurope, faMapMarkerAlt, faArrowDown} from '@fortawesome/free-solid-svg-icons'
 
 class StepThree extends React.Component {
     constructor(props){
@@ -18,6 +18,7 @@ class StepThree extends React.Component {
             showState: false,
             showCity: false,
             enableFormAfterJoining: false,
+            showformPart: 1,
         }
 
         this.createActive = this.createActive.bind(this);
@@ -32,13 +33,14 @@ class StepThree extends React.Component {
         this.toogleEnableFormAfterJoining = this.toogleEnableFormAfterJoining.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this);
         this.proceedToPrev = this.proceedToPrev.bind(this);
+        this.proceedToNext = this.proceedToNext.bind(this); 
+        this.showAllSteps = this.showAllSteps.bind(this); 
     }
 
     populateInput(state, e){
         let dform = this.state.stepThreeValues;
         dform[state] = e;
         this.setState({stepThreeValues: dform});
-          console.log('changed '+state+' -> ', dform);
     }
 
     toogleSelectSpecificLocation(e){
@@ -53,7 +55,6 @@ class StepThree extends React.Component {
     }
 
     createActive(setactive){
-        console.log('Type ->', setactive);
         this.setState({activepart: setactive})
     }
 
@@ -103,10 +104,6 @@ class StepThree extends React.Component {
     }
 
     activateItem(showOption){
-        console.log('show option ->', showOption);
-
-
-
         if(showOption === "option_one"){
             this.setState({showOptionOne: true})
             this.setState({showOptionTwo: false})
@@ -127,12 +124,23 @@ class StepThree extends React.Component {
     } 
 
     proceedToNext(){
-        console.log('proceed to next');
         this.props.callback(this.state.stepThreeValues);
     }
 
     proceedToPrev(){
         this.props.toBack(true);
+    }
+
+    openIdentifySteps(){
+        let steps = this.state.showformPart;
+        this.setState({showformPart: steps + 1});
+    }
+
+    showAllSteps(event, item){
+        console.log('show selected ->', event.target.checked);
+        if(event.target.checked){
+            this.setState({showformPart: 4});
+		}
     }
 
     render () {
@@ -154,7 +162,7 @@ class StepThree extends React.Component {
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'three_locations_of_participants' ? 'active_item' : '')} onFocus={() => this.createActive('three_locations_of_participants') }>
+                <div className={"cg-item " + (this.state.activepart === 'three_locations_of_participants' ? 'active_item' : '')} style={(this.state.showformPart >= 2 ? {} : {display: 'none'})} onFocus={() => this.createActive('three_locations_of_participants') }>
                     <div className="cg-label">Location of participants</div>
                     <div className="cg-input dactivity">
 
@@ -290,7 +298,7 @@ class StepThree extends React.Component {
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'three_enable_form' ? 'active_item' : '')} onFocus={() => this.createActive('three_enable_form')}>
+                <div className={"cg-item " + (this.state.activepart === 'three_enable_form' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('three_enable_form')}>
                     <div className="cg-label">Enable form</div>
                     <div className="cg-input dactivity">
                         <div className="subheader">Collect additional information from participants</div>
@@ -299,7 +307,7 @@ class StepThree extends React.Component {
                 </div>
 
 
-                <div className={"cg-item " + (this.state.activepart === 'three_challenge_duration' ? 'active_item' : '')} onFocus={() => this.createActive('three_challenge_duration') }>
+                <div className={"cg-item " + (this.state.activepart === 'three_challenge_duration' ? 'active_item' : '')} style={(this.state.showformPart >= 4 ? {} : {display: 'none'})} onFocus={() => this.createActive('three_challenge_duration') }>
                     <div className="cg-label">Challenge Duration</div>
                     <div className="cg-input dactivity">
                         <div className="cd-dropbase">
@@ -348,8 +356,16 @@ class StepThree extends React.Component {
                     </div>
                 </div>
 
+                <div className="step-by-step-options" style={(this.state.showformPart < 4 ? {} : {display: 'none'})}>
+                    <div className='step-show-all'>
+                        <input type="checkbox" onChange={(e) => this.showAllSteps(e, 'show_all')} /> show all steps
+                    </div>
+                    <div className='step-show-once'>
+                        <button onClick={() => this.openIdentifySteps()}>{this.state.showformPart}/4 <FontAwesomeIcon icon={faArrowDown} /></button>
+                    </div>
+                </div>
 
-                <div className="dnext-button">
+                <div className="dnext-button" style={(this.state.showformPart >= 4 ? {} : {display: 'none'})}>
                     <button className="prev-arrow" onClick={() => this.proceedToPrev()}>Back</button>
                     <button className="next-arrow" onClick={() => this.proceedToNext()}>Next &rarr;</button>
                 </div>

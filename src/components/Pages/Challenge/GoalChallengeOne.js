@@ -44,29 +44,26 @@ class GoalChallengeOne extends React.Component {
             challengeID: this.props.match.params.id,
             uinfo: this.props.uinfo,
             activepart: 'title',
-            stepnumber: 3,
-            menuActive: 4,
+            stepnumber: 0,
+            menuActive: 1,
             activityList: [{"activity": ""}],
             checked: false,
             showOptionOne: true,
             showOptionTwo: false,
             selectedPreviewHeaderImage: '/img/prev-header.png',
             selectedColor: '#03488d',
-            
             socialActionSLide: false,
             allowPenalty: false,
-            // challenge form
             formDetails: {
                 'details': {}
             },
             challengeTitle: '',
             title: '',
-
-            // challenge form
+            finalValues: [],
             stepOneData: [],
             stepTwoData: [],
             stepThreeData: [],
-            stepFourData: [],
+            stepFourData: '',
         }
         this.createActive = this.createActive.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this);
@@ -80,12 +77,9 @@ class GoalChallengeOne extends React.Component {
         // change tab
         this.populateInput = this.populateInput.bind(this);
         this.submitChallengeForm = this.submitChallengeForm.bind(this);
-
-        this.handleStepOneCallback = this.handleStepOneCallback.bind(this);
-        this.handleStepTwoCallback = this.handleStepTwoCallback.bind(this);
-        this.handleStepThreeCallback = this.handleStepThreeCallback.bind(this);
         this.handleStepFourCallback = this.handleStepFourCallback.bind(this);
-
+        this.processStepPerStep = this.processStepPerStep.bind(this);
+        this.processSubmit = this.processSubmit.bind(this);
         this.handleStepFourColor = this.handleStepFourColor.bind(this);
         this.handleStepFourSelectedImage = this.handleStepFourSelectedImage.bind(this);
 
@@ -99,7 +93,7 @@ class GoalChallengeOne extends React.Component {
     }
     
     createActive(setactive){
-        console.log('Type ->', setactive);
+        // console.log('Type ->', setactive);
         this.setState({activepart: setactive})
     }
 
@@ -135,7 +129,6 @@ class GoalChallengeOne extends React.Component {
     handleStepFourPreviousStep(){
         this.proceedToPrev();
     }
-
 
     handleChange(checked) {
         this.setState({ checked });
@@ -194,27 +187,22 @@ class GoalChallengeOne extends React.Component {
         console.log('params ->', params);
     }
 
-    handleStepOneCallback(StepOneInfo){
-        console.log('step one info -> ', StepOneInfo);
-        this.setState({stepOneData: StepOneInfo});
-        this.proceedToNext();
+    processSubmit(){
+        console.log('step finalValues -> ', this.state.finalValues);
     }
 
-    handleStepTwoCallback(SteptwoInfo){
-        console.log('step two info -> ', SteptwoInfo);
-        this.setState({stepTwoData: SteptwoInfo});
-        this.proceedToNext();
-    }
-
-    handleStepThreeCallback(StepThreeInfo){
-        console.log('step three info -> ', StepThreeInfo);
-        this.setState({stepThreeData: StepThreeInfo});
+    processStepPerStep(info){
+        let getFinalValues = this.state.finalValues;
+        Object.keys(info).forEach(function(key) {
+            getFinalValues[key] = info[key];
+        });
+        this.setState({finalValues: getFinalValues});
         this.proceedToNext();
     }
 
     handleStepFourCallback(StepFourInfo){
-        console.log('step four info -> ', StepFourInfo);
-        this.setState({stepFourData: StepFourInfo});
+        this.processStepPerStep(StepFourInfo);
+        this.processSubmit();
     }
 
     handleStepFourColor(stepFourColor){
@@ -225,9 +213,7 @@ class GoalChallengeOne extends React.Component {
     handleStepFourSelectedImage(stepfourimage){
         this.setState({selectedPreviewHeaderImage: stepfourimage});
     }
-
     
-
     render () {
         const tip_images = [
             '/img/challenge_tip1.png',
@@ -262,30 +248,24 @@ class GoalChallengeOne extends React.Component {
                     </div>
 
                     <div className="cgoal-center">
-
-                          <div className={"dstep step_one " + (this.state.stepnumber === 0 ? 'isactive_tab' : '')}>
-                              <StepOne callBack={this.handleStepOneCallback} />
-                          </div>
-
-                          <div className={"dstep step_one " + (this.state.stepnumber === 1 ? 'isactive_tab' : '')}>
-                              <div className="cgoal-center-inner">
-                                  <StepTwo callBack={this.handleStepTwoCallback} toBack={this.handleStepTwoPreviousStep}/>
-                              </div>
-                          </div>
-
-                          <div className={"dstep step_one " + (this.state.stepnumber === 2 ? 'isactive_tab' : '')}>
-                              <div className="cgoal-center-inner">
-                                  <StepThree callback={this.handleStepThreeCallback} toBack={this.handleStepThreePreviousStep} />
-                              </div>
-                          </div>
-
-                          <div className={"dstep step_one " + (this.state.stepnumber === 3 ? 'isactive_tab' : '')}>
-                              <div className="cgoal-center-inner">
-                                  <StepFour selectedcolor={this.handleStepFourColor} selectedimage={this.handleStepFourSelectedImage} toBack={this.handleStepFourPreviousStep} callback={this.handleStepFourCallback} />
-                              </div>
-                          </div>
-
-
+                        <div className={"dstep step_one " + (this.state.stepnumber === 0 ? 'isactive_tab' : '')}>
+                            <StepOne callBack={this.processStepPerStep} />
+                        </div>
+                        <div className={"dstep step_one " + (this.state.stepnumber === 1 ? 'isactive_tab' : '')}>
+                            <div className="cgoal-center-inner">
+                                <StepTwo callBack={this.processStepPerStep} toBack={this.handleStepTwoPreviousStep}/>
+                            </div>
+                        </div>
+                        <div className={"dstep step_one " + (this.state.stepnumber === 2 ? 'isactive_tab' : '')}>
+                            <div className="cgoal-center-inner">
+                                <StepThree callback={this.processStepPerStep} toBack={this.handleStepThreePreviousStep} />
+                            </div>
+                        </div>
+                        <div className={"dstep step_one " + (this.state.stepnumber === 3 ? 'isactive_tab' : '')}>
+                            <div className="cgoal-center-inner">
+                                <StepFour selectedcolor={this.handleStepFourColor} selectedimage={this.handleStepFourSelectedImage} toBack={this.handleStepFourPreviousStep} callback={this.handleStepFourCallback} />
+                            </div>
+                        </div>
                     </div>
                     <div className="cgoal-right">
                         <div className="cgoal-right-inner" style={{display: this.state.stepnumber < 2 ? 'block' : 'none' }} >
@@ -307,8 +287,8 @@ class GoalChallengeOne extends React.Component {
                                         <div className="prev-tags">
                                             <ul>
                                                 <li style={{backgroundColor: this.state.selectedColor}}>Health</li>
-                                                <li style={{backgroundColor: this.state.selectedColor}}>Health</li>
-                                                <li style={{backgroundColor: this.state.selectedColor}}>Health</li>
+                                                <li style={{backgroundColor: this.state.selectedColor}}>Activity</li>
+                                                <li style={{backgroundColor: this.state.selectedColor}}>Physical</li>
                                             </ul>
                                         </div>
                                         <div className="prev-participants">
@@ -354,6 +334,7 @@ class GoalChallengeOne extends React.Component {
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

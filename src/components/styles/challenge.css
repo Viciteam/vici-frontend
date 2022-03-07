@@ -304,6 +304,16 @@
     border-radius: 8px;
 }
 
+.step-by-step-options .step-show-once button {
+    background: #FFCA28;
+    font-weight: bold;
+    font-size: 14px;
+    color: #fff;
+    line-height: 1em;
+    padding: 15px 20px;
+    border-radius: 8px;
+}
+
 .challenges-goal-page-inner .cgoal-center-inner .dnext-button button.prev-arrow {
     font-size: 14px;
     color: #000;
@@ -1130,6 +1140,7 @@
 
 .challenges-goal-page-inner .goal-menu-inner .dsideoptions .dsitem {
     padding: 15px 0 15px 30px;
+    cursor: pointer;
 }
 
 .challenges-goal-page-inner .goal-menu-inner .dsideoptions {
@@ -4334,4 +4345,15 @@
 
 .d-action-current-step .d-action-sidebar .d-action-sidebar-item .d-sideitem-content .d-sideitem-single.suggestive-item span {
     margin-right: 10px;
+}
+
+.step-by-step-options .step-show-all {
+    display: inline-block;
+    width: 48%;
+}
+
+.step-by-step-options .step-show-once {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
 }

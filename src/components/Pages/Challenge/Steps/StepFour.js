@@ -26,9 +26,9 @@ class StepFour extends React.Component {
         this.state = {
             isactive: this.props.isactive,
             activepart: 'four_change_photo',
-            selectedPreviewHeaderImage: '/img/prev-header.png',
+            selectedPreviewHeaderImage: '',
             selectedColor: '#03488d',
-            stepFourValues: [],
+            stepFourValues:[],
             newUploadedImage: '',
             listofimages: [
                 '/img/prev-header.png',
@@ -48,7 +48,7 @@ class StepFour extends React.Component {
     }
 
     createActive(setactive){
-        console.log('Type ->', setactive);
+        // console.log('Type ->', setactive);
         this.setState({activepart: setactive})
     }
 
@@ -63,11 +63,13 @@ class StepFour extends React.Component {
         let dform = this.state.stepFourValues;
         dform[state] = e;
         this.setState({stepFourValues: dform});
-          console.log('changed '+state+' -> ', dform);
+        //   console.log('changed '+state+' -> ', dform);
     }
 
     changePrevHeader(selectedTodo){
         this.setState({selectedPreviewHeaderImage: selectedTodo});
+        this.populateInput('challenge_image', selectedTodo)
+        this.populateInput('challenge_color', '#03488d')
         this.props.selectedimage(selectedTodo);
     }
 
@@ -76,7 +78,7 @@ class StepFour extends React.Component {
     }
     
     processFileInput(event){
-        console.log('change input -> ', event.target.files[0]);
+        // console.log('change input -> ', event.target.files[0]);
         let thefile = event.target.files[0];
         var reader = new FileReader();
         var url = reader.readAsDataURL(thefile);
@@ -87,7 +89,7 @@ class StepFour extends React.Component {
             this.setState({ newUploadedImage: newimage})
         }.bind(this);
 
-        console.log('iamge url ->', url);
+        // console.log('iamge url ->', url);
     }
 
     proceedToPrev(){
@@ -95,7 +97,8 @@ class StepFour extends React.Component {
     }
     
     submitChallengeForm(){
-        
+        // console.log("submit values -> ", this.state.stepFourValues);
+        this.props.callback(this.state.stepFourValues);
     }
 
 
