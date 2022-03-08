@@ -2,7 +2,7 @@ import './../../../styles/challenge.css';
 import React from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft} from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faArrowDown} from '@fortawesome/free-solid-svg-icons'
 
 class StepOne extends React.Component {
     constructor(props){
@@ -13,8 +13,9 @@ class StepOne extends React.Component {
             isChallengeTitle: '',
             isHashtags: '',
             isTagline: '',
-            isInstructions: ''
-
+            isInstructions: '',
+            showformPart: 1,
+            stackedStep: 1
         }
 
         this.createActive = this.createActive.bind(this);
@@ -23,8 +24,9 @@ class StepOne extends React.Component {
         this.addChallengehashtag = this.addChallengehashtag.bind(this); 
         this.addChallengeTagline = this.addChallengeTagline.bind(this); 
         this.addChallengeInstuctions = this.addChallengeInstuctions.bind(this); 
-
+        this.openIdentifySteps = this.openIdentifySteps.bind(this); 
         this.proceedToNext = this.proceedToNext.bind(this); 
+        this.showAllSteps = this.showAllSteps.bind(this); 
         
     }
 
@@ -59,6 +61,19 @@ class StepOne extends React.Component {
         this.props.callBack(finalInfo);
     }
 
+    openIdentifySteps(){
+        let steps = this.state.showformPart;
+        this.setState({showformPart: steps + 1});
+    }
+
+    showAllSteps(event, item){
+        console.log('show selected ->', event.target.checked);
+        if(event.target.checked){
+            this.setState({showformPart: 4});
+		}
+    }
+
+
     render () {
         
         return (
@@ -71,27 +86,35 @@ class StepOne extends React.Component {
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'hashtags' ? 'active_item' : '')} style={(this.state.isChallengeTitle == "" ? {display: 'none'} : {})}  onFocus={() => this.createActive('hashtags') }>
+                <div className={"cg-item " + (this.state.activepart === 'hashtags' ? 'active_item' : '')} style={(this.state.showformPart >= 2 ? {} : {display: 'none'})}  onFocus={() => this.createActive('hashtags') }>
                     <div className="cg-label">Hashtags</div>
                     <div className="cg-input">
                         <input type="text" onChange={(e) => this.addChallengehashtag(e.target.value)} />
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'tagline' ? 'active_item' : '')} style={(this.state.isHashtags == "" ? {display: 'none'} : {})}  onFocus={() => this.createActive('tagline') }>
+                <div className={"cg-item " + (this.state.activepart === 'tagline' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})}  onFocus={() => this.createActive('tagline') }>
                     <div className="cg-label">Tagline</div>
                     <div className="cg-input">
                         <textarea name="" id="" onChange={(e) => this.addChallengeTagline(e.target.value)}></textarea>
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'rules' ? 'active_item' : '')} style={(this.state.isTagline == "" ? {display: 'none'} : {})}  onFocus={() => this.createActive('rules') }>
+                <div className={"cg-item " + (this.state.activepart === 'rules' ? 'active_item' : '')} style={(this.state.showformPart >= 4 ? {} : {display: 'none'})}  onFocus={() => this.createActive('rules') }>
                     <div className="cg-label">Instructions and rules</div>
                     <div className="cg-input">
                         <textarea name="" id="" onChange={(e) => this.addChallengeInstuctions(e.target.value)}></textarea>
                     </div>
                 </div>
-                <div className="dnext-button" style={(this.state.isInstructions == "" ? {display: 'none'} : {})}>
+                <div className="step-by-step-options" style={(this.state.showformPart < 4 ? {} : {display: 'none'})}>
+                    <div className='step-show-all'>
+                        <input type="checkbox" onChange={(e) => this.showAllSteps(e, 'show_all')} /> show all steps
+                    </div>
+                    <div className='step-show-once'>
+                        <button onClick={() => this.openIdentifySteps()}>{this.state.showformPart}/4 <FontAwesomeIcon icon={faArrowDown} /></button>
+                    </div>
+                </div>
+                <div className="dnext-button" style={(this.state.showformPart >= 4 ? {} : {display: 'none'})}>
                     <button className="next-arrow" onClick={() => this.proceedToNext()}>Next &rarr;</button>
                 </div>
             </div>

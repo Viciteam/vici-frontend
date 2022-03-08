@@ -198,6 +198,35 @@ class ChallengeGoalActions extends React.Component {
 		let ActionState = this.state.ActionList;
 		ActionState.push(this.state.currentActions);
 		this.setState({ActionList: ActionState});
+		this.props.getData(this.state.currentActions);
+
+		// reset all
+		let resetValues = {
+			'title': '',
+			'instructions': '',
+			'allowAction_link': false,
+			'action_link': '',
+			'simplify_action': false,
+			'set_required_action': false,
+			'integrations': {
+			  'items': [],
+			  'measurement_number': '',
+			  'measurement_unit': 'meters',
+			  'points_every': '10'
+			},
+			'custom_tracking': {
+			  'items': [],
+			  'verify_action_tracking': false,
+			  'action_tracking': "manually_verify",
+			},
+			'points': {
+			  'isactive': false,
+			  'isvalue': ''
+			},
+			'total': ''
+		};
+		this.setState({currentActions: resetValues});
+		this.setState({actionCurrentStep: 1});
 
 		this.closeAddActionModal();
 	}
@@ -222,7 +251,9 @@ class ChallengeGoalActions extends React.Component {
 	}
 
 	toogleMustCompleteActionInOrder(){
-		this.setState({ActionsMustCompleteActionInOrder: !this.state.ActionsMustCompleteActionInOrder});
+		let allowActionInOrder = !this.state.ActionsMustCompleteActionInOrder;
+		this.setState({ActionsMustCompleteActionInOrder: allowActionInOrder});
+		this.addActionParameters('must_complete_in_order', allowActionInOrder);
 	}
 
     render () {

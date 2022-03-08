@@ -3,12 +3,13 @@ import React from 'react';
 
 import ChallengeGoalActions from './../Segments/ChallengeGoalActions'
 import AddSocialAction from './../Segments/AddSocialAction'
+import ChallengePenalties from './../Segments/ChallengePenalties'
 import Switch from "react-switch";
 import ReactModal from 'react-modal';
 import ReactTooltip from 'react-tooltip';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faBars, faEllipsisV, faGlobeEurope, faMapMarkerAlt, faImage, faCrosshairs, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faBars, faEllipsisV, faGlobeEurope, faMapMarkerAlt, faImage, faCrosshairs, faQuestionCircle, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons'
 
 class StepTwo extends React.Component {
@@ -20,16 +21,29 @@ class StepTwo extends React.Component {
             mainGoalValue: 'single', 
             convertActionToPoints: false,
             allowPenalty: false,
-            convertActionToPoints: false,
+            allow_penalty: false,
+            actionList: [],
+            social_list: [],
+            penalty: [],
+            showformPart: 1,
         }
 
         this.createActive = this.createActive.bind(this);
         this.toogleMainGoalValues = this.toogleMainGoalValues.bind(this);
 
         this.toogleConvertActionToPoints = this.toogleConvertActionToPoints.bind(this);
-        
 
+        this.toogleAllowPenalty = this.toogleAllowPenalty.bind(this);
 
+        this.proceedToNext = this.proceedToNext.bind(this);
+        this.proceedToPrev = this.proceedToPrev.bind(this);
+
+        this.pullChallengeAction = this.pullChallengeAction.bind(this);
+        this.pullSocialAction = this.pullSocialAction.bind(this);
+        this.pullPenalties = this.pullPenalties.bind(this);
+
+        this.proceedToNext = this.proceedToNext.bind(this); 
+        this.showAllSteps = this.showAllSteps.bind(this); 
         
     }
 
@@ -49,7 +63,62 @@ class StepTwo extends React.Component {
         this.setState({convertActionToPoints: newState});
         
         // this.populateInput('convert_action_to_points', newState)
+        this.setState({allow_penalty: newState});
     }
+
+    toogleAllowPenalty(){
+        let toogleAllowPenalty = !this.state.allowPenalty;
+        this.setState({allowPenalty: toogleAllowPenalty});
+    }
+
+    proceedToNext(){
+        let finalInfo = {
+            'main_goal': this.state.mainGoalValue,
+            'actions': this.state.actionList,
+            'social': this.state.social_list,
+            'allow_penalty': this.state.allowPenalty,
+            'penalty': this.state.penalty,
+            'convert_actions_to_points': this.state.convertActionToPoints,
+        }
+        this.props.callBack(finalInfo);
+    }
+
+    proceedToPrev(){
+        this.props.toBack(true);
+    }
+
+    pullChallengeAction(actionDetails){
+        let currentlist = this.state.actionList;
+        // currentlist.push(actionDetails);
+        currentlist['action'] = actionDetails;
+        this.setState({actionList: currentlist});
+    }
+
+    pullSocialAction(socialDetails){
+        let currentlist = this.state.social_list;
+        currentlist = socialDetails;
+        this.setState({social_list: currentlist});
+    }
+
+    pullPenalties (actionPenalties){
+        let currentlist = this.state.penalty;
+        currentlist = actionPenalties;
+        this.setState({penalty: currentlist});
+    }
+
+    openIdentifySteps(){
+        let steps = this.state.showformPart;
+        this.setState({showformPart: steps + 1});
+    }
+
+    showAllSteps(event, item){
+        console.log('show selected ->', event.target.checked);
+        if(event.target.checked){
+            this.setState({showformPart: 5});
+		}
+    }
+
+
 
     
     
@@ -92,17 +161,17 @@ class StepTwo extends React.Component {
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'two_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_actions') }>
+                <div className={"cg-item " + (this.state.activepart === 'two_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 2 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_actions') }>
 
                     <div className="cg-label">Actions</div>
-                    <ChallengeGoalActions />
+                    <ChallengeGoalActions getData={this.pullChallengeAction} />
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'two_social_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_social_actions') }>
-                    <AddSocialAction />
+                <div className={"cg-item " + (this.state.activepart === 'two_social_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_social_actions') }>
+                    <AddSocialAction getData={this.pullSocialAction} />
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_convert_actions') }>
+                <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 4 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_convert_actions') }>
                     <div className="cg-label">
                         <div className="cgl-name">Convert all actions into points</div>
                         <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleConvertActionToPoints} checked={this.state.convertActionToPoints} /></div>
@@ -112,62 +181,24 @@ class StepTwo extends React.Component {
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'two_penalty' ? 'active_item' : '')} onFocus={() => this.createActive('two_penalty') }>
+                <div className={"cg-item " + (this.state.activepart === 'two_penalty' ? 'active_item' : '')} style={(this.state.showformPart >= 5 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_penalty') }>
                     <div className="cg-label">
                         <div className="cgl-name">Penalty</div>
                         <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleAllowPenalty} checked={this.state.allowPenalty} /></div>
                     </div>
-                    <div className="cg-input dactivity">
-                        <div className="subheader">Add penalty if goal has not been met.</div>
-                        <div className="activity-list">
-                            <div className="activity-items">
-                                <div className="ac-item">
-                                    <div className="dleftitems">
-                                        <span className="dicon"><FontAwesomeIcon icon={faBars} /></span>
-                                        <span className="dtext">Drink 8 glasses of water everyday</span>
-                                    </div>
-                                    <div className="drightitems">
-                                        <span className="doptions"><FontAwesomeIcon icon={faEllipsisV} /></span>
-                                    </div>
-                                </div>
-                                <div className="ac-item">
-                                    <div className="dleftitems">
-                                        <span className="dicon"><FontAwesomeIcon icon={faBars} /></span>
-                                        <span className="dtext">Drink 8 glasses of water everyday</span>
-                                    </div>
-                                    <div className="drightitems">
-                                        <span className="doptions"><FontAwesomeIcon icon={faEllipsisV} /></span>
-                                    </div>
-                                </div>
-                                <div className="ac-item">
-                                    <div className="dleftitems">
-                                        <span className="dicon"><FontAwesomeIcon icon={faBars} /></span>
-                                        <span className="dtext">Drink 8 glasses of water everyday</span>
-                                    </div>
-                                    <div className="drightitems">
-                                        <span className="doptions"><FontAwesomeIcon icon={faEllipsisV} /></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="activity-add-button">
-                                <div className="daddactions" onClick={() => this.addActivity()}>
-                                    <span className="dicon"><FontAwesomeIcon icon={faPlus} /></span>
-                                    <span className="dtext">Add penalty action</span>
-                                </div>
-                                <div className="daddactions" onClick={() => this.addActivity()}>
-                                    <span className="dicon"><FontAwesomeIcon icon={faPlus} /></span>
-                                    <span className="dtext">Add social action</span>
-                                </div>
-                                <div className="daddactions" onClick={() => this.addActivity()}>
-                                    <span className="dicon"><FontAwesomeIcon icon={faPlus} /></span>
-                                    <span className="dtext">Lose Vici tokens</span>
-                                </div>
-                            </div>
-                        </div>
+                    <ChallengePenalties getData={this.pullPenalties} showPenalties={this.state.allowPenalty} />
+                </div>
+
+                <div className="step-by-step-options" style={(this.state.showformPart < 5 ? {} : {display: 'none'})}>
+                    <div className='step-show-all'>
+                        <input type="checkbox" onChange={(e) => this.showAllSteps(e, 'show_all')} /> show all steps
+                    </div>
+                    <div className='step-show-once'>
+                        <button onClick={() => this.openIdentifySteps()}>{this.state.showformPart}/5 <FontAwesomeIcon icon={faArrowDown} /></button>
                     </div>
                 </div>
 
-                <div className="dnext-button">
+                <div className="dnext-button" style={(this.state.showformPart >= 5 ? {} : {display: 'none'})}>
                     <button className="prev-arrow" onClick={() => this.proceedToPrev()}>Back</button>
                     <button className="next-arrow" onClick={() => this.proceedToNext()}>Next &rarr;</button>
                 </div>

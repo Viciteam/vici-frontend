@@ -42,8 +42,8 @@ class Menu extends React.Component {
                             &nbsp;
                         </div>
                         <div className="ds-item-text">
-                            Save as Termplate
-                        </div>
+                            Save as Termplate 
+                        </div> 
                     </div>
                     <div className="dsitem">
                         <div className="ds-item-icon">
