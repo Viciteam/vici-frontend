@@ -10,8 +10,38 @@ class PostUser extends React.Component {
         super(props);
         this.state = {
             isactive: this.props.isactive,
-            post: this.props.postinfo
+            post_id: this.props.postinfo,
+            post: {
+                id: 1,
+                avatar: '/img/user_main.jpg',
+                name: 'John Peter Doe',
+                time: '5m ago',
+                message: [
+                    {
+                        text: 'Think i wanna do the bookwork challenge soon, haven\'t read a book since! Who wants to join?',
+                        image: '',
+                    }
+                ],
+                comments: [
+                    {
+                        id: 1,
+                        avatar: '/img/prof_icon.png',
+                        name: 'John S. White',
+                        time: '3m ago',
+                        message: 'Sound like fun! Count me in!',
+                    },
+                    {
+                        id: 1,
+                        avatar: '/img/prof_icon.png',
+                        name: 'Black S. Panther',
+                        time: '3m ago',
+                        message: 'Sound like fun! Count me in!',
+                    },
+                ]
+            }
         }
+
+        this.loadPostData = this.loadPostData.bind(this);
     }
 
     _handleComment = (e, index) => {
@@ -41,6 +71,14 @@ class PostUser extends React.Component {
                 this.setState({postComments: ''});
             }
         }
+    }
+
+    loadPostData(){
+        console.log('load post information -> ', this.state.post_id);
+    }
+
+    componentDidMount(){
+        this.loadPostData();
     }
 
     render () {

@@ -15,6 +15,7 @@ class Timeline extends React.Component {
             postMessage: '',
             postComments: '',
             openAttach: false,
+            post_list: [1,2,3],
             posts: [
                 {
                     id: 1,
@@ -152,7 +153,7 @@ class Timeline extends React.Component {
     }
 
     render () {
-        const { posts } = this.state
+        const { posts } = this.state.post_list;
         
         return (
             <div className="timeline-inner">
@@ -202,8 +203,8 @@ class Timeline extends React.Component {
                     </div>
                 </div>
 
-                {posts.map((post) => (
-                    <PostUser postinfo={post}  />
+                {this.state.post_list.map((post, i) => (
+                    <PostUser postinfo={post} key={i}  />
                 ))}
 
             </div>
