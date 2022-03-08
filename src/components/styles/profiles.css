@@ -492,6 +492,7 @@ ul.tabtitles > li {
 .challengebuttom .dc-left-item {
     display: inline-block;
     margin-right: 10px;
+    cursor: pointer;
 }
 .challengebuttom .dc-left-item .dicon {
     display: inline-block;
@@ -675,6 +676,7 @@ ul.tabtitles > li {
 .challengebuttom.dtimeline .dcright {
     right: -20px;
     bottom: -20px;
+    cursor: pointer;
 }
 
 .dtm-comments {

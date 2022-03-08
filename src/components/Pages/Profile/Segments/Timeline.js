@@ -1,6 +1,8 @@
 import './../../../styles/profiles.css';
 import React from 'react';
 
+import PostUser from './PostUser'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSmile } from '@fortawesome/free-regular-svg-icons'
 
@@ -14,6 +16,35 @@ class Timeline extends React.Component {
             postComments: '',
             openAttach: false,
             posts: [
+                {
+                    id: 1,
+                    avatar: '/img/user_main.jpg',
+                    name: 'John Peter Doe',
+                    time: '5m ago',
+                    message: [
+                        {
+                            text: 'Think i wanna do the bookwork challenge soon, haven\'t read a book since! Who wants to join?',
+                            image: '',
+                        }
+                    ],
+                    comments: [
+                        {
+                            id: 1,
+                            avatar: '/img/prof_icon.png',
+                            name: 'John S. White',
+                            time: '3m ago',
+                            message: 'Sound like fun! Count me in!',
+                        },
+                        {
+                            id: 1,
+                            avatar: '/img/prof_icon.png',
+                            name: 'Black S. Panther',
+                            time: '3m ago',
+                            message: 'Sound like fun! Count me in!',
+                        },
+                    ]
+    
+                },
                 {
                     id: 1,
                     avatar: '/img/user_main.jpg',
@@ -125,7 +156,6 @@ class Timeline extends React.Component {
         
         return (
             <div className="timeline-inner">
-                {/* BOF add post */}
                 <div className="tm-onmind">
                     <div className="om-inner">
                         <div className="dprofpic">
@@ -171,195 +201,11 @@ class Timeline extends React.Component {
                         </div>
                     </div>
                 </div>
-                {/* EOF add post */}
-                {/* BOF post list */}
 
-                {
-                   posts.map((post, i) => (
-                        <div className="dtimelinemain" key={i}>
-                            <div className="dtm-inner">
-                                {/* BOF post item */}
-                                <div className="dtm-item">
-                                    <div className="dtm-item-inner">
-                                        <div className="dtm-header">
-                                            <div className="dtm-item-image">
-                                                <div className="dtm-item-image-inner">
-                                                    <img alt="" src="/img/user_main.jpg"/>
-                                                </div>
-                                            </div>
-                                            <div className="dtm-item-info">
-                                                <div className="dtm-item-info-inner">
-                                                    <h3>{ post.name }</h3>
-                                                    <div className="subinfo">{ post.time }</div>
-                                                </div>
-                                            </div>
-                                            <br className="clear" />
-                                        </div>
-                                        <div className="dtm-content">
-                                            {
-                                                post.message.map((mess, index) => (
-                                                    <div className="dtm-content-inner" key={index}>
-                                                        { mess.text }
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                        <div className="challengebuttom dtimeline">
-                                            <div className="dcb-inner">
-                                                <div className="dcleft">
-                                                    <div className="dc-left-item">
-                                                        <div className="dicon">
-                                                            <div className="dclikable">
-                                                                <img alt="" src="/img/like.png"/>
-                                                            </div>
-                                                        </div>
-                                                        <div className="dvals">
-                                                            <div className="dv-inner">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="dc-left-item">
-                                                        <div className="dicon">
-                                                            <div className="dclikable">
-                                                                <img alt="" src="/img/dislike.png"/>
-                                                            </div>
-                                                        </div>
-                                                        <div className="dvals">
-                                                            <div className="dv-inner">
-                                                                0
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="dcright">
-                                                    <div className="dccomment">
-                                                        <img alt="" src="/img/comment.png"/>
-                                                    </div>
-                                                </div>
-                                                <br className="clear" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="dtm-comments">
-                                        <div className="drm-comments-inner">
-                                            {
-                                                post.comments.map((comment, index) => (
-                                                    <div className="dtm-comment-inner" key={index}>
-                                                        <div className="dtm-comment-image">
-                                                            <img alt="" src={comment.avatar} />
-                                                        </div>
-                                                        <div className="dtm-comment-content">
-                                                            <div className="dpagetitle">{ comment.name }<span className="dtime">{ comment.time }</span></div>
-                                                            <div className="dcommentcontent">
-                                                                <div className="dcm-text">{ comment.message }</div>
-                                                                <div className="dcm-options">
-                                                                    <div className="doptleft">
-                                                                        <div className="dc-left-item">
-                                                                            <div className="dicon">
-                                                                                <div className="dclikable">
-                                                                                    <img alt="" src="/img/like.png"/>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="dvals">
-                                                                                <div className="dv-inner">
-                                                                                    0
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="dc-left-item">
-                                                                            <div className="dicon">
-                                                                                <div className="dclikable">
-                                                                                    <img alt="" src="/img/dislike.png"/>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="dvals">
-                                                                                <div className="dv-inner">
-                                                                                    0
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="doptright">
-                                                                        <button>Reply</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            }
+                {posts.map((post) => (
+                    <PostUser postinfo={post}  />
+                ))}
 
-
-                                            {/* <div className="dtm-comment-inner">
-                                                <div className="dtm-comment-image">
-                                                    <img src="/img/prof_icon.png"/>
-                                                </div>
-                                                <div className="dtm-comment-content">
-                                                    <div className="dpagetitle">Black S. Panther <span className="dtime">3m ago</span></div>
-                                                    <div className="dcommentcontent">
-                                                        <div className="dcm-text">Sound like fun! Count me in!</div>
-                                                        <div className="dcm-options">
-                                                            <div className="doptleft">
-                                                                <div className="dc-left-item">
-                                                                    <div className="dicon">
-                                                                        <div className="dclikable">
-                                                                            <img src="/img/like.png"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="dvals">
-                                                                        <div className="dv-inner">
-                                                                            0
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="dc-left-item">
-                                                                    <div className="dicon">
-                                                                        <div className="dclikable">
-                                                                            <img src="/img/dislike.png"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="dvals">
-                                                                        <div className="dv-inner">
-                                                                            0
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="doptright">
-                                                                <button>Reply</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> */}
-                                            <div className="dreplypart">
-                                                <div className="dr-inner">
-                                                    <div className="dpartimage">
-                                                        <div className="dpimage"><img alt="" src="/img/user_main.jpg"/></div>
-                                                    </div>
-                                                    <div className="dformpart">
-                                                        <div className="dforminner">
-                                                            <div className="dftextarea">
-                                                                <textarea value={this.state.postComments} onKeyDown={(e) => this._handleComment(e, i)} onChange={this.handleCommentChange} name="" id="" placeholder="Leave a comment"></textarea>
-                                                            </div>
-                                                            <div className="demoticons">
-                                                                <button><FontAwesomeIcon icon={faSmile} /></button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* EOF post item */}
-                            </div>
-                        </div>
-                    ))
-                }
-
-                {/* EOF post list */}
             </div>
         )
     }
