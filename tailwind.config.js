@@ -82,6 +82,7 @@ module.exports = {
       vici_success: '#7DCC88',
       vici_error: '#eb5757',
       vici_primary_text: '#1F1521',
+      other_challenges_opacity: '#9299ad',
     },
     extend: {
       width: {

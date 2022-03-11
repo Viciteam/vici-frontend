@@ -1,11 +1,260 @@
 import React from 'react';
-
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { DateRangePicker } from 'react-date-range';
+import moment from 'moment';
 class Actions extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectRange: false,
+            selectedDate: 'Select Date',
+            selectionRange: {
+                startDate: new Date(),
+                endDate: new Date(),
+                key: 'selection',
+            }
+        };
+        this.handleSelectRange = this.handleSelectRange.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
+        this.handleSubmitSelected = this.handleSubmitSelected.bind(this);
+    }
 
+    handleSelectRange() {
+        if(this.state.selectRange){
+            this.setState({ selectRange: false });
+        }else{
+            this.setState({ selectRange: true });
+        }
+        
+    }
+    handleSubmitSelected() {
+        this.setState({ selectRange: false });
+    }
+    handleSelect(ranges){
+        console.log(ranges);
+        this.setState({
+            selectionRange: {
+                startDate: ranges.selection.startDate,
+                endDate: ranges.selection.endDate,
+                key: 'selection',
+            },
+            //selectRange: false
+          });
+        
+        let dateStart = moment(ranges.selection.startDate).format("DD MMM YYYY");
+        let dateEnd = moment(ranges.selection.endDate).format("DD MMM YYYY");
+        this.setState({ selectedDate: dateStart + ' - ' +  dateEnd});
+        console.log('date start', dateStart)
+    }
     render () {
         return (
-            <div>
-                Actions
+            <div className="mt-6 pb-12 px-3">
+                <div className="flex justify-between">
+                    <div className="text-xl font-bold text-vici_secondary_text">Actions</div>
+                    <div className="relative">
+                        <button className="font-bold px-4 py-2 border rounded-lg border-bottom_gray flex text-xs text-vici_primary_text" onClick={this.handleSelectRange}>
+                            { this.state.selectedDate }
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 mt-0" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        {
+                            this.state.selectRange && 
+                            <div className="absolute right-0 top-8">
+                                <DateRangePicker
+                                    ranges={[this.state.selectionRange]}
+                                    onChange={this.handleSelect}
+                                    moveRangeOnFirstSelection={false}
+                                    editableDateInputs={true}
+                                />
+                                <div className="flex justify-end">
+                                    <button onClick={this.handleSubmitSelected} className="px-3 py-2 bg-primary_color text-white_color text-sm rounded-lg">Close</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div className="shadow-vici mt-6 p-6 flex">
+                    <div className="w-1/4 border-r border-bottom_gray py-3">
+                        <div className="text-xl font-bold text-other_challenges">Morning Routine</div>
+                        <div className="flex mt-2">
+                            <img src="/img/explore/avatar.png" />
+                            <div className="text-xs font-bold pl-2 pt-1">John S. Green</div>
+                        </div>
+                    </div>
+                    <div className="w-1/4 pt-4">
+                        <div className="flex justify-center">
+                            <div className="font-bold text-2xl">498</div>
+                        </div>
+                        <div className="text-sm text-center">Total Actions Completed</div>
+                    </div>
+                    <div className="w-1/4 pt-4">
+                        <div className="flex justify-center">
+                            <div className="font-bold text-2xl text-other_challenges">5</div>
+                        </div>
+                        <div className="text-sm text-center">Total Actions Failed</div>
+                    </div>
+                    <div className="w-1/4 pt-4">
+                        <div className="flex justify-center">
+                            <div className="font-bold text-2xl text-other_challenges">15</div>
+                        </div>
+                        <div className="text-sm text-center">Total Actions Verified</div>
+                    </div>
+                </div>
+                <div className="shadow-vici mt-6 rounded-b-xl pb-6">
+                    <div className="flex justify-between rounded-t-3xl px-8 py-2 mb-3 bg-other_challenges">
+                        <div className="text-xl text-white_color">Actions</div>
+                        <div className="flex">
+                            <button className="pb-0 flex pt-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white_color" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                <span className="text-sm text-white_color pl-2">Add an action</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="py-4 px-6 flex justify-between">
+                        <div>Run 1 km-Due today</div>
+                        <div>
+                            <button className="text-vici_secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div className="py-4 px-6 flex justify-between">
+                        <div>Lorem Ipsum another action - Due today</div>
+                        <div>
+                            <button className="text-vici_secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div className="py-4 px-6 flex justify-between">
+                        <div>Eat a healthy breakfast - Due today</div>
+                        <div>
+                            <button className="text-vici_secondary">Edit</button>
+                        </div>
+                    </div>
+                    <div className="py-4 px-6 flex justify-between">
+                        <div>Eat a healthy breakfast - Due today</div>
+                        <div>
+                            <button className="text-vici_secondary">Edit</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="shadow-vici mt-6 rounded-2xl p-6">
+                    <div className="flex justify-between">
+                        <div className="font-bold">Verify Actions (24)</div>
+                        <div className="flex">
+                            <div className="text-sm pr-3">Sort by: Name</div>
+                            <button>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="p-3">
+                        <table className="table-auto w-full">
+                            <thead className="border-b py-3 border-vici_gray">
+                                <tr className="py-3">
+                                    <th className="py-3 text-left font-normal text-vici_secondary_text">Participant</th>
+                                    <th className="py-3 text-left font-normal text-vici_secondary_text">Action name</th>
+                                    <th className="py-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td className="py-3">
+                                        <div className="flex">
+                                            <input type="checkbox" className="mt-2 mr-3 border-vici_gray"/>
+                                            <img src="/img/explore/avatar.png" width={30} />
+                                            <span className="text-sm pl-3 pt-1">Lorem Ipsum</span>
+                                        </div>
+                                    </td>
+                                    <td>Eat a healthy breakfast</td>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            <button className="text-vici_secondary text-sm">Verify Action</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="py-3">
+                                        <div className="flex">
+                                            <input type="checkbox" className="mt-2 mr-3 border-vici_gray"/>
+                                            <img src="/img/explore/avatar.png" width={30} />
+                                            <span className="text-sm pl-3 pt-1">Lorem Ipsum</span>
+                                        </div>
+                                    </td>
+                                    <td>Eat a healthy breakfast</td>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            <button className="text-vici_secondary text-sm">Verify Action</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="py-3">
+                                        <div className="flex">
+                                            <input type="checkbox" className="mt-2 mr-3 border-vici_gray"/>
+                                            <img src="/img/explore/avatar.png" width={30} />
+                                            <span className="text-sm pl-3 pt-1">Lorem Ipsum</span>
+                                        </div>
+                                    </td>
+                                    <td>Eat a healthy breakfast</td>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            <button className="text-vici_secondary text-sm">Verify Action</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="py-3">
+                                        <div className="flex">
+                                            <input type="checkbox" className="mt-2 mr-3 border-vici_gray"/>
+                                            <img src="/img/explore/avatar.png" width={30} />
+                                            <span className="text-sm pl-3 pt-1">Lorem Ipsum</span>
+                                        </div>
+                                    </td>
+                                    <td>Eat a healthy breakfast</td>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            <button className="text-vici_secondary text-sm">Verify Action</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="py-3">
+                                        <div className="flex">
+                                            <input type="checkbox" className="mt-2 mr-3 border-vici_gray"/>
+                                            <img src="/img/explore/avatar.png" width={30} />
+                                            <span className="text-sm pl-3 pt-1">Lorem Ipsum</span>
+                                        </div>
+                                    </td>
+                                    <td>Eat a healthy breakfast</td>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            <button className="text-vici_secondary text-sm">Verify Action</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td className="py-3">
+                                        <div className="flex">
+                                            <input type="checkbox" className="mt-2 mr-3 border-vici_gray"/>
+                                            <img src="/img/explore/avatar.png" width={30} />
+                                            <span className="text-sm pl-3 pt-1">Lorem Ipsum</span>
+                                        </div>
+                                    </td>
+                                    <td>Eat a healthy breakfast</td>
+                                    <td>
+                                        <div className="flex justify-center">
+                                            <button className="text-vici_secondary text-sm">Verify Action</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         )
     }
