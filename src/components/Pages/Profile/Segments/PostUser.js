@@ -13,13 +13,15 @@ class PostUser extends React.Component {
             isactive: this.props.isactive,
             post_id: this.props.postinfo,
             post: [],
-            comments: []
+            comments: [],
+            buildComment: ''
         }
 
         this.loadPostData = this.loadPostData.bind(this);
         this.addPostReaction = this.addPostReaction.bind(this);
         this.addCommentReaction = this.addCommentReaction.bind(this);
         this.viewComment = this.viewComment.bind(this);
+        this.postComment = this.postComment.bind(this);
     }
 
     _handleComment = (e, index) => {
@@ -191,13 +193,38 @@ class PostUser extends React.Component {
     }
 
     viewComment(){
+
         let post_info = this.state.post;
 
         post_info.view_comment = !post_info.view_comment;
 
         this.setState({post: post_info});
     }
+
+    postComment(text){
+        console.log('text ->', text);
+        this.setState({buildComment: text});
+    }
     
+    processComment(){
+        let comments_infos = this.state.comments;
+        let comment_to_add = this.state.buildComment;
+
+        let comment_build = {
+            id: 3,
+            avatar: '/img/prof_icon.png',
+            name: 'John S. White',
+            time: '3m ago',
+            message: comment_to_add,
+            like: 0,
+            dislike: 0,
+            islikeselected: ''
+        };
+
+        comments_infos.push(comment_build);
+        this.setState({comments: comments_infos});
+        this.setState({buildComment: ''});
+    }
 
     componentDidMount(){
         this.loadPostData();
@@ -323,10 +350,10 @@ class PostUser extends React.Component {
                                             <div className="dformpart">
                                                 <div className="dforminner">
                                                     <div className="dftextarea">
-                                                        <textarea value={this.state.postComments} onKeyDown={(e) => this._handleComment(e, this.state.post.id)} onChange={this.handleCommentChange} name="" id="" placeholder="Leave a comment"></textarea>
+                                                        <textarea value={this.state.buildComment} onChange={(e) => this.postComment(e.target.value)} name="" id="" placeholder="Leave a comment"></textarea>
                                                     </div>
                                                     <div className="demoticons">
-                                                        <button><FontAwesomeIcon icon={faSmile} /></button>
+                                                        <button onClick={() => this.processComment()}><FontAwesomeIcon icon={faSmile} /></button>
                                                     </div>
                                                 </div>
                                             </div>
