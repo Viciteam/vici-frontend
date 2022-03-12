@@ -490,12 +490,12 @@ ul.tabtitles > li {
     position: relative;
 }
 
-.challengebuttom.dtimeline .dcleft.has-selected-item .dc-left-item {
+/* .challengebuttom.dtimeline .dcleft.has-selected-item .dc-left-item {
     display: none;
 }
 .challengebuttom.dtimeline .dcleft.has-selected-item .dc-left-item.isactive_tab {
     display: block;
-}
+} */
 .challengebuttom .dc-left-item {
     display: inline-block;
     margin-right: 10px;

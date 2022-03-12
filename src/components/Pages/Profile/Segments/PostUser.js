@@ -17,6 +17,7 @@ class PostUser extends React.Component {
 
         this.loadPostData = this.loadPostData.bind(this);
         this.addPostReaction = this.addPostReaction.bind(this);
+        this.addCommentReaction = this.addCommentReaction.bind(this);
     }
 
     _handleComment = (e, index) => {
@@ -78,17 +79,19 @@ class PostUser extends React.Component {
                 name: 'John S. White',
                 time: '3m ago',
                 message: 'Sound like fun! Count me in!',
-                like: 0,
-                dislike: 2
+                like: 1,
+                dislike: 2,
+                islikeselected: 'like'
             },
             {
-                id: 1,
+                id: 2,
                 avatar: '/img/prof_icon.png',
                 name: 'Black S. Panther',
                 time: '3m ago',
                 message: 'Sound like fun! Count me in!',
                 like: 0,
-                dislike: 2
+                dislike: 2,
+                islikeselected: ''
             },
         ];
         this.setState({comments: comments_data});
@@ -137,6 +140,51 @@ class PostUser extends React.Component {
         }
 
         this.setState({post: post_info});
+    }
+
+    addCommentReaction(reaction, index){
+        let comments = this.state.comments;
+
+        if(comments[index].islikeselected == ''){
+            console.log('not liked anything');
+
+            if(reaction == 'like'){
+                let likevals = comments[index].like;
+                comments[index].like = likevals + 1;
+            }
+
+            if(reaction == 'dislike'){
+                let dislikevals = comments[index].dislike;
+                comments[index].dislike = dislikevals + 1;
+            }
+            comments[index].islikeselected = reaction;
+
+        } else {
+            console.log('has liked -> ', comments[index].islikeselected);
+
+            let postSelected = comments[index].islikeselected;
+            if(reaction == postSelected){
+                if(reaction == 'like'){
+                    console.log('+1 like');
+                    let likevals = comments[index].like;
+                    comments[index].like = likevals - 1;
+                }
+    
+                if(reaction == 'dislike'){
+                    console.log('+1 dislike');
+                    let dislikevals = comments[index].dislike;
+                    comments[index].dislike = dislikevals - 1;
+                }
+                comments[index].islikeselected = '';
+
+            }
+
+        }
+
+        this.setState({comments: comments});
+
+
+        // console.log('selected index ->', selected_comment);
     }
     
 
@@ -226,20 +274,20 @@ class PostUser extends React.Component {
                                                         <div className="dcm-text">{ comment.message }</div>
                                                         <div className="dcm-options">
                                                             <div className="doptleft">
-                                                                <div className="dc-left-item">
+                                                                <div className="dc-left-item" onClick={() => this.addCommentReaction('like', index)}>
                                                                     <div className="dicon">
                                                                         <div className="dclikable">
-                                                                            <img alt="" src="/img/like.png"/>
+                                                                            <img alt="" src={(comment.islikeselected == 'like' ? '/img/like_h.png' : '/img/like.png')}/>
                                                                         </div>
                                                                     </div>
                                                                     <div className="dvals">
                                                                         <div className="dv-inner">{comment.like}</div>
                                                                     </div>
                                                                 </div>
-                                                                <div className="dc-left-item">
+                                                                <div className="dc-left-item" onClick={() => this.addCommentReaction('dislike', index)}>
                                                                     <div className="dicon">
                                                                         <div className="dclikable">
-                                                                            <img alt="" src="/img/dislike.png"/>
+                                                                            <img alt="" src={(comment.islikeselected == 'dislike' ? '/img/dislike_h.png' : '/img/dislike.png')}/>
                                                                         </div>
                                                                     </div>
                                                                     <div className="dvals">
