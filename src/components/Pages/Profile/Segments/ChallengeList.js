@@ -17,9 +17,12 @@ class ChallengeList extends React.Component {
             },
             challengeComments: []
         }
-
+        
+        this.addPostReaction = this.addPostReaction.bind(this);
+        this.addCommentReaction = this.addCommentReaction.bind(this);
         this.getChallengeInfo = this.getChallengeInfo.bind(this);
         this.getChallengeComments = this.getChallengeComments.bind(this);
+        this.viewComment = this.viewComment.bind(this);
     }
 
     getChallengeInfo($id){
@@ -66,6 +69,101 @@ class ChallengeList extends React.Component {
             },
         ];
         this.setState({challengeComments: comments_data});
+    }
+
+    viewComment(){
+
+        let post_info = this.state.challenge_info;
+
+        post_info.view_comment = !post_info.view_comment;
+
+        this.setState({challenge_info: post_info});
+    }
+
+    addPostReaction(reaction){
+        
+        let post_info = this.state.challenge_info;
+
+        if(post_info.islikeselected == ''){ 
+            console.log('blank isliked');
+            if(reaction == 'like'){
+                console.log('+1 like');
+                let likevals = post_info.like;
+                post_info.like = likevals + 1;
+            }
+
+            if(reaction == 'dislike'){
+                console.log('+1 dislike');
+                let dislikevals = post_info.dislike;
+                post_info.dislike = dislikevals + 1;
+            }
+            post_info.islikeselected = reaction;
+        } else {
+            let postSelected = post_info.islikeselected;
+            if(reaction == postSelected){
+                if(reaction == 'like'){
+                    console.log('+1 like');
+                    let likevals = post_info.like;
+                    post_info.like = likevals - 1;
+                }
+    
+                if(reaction == 'dislike'){
+                    console.log('+1 dislike');
+                    let dislikevals = post_info.dislike;
+                    post_info.dislike = dislikevals - 1;
+                }
+                post_info.islikeselected = '';
+
+            }
+            
+        }
+
+        this.setState({challenge_info: post_info});
+    }
+
+    addCommentReaction(reaction, index){
+        let comments = this.state.challengeComments;
+
+        if(comments[index].islikeselected == ''){
+            console.log('not liked anything');
+
+            if(reaction == 'like'){
+                let likevals = comments[index].like;
+                comments[index].like = likevals + 1;
+            }
+
+            if(reaction == 'dislike'){
+                let dislikevals = comments[index].dislike;
+                comments[index].dislike = dislikevals + 1;
+            }
+            comments[index].islikeselected = reaction;
+
+        } else {
+            console.log('has liked -> ', comments[index].islikeselected);
+
+            let postSelected = comments[index].islikeselected;
+            if(reaction == postSelected){
+                if(reaction == 'like'){
+                    console.log('+1 like');
+                    let likevals = comments[index].like;
+                    comments[index].like = likevals - 1;
+                }
+    
+                if(reaction == 'dislike'){
+                    console.log('+1 dislike');
+                    let dislikevals = comments[index].dislike;
+                    comments[index].dislike = dislikevals - 1;
+                }
+                comments[index].islikeselected = '';
+
+            }
+
+        }
+
+        this.setState({challengeComments: comments});
+
+
+        // console.log('selected index ->', selected_comment);
     }
 
     componentDidMount(){
@@ -124,21 +222,21 @@ class ChallengeList extends React.Component {
                     </div>
                     <div className="challengebuttom">
                         <div className="dcb-inner">
-                            <div className="dcleft">
-                                <div className="dc-left-item">
+                            <div className={"dcleft " + (this.state.challenge_info.islikeselected != '' ? 'has-selected-item' : '')}>
+                                <div onClick={() => this.addPostReaction('like')} className={"dc-left-item " + (this.state.challenge_info.islikeselected == 'like' ? 'isactive_tab' : '')}>
                                     <div className="dicon">
                                         <div className="dclikable">
-                                            <img alt="" src="/img/like.png"/>
+                                            <img alt="" src={(this.state.challenge_info.islikeselected == 'like' ? '/img/like_h.png' : '/img/like.png')}/>
                                         </div>
                                     </div>
                                     <div className="dvals">
                                         <div className="dv-inner">{this.state.challenge_info.like}</div>
                                     </div>
                                 </div>
-                                <div className="dc-left-item">
+                                <div onClick={() => this.addPostReaction('dislike')} className={"dc-left-item " + (this.state.challenge_info.islikeselected == 'dislike' ? 'isactive_tab' : '')}>
                                     <div className="dicon">
                                         <div className="dclikable">
-                                            <img alt="" src="/img/dislike.png"/>
+                                            <img alt="" src={(this.state.challenge_info.islikeselected == 'dislike' ? '/img/dislike_h.png' : '/img/dislike.png')}/>
                                         </div>
                                     </div>
                                     <div className="dvals">
@@ -146,7 +244,7 @@ class ChallengeList extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="dcright">
+                            <div className="dcright" onClick={() => this.viewComment()}>
                                 <div className="dccomment">
                                     <img alt="" src="/img/comment.png"/>
                                 </div>
@@ -156,7 +254,7 @@ class ChallengeList extends React.Component {
                     </div>
                     
                 </div>
-                <div className={"dtm-comments " + (this.state.challenge_info.view_comment ? 'active_comments' : 'inactive_comments')}>
+                <div className={"dtm-comments " + (this.state.challenge_info.view_comment ? 'active_comments' : 'inactive_comments')} style={{marginTop: '45px'}}>
                         <div className="drm-comments-inner">
                             {
                                 this.state.challengeComments.map((comment, index) => (
