@@ -4,6 +4,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft} from '@fortawesome/free-solid-svg-icons'
 import { faSmile } from '@fortawesome/free-regular-svg-icons'
+import { fa } from 'faker/lib/locales';
 
 class PostUser extends React.Component {
     constructor(props){
@@ -18,6 +19,7 @@ class PostUser extends React.Component {
         this.loadPostData = this.loadPostData.bind(this);
         this.addPostReaction = this.addPostReaction.bind(this);
         this.addCommentReaction = this.addCommentReaction.bind(this);
+        this.viewComment = this.viewComment.bind(this);
     }
 
     _handleComment = (e, index) => {
@@ -66,7 +68,8 @@ class PostUser extends React.Component {
             ],
             like: 2,
             dislike: 3,
-            islikeselected: ''
+            islikeselected: '',
+            view_comment: true
         };
         this.setState({post: post_info});
     }
@@ -186,6 +189,14 @@ class PostUser extends React.Component {
 
         // console.log('selected index ->', selected_comment);
     }
+
+    viewComment(){
+        let post_info = this.state.post;
+
+        post_info.view_comment = !post_info.view_comment;
+
+        this.setState({post: post_info});
+    }
     
 
     componentDidMount(){
@@ -252,7 +263,7 @@ class PostUser extends React.Component {
                                             </div>
                                         </div>
                                         <div className="dcright">
-                                            <div className="dccomment">
+                                            <div className="dccomment" onClick={() => this.viewComment()}>
                                                 <img alt="" src="/img/comment.png"/>
                                             </div>
                                         </div>
@@ -260,7 +271,7 @@ class PostUser extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="dtm-comments">
+                            <div className={"dtm-comments " + (this.state.post.view_comment ? 'active_comments' : 'inactive_comments')}>
                                 <div className="drm-comments-inner">
                                     {
                                         this.state.comments.map((comment, index) => (
