@@ -147,8 +147,8 @@ class mainProfileContent extends React.Component{
                                             </div>
                                             <div className="absolute right-0 top-32 -mr-3 z-10">
                                                 <button onClick={() => this.scroll(160)} className="bg-white_color p-1 rounded-full text-vici_secondary">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                                     </svg>
                                                 </button>
                                             </div>
@@ -156,8 +156,8 @@ class mainProfileContent extends React.Component{
                                                 this.state.openLeftScroll &&
                                                 <div className="absolute left-0 top-32 -ml-3 z-10">
                                                     <button onClick={() => this.scroll(-160)} className="bg-white_color p-1 rounded-full text-vici_secondary">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
                                                         </svg>
                                                     </button>
                                                 </div>
