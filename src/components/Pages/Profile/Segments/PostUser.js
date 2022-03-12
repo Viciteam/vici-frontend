@@ -22,6 +22,7 @@ class PostUser extends React.Component {
         this.addCommentReaction = this.addCommentReaction.bind(this);
         this.viewComment = this.viewComment.bind(this);
         this.postComment = this.postComment.bind(this);
+        this.processComment = this.processComment.bind(this);
     }
 
     _handleComment = (e, index) => {

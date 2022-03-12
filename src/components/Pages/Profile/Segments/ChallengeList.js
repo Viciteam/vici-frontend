@@ -15,7 +15,8 @@ class ChallengeList extends React.Component {
             challenge_info: {
                 challenge_tags: []
             },
-            challengeComments: []
+            challengeComments: [],
+            buildComment: ''
         }
         
         this.addPostReaction = this.addPostReaction.bind(this);
@@ -23,6 +24,8 @@ class ChallengeList extends React.Component {
         this.getChallengeInfo = this.getChallengeInfo.bind(this);
         this.getChallengeComments = this.getChallengeComments.bind(this);
         this.viewComment = this.viewComment.bind(this);
+        this.postComment = this.postComment.bind(this);
+        this.processComment = this.processComment.bind(this);
     }
 
     getChallengeInfo($id){
@@ -164,6 +167,31 @@ class ChallengeList extends React.Component {
 
 
         // console.log('selected index ->', selected_comment);
+    }
+
+    postComment(text){
+        console.log('text ->', text);
+        this.setState({buildComment: text});
+    }
+
+    processComment(){
+        let comments_infos = this.state.challengeComments;
+        let comment_to_add = this.state.buildComment;
+
+        let comment_build = {
+            id: 3,
+            avatar: '/img/prof_icon.png',
+            name: 'John S. White',
+            time: '3m ago',
+            message: comment_to_add,
+            like: 0,
+            dislike: 0,
+            islikeselected: ''
+        };
+
+        comments_infos.push(comment_build);
+        this.setState({challengeComments: comments_infos});
+        this.setState({buildComment: ''});
     }
 
     componentDidMount(){
