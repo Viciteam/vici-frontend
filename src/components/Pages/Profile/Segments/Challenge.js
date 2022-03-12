@@ -34,7 +34,7 @@ class Challenge extends React.Component {
             challengeCurrentSteps: 1,
             challengeDesc: '',
             challengeName: '',
-            challengeList: [1,2,3]
+            challengeList: [1,2]
         }
         
         this.newChallenge = this.newChallenge.bind(this);
