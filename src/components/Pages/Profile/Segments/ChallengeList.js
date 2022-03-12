@@ -9,7 +9,8 @@ class ChallengeList extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            uinfo: this.props.uinfo
+            uinfo: this.props.uinfo,
+            challenge_id: this.props.challenge_id,
         }
     }
 

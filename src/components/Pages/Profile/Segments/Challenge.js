@@ -33,7 +33,8 @@ class Challenge extends React.Component {
             newChallengeModalOpen: false,
             challengeCurrentSteps: 1,
             challengeDesc: '',
-            challengeName: ''
+            challengeName: '',
+            challengeList: [1,2,3]
         }
         
         this.newChallenge = this.newChallenge.bind(this);
@@ -124,9 +125,9 @@ class Challenge extends React.Component {
                 </div> */}
                 <div className="dchallenge-list">
                     <div className="dch-inner">
-                        <ChallengeList />
-                        <ChallengeList />
-                        <ChallengeList />
+                        {this.state.challengeList.map((challenge, i) => (
+                            <ChallengeList challenge_id={challenge} key={i}  />
+                        ))}
                     </div>
                 </div>
             </div>
