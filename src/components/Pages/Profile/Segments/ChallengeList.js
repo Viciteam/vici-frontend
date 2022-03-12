@@ -43,7 +43,7 @@ class ChallengeList extends React.Component {
             like: 2,
             dislike: 3,
             islikeselected: '',
-            view_comment: true
+            view_comment: false
         };
         this.setState({challenge_info: challenge_information});
     }
