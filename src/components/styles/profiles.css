@@ -489,9 +489,20 @@ ul.tabtitles > li {
     padding: 0px 0px;
     position: relative;
 }
+
+/* .challengebuttom.dtimeline .dcleft.has-selected-item .dc-left-item {
+    display: none;
+}
+.challengebuttom.dtimeline .dcleft.has-selected-item .dc-left-item.isactive_tab {
+    display: block;
+} */
 .challengebuttom .dc-left-item {
     display: inline-block;
     margin-right: 10px;
+    cursor: pointer;
+}
+.challengebuttom .dc-left-item.isactive_tab .dvals{
+    color: #ffca28;
 }
 .challengebuttom .dc-left-item .dicon {
     display: inline-block;
@@ -675,10 +686,15 @@ ul.tabtitles > li {
 .challengebuttom.dtimeline .dcright {
     right: -20px;
     bottom: -20px;
+    cursor: pointer;
 }
 
 .dtm-comments {
     margin-top: 25px;
+}
+
+.dtm-comments.inactive_comments {
+    display: none;
 }
 
 .dtm-comment-inner {
@@ -701,6 +717,7 @@ ul.tabtitles > li {
 .dtm-comments .dtm-comment-inner .dtm-comment-content .dpagetitle span.dtime {
     font-size: 12px;
     color: #a0a8b0;
+    margin-left: 10px;
 }
 
 .dcommentcontent .dcm-text {
@@ -723,6 +740,7 @@ ul.tabtitles > li {
 .dcm-options .doptleft .dc-left-item {
     display: inline-block;
     margin-right: 13px;
+    cursor: pointer;
 }
 .dcm-options .doptleft .dc-left-item > div {
     display: inline-block;
@@ -773,6 +791,7 @@ ul.tabtitles > li {
     width: 100%;
     font-size: 14px;
     height: 30px;
+    background: none;
 }
 .dreplypart .dformpart .dforminner .demoticons {
     display: inline-block;
