@@ -23,6 +23,8 @@ class PostUser extends React.Component {
         this.viewComment = this.viewComment.bind(this);
         this.postComment = this.postComment.bind(this);
         this.processComment = this.processComment.bind(this);
+        this.processCommentSend = this.processCommentSend.bind(this);
+        this.prepCommentHolder = this.prepCommentHolder.bind(this);
     }
 
     _handleComment = (e, index) => {
@@ -94,7 +96,7 @@ class PostUser extends React.Component {
                 avatar: '/img/prof_icon.png',
                 name: 'Black S. Panther',
                 time: '3m ago',
-                message: 'Sound like fun! Count me in!',
+                message: 'Sound like fun!\nCount me in!',
                 like: 0,
                 dislike: 2,
                 islikeselected: ''
@@ -197,21 +199,43 @@ class PostUser extends React.Component {
         this.setState({post: post_info});
     }
 
-    postComment(text){
-        console.log('text ->', text);
-        this.setState({buildComment: text});
+    processCommentSend(e){
+        // console.log('text ->', e.key);
+        if(e.key === 'Enter'){
+            if(e.shiftKey){
+                // console.log('has shift key pressed');
+
+            } else {
+                // console.log('has pressed enter');
+                this.processComment();
+                e.preventDefault();
+            }
+        }
+    }
+
+    postComment(e){
+        let textbase = e.target.value;
+        console.log('text ->', textbase);
+        this.setState({buildComment: textbase});
+    }
+
+    prepCommentHolder(text){
+        console.log(text);
+        let newText = text.split('\n').map(str => <p>{str}</p>);
+        return newText;
     }
     
     processComment(){
         let comments_infos = this.state.comments;
         let comment_to_add = this.state.buildComment;
+        let newCommentContent = comment_to_add.replace(/(?:\r\n|\r|\n)/g, '\n');
 
         let comment_build = {
             id: 3,
             avatar: '/img/prof_icon.png',
             name: 'John S. White',
             time: '3m ago',
-            message: comment_to_add,
+            message: newCommentContent,
             like: 0,
             dislike: 0,
             islikeselected: ''
@@ -305,7 +329,7 @@ class PostUser extends React.Component {
                                                 <div className="dtm-comment-content">
                                                     <div className="dpagetitle">{ comment.name }<span className="dtime">{ comment.time }</span></div>
                                                     <div className="dcommentcontent">
-                                                        <div className="dcm-text">{ comment.message }</div>
+                                                        <div className="dcm-text">{ this.prepCommentHolder(comment.message) }</div>
                                                         <div className="dcm-options">
                                                             <div className="doptleft">
                                                                 <div className="dc-left-item" onClick={() => this.addCommentReaction('like', index)}>
@@ -346,7 +370,7 @@ class PostUser extends React.Component {
                                             <div className="dformpart">
                                                 <div className="dforminner">
                                                     <div className="dftextarea">
-                                                        <textarea value={this.state.buildComment} onChange={(e) => this.postComment(e.target.value)} name="" id="" placeholder="Leave a comment"></textarea>
+                                                    <textarea value={this.state.buildComment} onKeyPress={(event) => this.processCommentSend(event)} onChange={(e) => this.postComment(e)} name="" id="" placeholder="Leave a comment"></textarea>
                                                     </div>
                                                     <div className="demoticons">
                                                         <button onClick={() => this.processComment()}><FontAwesomeIcon icon={faSmile} /></button>
