@@ -189,8 +189,8 @@ class SideProfile extends React.Component {
                                    <img src="/img/dummy/fitness.png" />
                                    <span className="pl-1">Fitness Clan</span>
                                    <button>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                                         </svg>
                                    </button>
                                 </div>
@@ -299,9 +299,9 @@ class SideProfile extends React.Component {
                                 </svg>
                             </a>
                             <a href="#" className="">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                             </a>
                         </div>
@@ -336,7 +336,7 @@ class SideProfile extends React.Component {
                                 <div className="flex">
                                     {
                                         badges.map((item, i) => (
-                                            <img src={item.badge} className="w-8 h-8 ml-2" />
+                                            <img src={item.badge} key={i} className="w-8 h-8 ml-2" />
                                         ))
                                     }
                                 </div>
@@ -365,8 +365,8 @@ class SideProfile extends React.Component {
                                         <img src={this.state.emoji} />
                                         <span className="text-sm font-bold pl-2 pt-1 capitalize">{ this.state.emojiText }</span>
                                         <div className="pt-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                                             </svg>
                                         </div>
                                     </div>
@@ -375,7 +375,7 @@ class SideProfile extends React.Component {
                                         <div className="absolute p-3 bg-white_color w-32 shadow-card_border rounded-md">
                                             {
                                                 emojis.map((item, i) => (
-                                                    <div onClick={()=>this.setState({ emoji: item.emoji, emojiText: item.name, openEmojis: false})} className="flex py-2 cursor-pointer">
+                                                    <div onClick={()=>this.setState({ emoji: item.emoji, emojiText: item.name, openEmojis: false})} key={i} className="flex py-2 cursor-pointer">
                                                         <img src={item.emoji} />
                                                         <span className="capitalize text-sm font-bold pl-2">{ item.name }</span>
                                                     </div>
