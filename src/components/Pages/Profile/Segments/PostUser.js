@@ -6,6 +6,11 @@ import { faArrowLeft} from '@fortawesome/free-solid-svg-icons'
 import { faSmile } from '@fortawesome/free-regular-svg-icons'
 import { fa } from 'faker/lib/locales';
 
+import auth from '../../../../services/auth';
+import CookieService from '../../../../services/CookieService';
+
+import LoginModal from '../../Auth/LoginModal';
+
 class PostUser extends React.Component {
     constructor(props){
         super(props);
@@ -25,35 +30,9 @@ class PostUser extends React.Component {
         this.processComment = this.processComment.bind(this);
         this.processCommentSend = this.processCommentSend.bind(this);
         this.prepCommentHolder = this.prepCommentHolder.bind(this);
-    }
 
-    _handleComment = (e, index) => {
-        if (e.key === 'Enter') {
-            let array = [...this.state.posts]; // make a separate copy of the array
-            const newComment = {
-                avatar: '/img/prof_icon.png',
-                name: 'John S. White',
-                time: '3m ago',
-                message: this.state.postComments,
-            }
-            if (index !== -1) {
-                array.forEach((elem, i) =>{
-                    if(index === i){
-                        const data = {
-                            avatar: '/img/user_main.jpg',
-                            name: 'John Peter Doe',
-                            time: '5m ago',
-                            message: [...elem.message],
-                            comments: [...elem.comments, newComment],
-                        }
-                        array.splice(index, 1, data);
-                    }
-                })
-                //array.splice(index, 1);
-                this.setState({posts: array});
-                this.setState({postComments: ''});
-            }
-        }
+        this.handleOpenLogin = this.handleOpenLogin.bind(this);
+        this.handleCloseLogin = this.handleCloseLogin.bind(this);
     }
 
     loadPostData(){
@@ -232,8 +211,8 @@ class PostUser extends React.Component {
 
         let comment_build = {
             id: 3,
-            avatar: '/img/prof_icon.png',
-            name: 'John S. White',
+            avatar: this.profile_main_image(),
+            name: auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User',
             time: '3m ago',
             message: newCommentContent,
             like: 0,
@@ -244,6 +223,29 @@ class PostUser extends React.Component {
         comments_infos.push(comment_build);
         this.setState({comments: comments_infos});
         this.setState({buildComment: ''});
+    }
+
+    profile_main_image(){
+        let show_image = '';
+        const user_profile = CookieService.get("user_profile");
+        if(user_profile !== undefined ){
+            if(user_profile.fb_user_id !== undefined){
+                console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        } else {
+            return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+        }
+    }
+
+    handleOpenLogin(){
+        this.setState({ openModal: true });
+    }
+
+    handleCloseLogin(){
+        this.setState({ openModal: false });
     }
 
     componentDidMount(){
@@ -364,19 +366,36 @@ class PostUser extends React.Component {
                                     }
                                     <div className="dreplypart">
                                         <div className="dr-inner">
-                                            <div className="dpartimage">
-                                                <div className="dpimage"><img alt="" src="/img/user_main.jpg"/></div>
-                                            </div>
-                                            <div className="dformpart">
-                                                <div className="dforminner">
-                                                    <div className="dftextarea">
-                                                    <textarea value={this.state.buildComment} onKeyPress={(event) => this.processCommentSend(event)} onChange={(e) => this.postComment(e)} name="" id="" placeholder="Leave a comment"></textarea>
+                                            {
+                                                auth.isAuthenticated() ? 
+                                                    <div>
+                                                        <div className="dpartimage">
+                                                            <div className="dpimage"><img alt="" src={this.profile_main_image()}/></div>
+                                                        </div>
+                                                        <div className="dformpart">
+                                                            <div className="dforminner">
+                                                                <div className="dftextarea">
+                                                                    <textarea value={this.state.buildComment} onKeyPress={(event) => this.processCommentSend(event)} onChange={(e) => this.postComment(e)} name="" id="" placeholder="Leave a comment"></textarea>
+                                                                </div>
+                                                                <div className="demoticons">
+                                                                    <button onClick={() => this.processComment()}><FontAwesomeIcon icon={faSmile} /></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="demoticons">
-                                                        <button onClick={() => this.processComment()}><FontAwesomeIcon icon={faSmile} /></button>
+                                                :
+                                                <div>
+                                                    <div className="dpartimage">
+                                                        &nbsp;
+                                                    </div>
+                                                    <div className="dformpart">
+                                                        <div className="dforminner dcommentloginnow">
+                                                            please <span onClick={this.handleOpenLogin} class="login_in_comment">login</span> to leave a comment 
+                                                        </div>
+                                                        {this.state.openModal && <LoginModal closeModal={this.handleCloseLogin } />}
                                                     </div>
                                                 </div>
-                                            </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>

@@ -9,6 +9,8 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import auth from '../../../../services/auth';
 import CookieService from '../../../../services/CookieService';
 
+import LoginModal from '../../Auth/LoginModal';
+
 class ChallengeList extends React.Component {
     constructor(props){
         super(props);
@@ -19,7 +21,8 @@ class ChallengeList extends React.Component {
                 challenge_tags: []
             },
             challengeComments: [],
-            buildComment: ''
+            buildComment: '',
+            openModal: false
         }
         
         this.addPostReaction = this.addPostReaction.bind(this);
@@ -32,6 +35,9 @@ class ChallengeList extends React.Component {
         this.processCommentSend = this.processCommentSend.bind(this);
         this.prepCommentHolder = this.prepCommentHolder.bind(this);
         this.profile_main_image = this.profile_main_image.bind(this);
+
+        this.handleOpenLogin = this.handleOpenLogin.bind(this);
+        this.handleCloseLogin = this.handleCloseLogin.bind(this);
     }
 
     getChallengeInfo($id){
@@ -243,6 +249,14 @@ class ChallengeList extends React.Component {
         this.getChallengeInfo(this.state.challenge_id);
         this.getChallengeComments(this.state.challenge_id);
     }
+
+    handleOpenLogin(){
+        this.setState({ openModal: true });
+    }
+
+    handleCloseLogin(){
+        this.setState({ openModal: false });
+    }
     
 
     render () {
@@ -374,19 +388,37 @@ class ChallengeList extends React.Component {
                             }
                             <div className="dreplypart">
                                 <div className="dr-inner">
-                                    <div className="dpartimage">
-                                        <div className="dpimage"><img alt="" src="/img/user_main.jpg"/></div>
-                                    </div>
-                                    <div className="dformpart">
-                                        <div className="dforminner">
-                                            <div className="dftextarea">
-                                                <textarea value={this.state.buildComment} onKeyPress={(event) => this.processCommentSend(event)} onChange={(e) => this.postComment(e)} name="" id="" placeholder="Leave a comment"></textarea>
+                                    {
+                                        auth.isAuthenticated() ? 
+                                            <div>
+                                                <div className="dpartimage">
+                                                    <div className="dpimage"><img alt="" src={this.profile_main_image()}/></div>
+                                                </div>
+                                                <div className="dformpart">
+                                                    <div className="dforminner">
+                                                        <div className="dftextarea">
+                                                            <textarea value={this.state.buildComment} onKeyPress={(event) => this.processCommentSend(event)} onChange={(e) => this.postComment(e)} name="" id="" placeholder="Leave a comment"></textarea>
+                                                        </div>
+                                                        <div className="demoticons">
+                                                            <button onClick={() => this.processComment()}><FontAwesomeIcon icon={faSmile} /></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="demoticons">
-                                                <button onClick={() => this.processComment()}><FontAwesomeIcon icon={faSmile} /></button>
+                                        :
+                                        <div>
+                                            <div className="dpartimage">
+                                                &nbsp;
+                                            </div>
+                                            <div className="dformpart">
+                                                <div className="dforminner dcommentloginnow">
+                                                    please <span onClick={this.handleOpenLogin} class="login_in_comment">login</span> to leave a comment 
+                                                </div>
+                                                {this.state.openModal && <LoginModal closeModal={this.handleCloseLogin } />}
                                             </div>
                                         </div>
-                                    </div>
+                                    }
+                                    
                                 </div>
                             </div>
                         </div>
