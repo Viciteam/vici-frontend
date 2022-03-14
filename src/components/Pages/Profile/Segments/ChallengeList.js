@@ -6,6 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSmile } from '@fortawesome/free-regular-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
+import auth from '../../../../services/auth';
+import CookieService from '../../../../services/CookieService';
+
 class ChallengeList extends React.Component {
     constructor(props){
         super(props);
@@ -28,6 +31,7 @@ class ChallengeList extends React.Component {
         this.processComment = this.processComment.bind(this);
         this.processCommentSend = this.processCommentSend.bind(this);
         this.prepCommentHolder = this.prepCommentHolder.bind(this);
+        this.profile_main_image = this.profile_main_image.bind(this);
     }
 
     getChallengeInfo($id){
@@ -206,8 +210,8 @@ class ChallengeList extends React.Component {
 
         let comment_build = {
             id: 3,
-            avatar: '/img/prof_icon.png',
-            name: 'John S. White',
+            avatar: this.profile_main_image(),
+            name: auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User',
             time: '3m ago',
             message: newCommentContent,
             like: 0,
@@ -220,6 +224,21 @@ class ChallengeList extends React.Component {
         this.setState({buildComment: ''});
     }
 
+    profile_main_image(){
+        let show_image = '';
+        const user_profile = CookieService.get("user_profile");
+        if(user_profile !== undefined ){
+            if(user_profile.fb_user_id !== undefined){
+                console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        } else {
+            return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+        }
+    }
+
     componentDidMount(){
         this.getChallengeInfo(this.state.challenge_id);
         this.getChallengeComments(this.state.challenge_id);
@@ -227,6 +246,7 @@ class ChallengeList extends React.Component {
     
 
     render () {
+
         return (
             <div className="dch-item">
                 <div className="ditm-inner">
