@@ -22,6 +22,7 @@ class PostUser extends React.Component {
         this.addCommentReaction = this.addCommentReaction.bind(this);
         this.viewComment = this.viewComment.bind(this);
         this.postComment = this.postComment.bind(this);
+        this.processComment = this.processComment.bind(this);
     }
 
     _handleComment = (e, index) => {
@@ -105,11 +106,6 @@ class PostUser extends React.Component {
     addPostReaction(reaction){
         
         let post_info = this.state.post;
-        console.log('post-part -> ', post_info);
-        console.log('reaction -> ', reaction);
-
-        
-
         if(post_info.islikeselected == ''){ 
             console.log('blank isliked');
             if(reaction == 'like'){
