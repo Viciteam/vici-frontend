@@ -182,14 +182,14 @@ class ChallengeList extends React.Component {
     }
 
     prepCommentHolder(text){
-        console.log(text);
-        let newText = text.split('\n').map(str => <p>{str}</p>);
+        // console.log(text);
+        let newText = text.split('\n').map((str, i) => <p key={i}>{str}</p>);
         return newText;
     }
 
     postComment(e){
         let textbase = e.target.value;
-        console.log('text ->', textbase);
+        // console.log('text ->', textbase);
         this.setState({buildComment: textbase});
     }
 
@@ -274,8 +274,8 @@ class ChallengeList extends React.Component {
                             <h3><span className="dusername">{this.state.challenge_info.name}</span> created a <span className="dactivity">Challenge for herself!</span></h3>
                             <div className="dtime">{this.state.challenge_info.time}</div>
                             <div className="dtags">
-                                {this.state.challenge_info.challenge_tags.map((message) => (
-                                    <span>{message}</span>
+                                {this.state.challenge_info.challenge_tags.map((message, i) => (
+                                    <span key={i}>{message}</span>
                                 ))}
                             </div>
                         </div>

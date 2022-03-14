@@ -912,6 +912,9 @@ ul.tabtitles > li {
     font-weight: bold;
 }
 
+.d-friends-list {
+    cursor: pointer;
+}
 
 /* clan challenge */
 .cc-inner {
@@ -1828,6 +1831,45 @@ ul.tabtitles > li {
     line-height: 1em;
     font-size: 14px;
     font-weight: bold;
+}
+
+.d-open-new-message {
+    position: fixed;
+    bottom: 10px;
+    right: 30px;
+    width: 320px;
+    background: #fff;
+    box-shadow: 0 0 12px #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 9;
+}
+
+.d-new-message-container .d-open-header {
+    background: #FFCA28;
+    padding: 10px 20px;
+}
+
+.d-new-message-container .d-open-header > .d-image-part {
+    display: inline-block;
+    width: 20%;
+    vertical-align: middle;
+}
+
+.d-new-message-container .d-open-header > .d-image-part img {
+    width: 50px;
+}
+
+.d-new-message-container .d-open-header > .d-image-info {
+    display: inline-block;
+    width: 59%;
+    vertical-align: middle;
+}
+
+.d-new-message-container .d-open-header > .d-image-options {
+    display: inline-block;
+    width: 20%;
+    vertical-align: middle;
 }
 
 @media only screen and (max-width: 1022px) {
