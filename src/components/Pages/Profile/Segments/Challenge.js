@@ -14,13 +14,14 @@ import ReactModal from 'react-modal';
 
 import axios from 'axios'
 
+
 const api = axios.create({
   baseURL: 'https://api.vici.life/api/',
   headers: {
     'Content-Type' : 'application/json',
     'Accept' : 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Authorization' : 'Bearer 54|nDXR6RW6gzfF0P20tPIrjg68h6xpnZmNGdzSVVBM',
+    'Authorization' : 'Bearer '+auth.getAccessToken(),
   }
 })
 
@@ -84,6 +85,22 @@ class Challenge extends React.Component {
 
     }
 
+    getChallengeInfo(){
+        let self = this;
+
+        api.get('/getallchallenges', {})
+        .then((response) => {
+            // console.log('API response -> ', response.data.challenges);
+            let challenges = response.data.challenges;
+            let cids = [];
+            Object.keys(challenges).forEach(function(xkey) {
+                cids.push(challenges[xkey].id);
+            });
+
+            self.setState({challengeList: cids});
+        });
+    }
+
     proceedToNextStep(selectedStep){
         this.setState({ challengeCurrentSteps: selectedStep });
     }
@@ -100,29 +117,14 @@ class Challenge extends React.Component {
         this.setState({ challengeDesc: desc });
     }
 
+    componentDidMount(){
+        this.getChallengeInfo();
+    }
+
     render () {
 
         return (
             <div className="challenges-inner">
-                {/* <div className="dchallemgeheader">
-                    <div className="dc-inner">
-                        <div className="dci-left">
-                            <button onClick={this.handleOpenModal}>
-                                <img src="/img/join_challenge.png" alt="" />
-                                <span>Join a Challenge</span>
-                            </button>
-                            {this.state.openModal && <LoginModal closeModal={this.handleCloseModal } />}
-                        </div>
-                        <div className="dci-right">
-                            <button onClick={() => this.newChallenge() }>
-                                <img src="/img/new_challenge.png" alt="" />
-                                <span>New Challenge</span>
-                            </button>
-                            {this.state.newChallengeModalOpen && <NewChallengeModal showModal={this.state.newChallengeModalOpen} />}
-                            
-                        </div>
-                    </div>
-                </div> */}
                 <div className="dchallenge-list">
                     <div className="dch-inner">
                         {this.state.challengeList.map((challenge, i) => (
