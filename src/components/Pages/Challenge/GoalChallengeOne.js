@@ -22,6 +22,7 @@ import { faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free
 import { HexColorPicker } from "react-colorful";
 
 import ReactTooltip from 'react-tooltip';
+import auth from '../../../services/auth';
 
 import axios from 'axios'
 
@@ -31,8 +32,8 @@ const api = axios.create({
     'Content-Type' : 'application/json',
     'Accept' : 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Authorization' : 'Bearer 1|74Q5WHcDLDhCb5M9NtabCridB2ZN68CGFaS5r2yN',
-    'X-CSRF-TOKEN': '1|74Q5WHcDLDhCb5M9NtabCridB2ZN68CGFaS5r2yN'
+    'Authorization' : `Bearer ${auth.getAccessToken()}`,
+    'X-CSRF-TOKEN': auth.getAccessToken()
   }
 })
 
