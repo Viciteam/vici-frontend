@@ -37,9 +37,27 @@ class ClanHeader extends React.Component {
 
         this.handleOpenLogin = this.handleOpenLogin.bind(this);
         this.handleCloseLogin = this.handleCloseLogin.bind(this);
+        this.wrapperRef = React.createRef();
+        this.handleClickOutside = this.handleClickOutside.bind(this);
     }
 
     static contextType = ProfileContext;
+
+    componentDidMount() {
+        document.addEventListener("mousedown", this.handleClickOutside);
+    }
+    
+    componentWillUnmount() {
+        document.removeEventListener("mousedown", this.handleClickOutside);
+    }
+
+    handleClickOutside(event) {
+        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+            this.setState({ openMessages: false });
+            this.setState({ openAccountSettings: false });
+            this.setState({ search: '' });
+        }
+    }
 
     handleBannerChanges (val) {
         const { banner } = this.context;
@@ -158,7 +176,7 @@ class ClanHeader extends React.Component {
         const isAuthHeader = () => {
             if(auth.isAuthenticated()){
                 return (
-                    <div className="flex">
+                    <div ref={this.wrapperRef} className="flex">
                         <div className="dnotif px-3 flex">
                             <div className="relative">
                                 <div onClick={this.handleOpenMessages} className="dmessage mx-3 cursor-pointer relative">
@@ -320,12 +338,12 @@ class ClanHeader extends React.Component {
                                 }
                             </div>
                         </div>
-                        <div className="dcoin mt-3 mr-3">
+                        {/* <div className="dcoin mt-3 mr-3">
                             <div className="dcoin-inner flex"><img alt="" src="/img/coil.png"/> <span className="pl-2">0</span></div>
                         </div>
                         <div className="dmedals mt-3 mx-3">
                             <div className="dmedal-inner flex"><img alt="" src="/img/medal.png"/> <span className="pl-2">0</span></div>
-                        </div>
+                        </div> */}
                     </div>
                 );
             } else {
@@ -341,7 +359,7 @@ class ClanHeader extends React.Component {
         }
         
         return (
-            <div className="clan-header-main">
+            <div ref={this.wrapperRef} className="clan-header-main">
                 <div className="clan-header-inner flex justify-between lg:justify-evenly">
                     <div className="dlogo">
                         <a href="/"><img alt="" src="/img/vici.png"/></a>
