@@ -3,7 +3,6 @@ import React from 'react';
 // import ReactModal from 'react-modal';
 // import { HexColorPicker } from "react-colorful";
 import auth from '../../../../services/auth';
-
 import CookieService from '../../../../services/CookieService';
 
 
@@ -38,6 +37,7 @@ class SideProfile extends React.Component {
     data_initialize(){
         console.log('stats', this.state.uinfo.stats);
     }
+    
 
     handleOpenEmojis(){
         console.log('open imoji')
@@ -314,7 +314,7 @@ class SideProfile extends React.Component {
                             <div className="avatar flex justify-center bg-vici_prof_bg py-10">
                                 <div className="d-profile-avatar">
                                     <div className="d-profile-avatar-inner">
-                                        <img src={profile_main_image()} alt="" className="object-cover rounded-full w-40 h-40" />
+                                        <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} alt="" className="object-cover rounded-full w-40 h-40" />
                                     </div>
                                 </div>
                             </div>
@@ -331,7 +331,7 @@ class SideProfile extends React.Component {
                         <div className="ud-inner">
                             <div className="flex justify-between side-profile-name">
                                 <div className="w-48 truncate">
-                                    <h3><a href='/profile' className="truncate">{ auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User'}</a></h3>
+                                    <h3><a href='/profile' className="overflow-hidden truncate">{ auth.isAuthenticated() ? auth.userProfile() !== 'undefined' && auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User'}</a></h3>
                                 </div>
                                 <div className="flex">
                                     {
