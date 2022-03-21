@@ -412,7 +412,7 @@ class ChallengeList extends React.Component {
                                             </div>
                                             <div className="dformpart">
                                                 <div className="dforminner dcommentloginnow">
-                                                    please <span onClick={this.handleOpenLogin} class="login_in_comment">login</span> to leave a comment 
+                                                    please <span onClick={this.handleOpenLogin} className="login_in_comment">login</span> to leave a comment 
                                                 </div>
                                                 {this.state.openModal && <LoginModal closeModal={this.handleCloseLogin } />}
                                             </div>

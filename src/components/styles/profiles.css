@@ -1837,17 +1837,35 @@ ul.tabtitles > li {
     position: fixed;
     bottom: 10px;
     right: 30px;
-    width: 320px;
+    width: 450px;
+    z-index: 9;
+    text-align: right;
+}
+
+.d-open-heads-list > .d-pop-list-base {
+    display: inline-block;
+    border-radius: 100px;
+    width: 45px;
+    height: 45px;
+    border: 2px solid #ffc928;
+    background: #ffc928;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.d-open-new-message > .d-pop-list-base .d-open-new-message-inner{
+    display: inline-block;
     background: #fff;
     box-shadow: 0 0 12px #ccc;
     border-radius: 5px;
     overflow: hidden;
-    z-index: 9;
+    width: 300px;
+    margin-left: 10px;
 }
 
 .d-new-message-container .d-open-header {
     background: #FFCA28;
-    padding: 10px 20px;
+    padding: 10px 15px;
 }
 
 .d-new-message-container .d-open-header > .d-image-part {
@@ -1857,20 +1875,150 @@ ul.tabtitles > li {
 }
 
 .d-new-message-container .d-open-header > .d-image-part img {
-    width: 50px;
+    width: 45px;
+    border-radius: 100px;
+    overflow: hidden;
+    border: 2px solid #fff;
 }
 
 .d-new-message-container .d-open-header > .d-image-info {
     display: inline-block;
-    width: 59%;
+    width: 69%;
     vertical-align: middle;
+    text-align: left;
 }
 
 .d-new-message-container .d-open-header > .d-image-options {
     display: inline-block;
-    width: 20%;
+    width: 10%;
     vertical-align: middle;
+    text-align: right;
 }
+
+.d-new-message-container .d-open-header > .d-image-info .d-header-top {
+    display: block;
+    line-height: 1em;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.d-new-message-container .d-open-header > .d-image-info .d-header-subtop {
+    display: block;
+    font-size: 13px;
+    line-height: 1em;
+    margin-top: 5px;
+}
+
+.d-new-message-container .d-open-header > .d-image-options button {
+    color: #fff;
+}
+
+.d-new-message-container .d-open-content .d-content-greybar {
+    background: #F2F2F2;
+    text-align: center;
+    line-height: 1em;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 0 0 10px 10px;
+    padding: 10px 0;
+}
+
+.d-new-message-container .d-open-footer {
+    border-top: 1px solid #EBECEF;
+    padding: 10px 20px;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext > * {
+    display: inline-block;
+    vertical-align: middle;
+    color: #A0A8B0;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-smiley {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-attach {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-mic {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-photo {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-showtext {
+    width: 70%;
+    margin: 0 3%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-showtext textarea {
+    width: 100%;
+    display: block;
+    max-height: 24px;
+    font-size: 13px;
+}
+
+.d-new-message-container .d-open-content .d-main-content {
+    min-height: 180px;
+    padding: 10px 10px;
+}
+
+.d-open-new-message > .d-open-heads-list {
+    display: inline-block;
+    width: 15%;
+}
+
+.d-open-new-message > .d-open-message-info {
+    display: inline-block;
+    width: 83%;
+
+    background: #fff;
+    box-shadow: 0 0 12px #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+    margin-left: 10px;
+}
+
+.ismessage {
+    margin-bottom: 10px;
+}
+
+.ismessage.incomming-message {
+    text-align: left;
+}
+
+.ismessage.outgoing-message {
+    text-align: right;
+}
+
+.ismessage-inner {
+    font-size: 12px;
+    display: inline-block;
+    padding: 10px 20px;
+    line-height: 1.2em;
+    box-shadow: 0 0 10px #ddd;
+    border-radius: 5px;
+}
+
+.ismessage.incomming-message .ismessage-inner {
+    background: #ffc928;
+}
+
+.ismessage.outgoing-message .ismessage-inner {
+    background: #dcdcdc;
+}
+
+
+
 
 @media only screen and (max-width: 1022px) {
     .middle-content {

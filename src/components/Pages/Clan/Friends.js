@@ -2,6 +2,12 @@ import React from 'react';
 
 import CookieService from '../../../services/CookieService';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMicrophone, faPaperclip, faChevronDown, faCamera} from '@fortawesome/free-solid-svg-icons'
+import { faSmile } from '@fortawesome/free-regular-svg-icons'
+
+import FriendsPop from './Components/FriendsPop';
+
 class Friends extends React.Component {
 
     constructor(props){
@@ -9,17 +15,26 @@ class Friends extends React.Component {
         this.state = {
             isactive: this.props.isactive,
             friendsNumber: 0,
-            friendsList: []
+            friendsList: [],
+            friendsPops: [],
+            lastInserted: null
         }
 
         this.pullFriendsInformation = this.pullFriendsInformation.bind(this);
         this.openFriendProfile = this.openFriendProfile.bind(this);
+        this.closeActiveChat = this.closeActiveChat.bind(this);
+        this.openActiveChat = this.openActiveChat.bind(this);
         
     }
 
     pullFriendsInformation(){
+
         const user_profile = CookieService.get("user_profile");
-        let userid = user_profile.id;
+        let userid  = 0;
+        if(user_profile !== undefined){
+            userid = user_profile.id;
+        }
+        
         console.log('user profile -> ', userid);
 
         // get users friends
@@ -29,30 +44,170 @@ class Friends extends React.Component {
                 img: '/img/dummy/1.png',
                 name: 'Jessica Alba',
                 is_online: true,
+                is_open: false,
+                messages: [
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                ]
             },
             {
                 id: 2,
                 img: '/img/dummy/2.png',
                 name: 'Lorem Zones',
                 is_online: false,
+                is_open: false,
+                messages: [
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                ]
             },
             {
                 id: 3,
                 img: '/img/dummy/3.png',
                 name: 'Arnold Zaragoza',
                 is_online: true,
+                is_open: false,
+                messages: [
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                ]
             },
             {
                 id: 4,
                 img: '/img/dummy/4.png',
                 name: 'Jackie Jeminiz',
                 is_online: true,
+                is_open: false,
+                messages: [
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                ]
             },
             {
                 id: 5,
                 img: '/img/dummy/5.png',
                 name: 'Jet Gautay',
                 is_online: false,
+                is_open: false,
+                messages: [
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'in',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                    {
+                        id: 1,
+                        type: 'out',
+                        message: 'asdasdasdasdasdasdasdasdads'
+                    },
+                ]
             },
         ];
 
@@ -60,8 +215,21 @@ class Friends extends React.Component {
         this.setState({friendsNumber: 20});
     } 
 
-    openFriendProfile(id){
-        window.open('/profile/'+id);
+    openFriendProfile(item){
+        // window.open('/profile/'+id);
+        let friendsPopUps = this.state.friendsPops;
+        friendsPopUps.push(item);
+        this.setState({friendsPops: friendsPopUps});
+        this.setState({lastInserted: item});
+    }
+
+    closeActiveChat(e){
+        this.setState({lastInserted: null});
+    }
+
+    openActiveChat(e){
+        let setActive = this.state.friendsPops[e];
+        this.setState({lastInserted: setActive});
     }
 
     componentDidMount(){
@@ -89,33 +257,12 @@ class Friends extends React.Component {
                             </svg>
                         </button>
                     </div>
-                    <div className='d-open-new-message'>
-                        <div className='d-open-new-message-inner'>
-                            <div className='d-new-message-container'>
-                                <div className='d-open-header'>
-                                    <div className='d-image-part'>
-                                        <img src="/img/avatarguest.png" alt="" /> 
-                                    </div>
-                                    <div className='d-image-info'>
-                                        test
-                                    </div>
-                                    <div className='d-image-options'>
-                                        opts
-                                    </div>
-                                </div>
-                                <div className='d-open-content'>
-                                    <div className='d-content-inner'>
-                                        this is a test
-                                    </div>
-                                </div>
-                                <div className='d-open-footer'></div>
-                            </div>
-                        </div>
-                    </div>
+                    <FriendsPop pops={this.state.friendsPops} lastinserted={this.state.lastInserted} closePop={this.closeActiveChat} openPops={(e) => this.openActiveChat(e)}/>
+                    
                 </div>
                 {
                     this.state.friendsList.map((item, i) => (
-                        <div className="flex my-3 d-friends-list" key={i} onClick={() => this.openFriendProfile(item.id)}>
+                        <div className="flex my-3 d-friends-list" key={i} onClick={() => this.openFriendProfile(item)}>
                             <div className="relative">
                                 <img alt="" src={ item.img } className="rounded-full"></img>
                                 { item.is_online && <div className="h-3 w-3 bg-tag_success rounded-full absolute right-0 -mt-3 border border-white_color"></div> }
