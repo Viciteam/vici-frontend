@@ -46,11 +46,13 @@ class mainProfileContent extends React.Component{
             openModal: false,
             toggleMakeMyDay: false,
             openLeftScroll: false,
+            newChallengeModal: false,
         }
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.toggleMakeMyDay = this.toggleMakeMyDay.bind(this);
         this.boxRef = React.createRef();
+        this.newChallenge = this.newChallenge.bind(this);
     }
 
     toggleMakeMyDay () {
@@ -59,6 +61,15 @@ class mainProfileContent extends React.Component{
         }else{
             this.setState({ toggleMakeMyDay: true });
         }
+    }
+
+    newChallenge(){
+        this.setState({ newChallengeModal: true });
+        /* if(this.state.newChallengeModal){
+            this.setState({ newChallengeModal: false });
+        }else{
+            this.setState({ newChallengeModal: true });
+        } */
     }
 
     handleOpenModal () {
@@ -119,10 +130,12 @@ class mainProfileContent extends React.Component{
                                             <div ref={this.boxRef} className="flex w-full overflow-x-hidden">
                                                 <div className="flex">
                                                     <div className="w-36 bg-primary_color h-52 flex justify-center rounded-lg p-3 shadow-vici">
-                                                        <div className="text-center mt-12 cursor-pointer">
-                                                            <div className="flex justify-center"><img src="/img/new_challenge.png" /></div>
-                                                            <div className="text-sm text-white_color">New Challenge</div>
-                                                        </div>
+                                                        <a href='/challenge/new'>
+                                                            <div className="text-center mt-12 cursor-pointer">
+                                                                <div className="flex justify-center"><img src="/img/new_challenge.png" /></div>
+                                                                <div className="text-sm text-white_color">New Challenge</div>
+                                                            </div>
+                                                        </a>
                                                     </div>
                                                     <div className="w-36 h-52 flex justify-center rounded-lg mx-3 p-3 shadow-vici">
                                                         <div onClick={this.toggleMakeMyDay} className="text-center mt-12 cursor-pointer">

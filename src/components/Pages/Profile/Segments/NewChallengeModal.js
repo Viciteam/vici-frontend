@@ -81,7 +81,7 @@ class NewChallengeModal extends React.Component {
         let ChallengeSteps = () => {
             if(this.state.challengeCurrentSteps == 1){
                 return (
-                    <div className="d-new-challenge-step d-challenge-step-one">
+                    <div className="d-new-challenge-step d-challenge-step-one z-20">
                         <div className="d-new-challenge-inner">
                             <h3>What is your challenge about?</h3>
                             <div className="d-new-challenge-name-input">
