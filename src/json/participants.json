@@ -1,0 +1,50 @@
+{
+    "participants": {
+        "challenge_id": 2,
+        "number_of_participants": 5,
+        "number_of_clans": 5,
+        "number_of_squads": 15,
+        "participants": [
+            {
+                "user_id": 2,
+                "challenge_id": 2,
+                "user_name": "Dapne WInter",
+                "clan": "fitness Clan",
+                "progress": 0,
+                "socials": "fb"
+            },
+            {
+                "user_id": 2,
+                "challenge_id": 2,
+                "user_name": "Dapne WInter",
+                "clan": "fitness Clan",
+                "progress": 0,
+                "socials": "fb"
+            },
+            {
+                "user_id": 2,
+                "challenge_id": 2,
+                "user_name": "Dapne WInter",
+                "clan": "fitness Clan",
+                "progress": 0,
+                "socials": "fb"
+            },
+            {
+                "user_id": 2,
+                "challenge_id": 2,
+                "user_name": "Dapne WInter",
+                "clan": "fitness Clan",
+                "progress": 0,
+                "socials": "fb"
+            },
+            {
+                "user_id": 2,
+                "challenge_id": 2,
+                "user_name": "Dapne WInter",
+                "clan": "fitness Clan",
+                "progress": 0,
+                "socials": "fb"
+            }
+        ]
+    }
+}

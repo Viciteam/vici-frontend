@@ -1,0 +1,105 @@
+{
+    "overview":
+            {
+                "details": {
+                    "challenge_id": 2,
+                    "challenge_name": "Morning Routine",
+                    "user_name": "Jhon S. Green",
+                    "num_of_visitors": 200,
+                    "joined": 145,
+                    "completion_rate": "87%",
+                    "clans": 5,
+                    "squads": 15
+                },
+                "notifications": [
+                    {
+                        "id": 1,
+                        "challenge_id": 2,
+                        "num": 5,
+                        "notif": "Actions",
+                        "text": "waiting to be verified"
+                    },
+                    {
+                        "id": 12,
+                        "challenge_id": 2,
+                        "num": 1,
+                        "notif": "Manual Reward",
+                        "text": "manual reward"
+                    },
+                    {
+                        "id": 13,
+                        "challenge_id": 2,
+                        "num": 50,
+                        "notif": "Claimed Rewards",
+                        "text": "review rewards"
+                    }
+                ],
+                "activity": {
+                    "visitors": [
+                        {
+                            "date": "03/12/2022",
+                            "challenge_id": 2,
+                            "num_of_visitors": 13
+                        },
+                        {
+                            "date": "03/13/2022",
+                            "challenge_id": 2,
+                            "num_of_visitors": 10
+                        },
+                        {
+                            "date": "03/14/2022",
+                            "challenge_id": 2,
+                            "num_of_visitors": 31
+                        },
+                        {
+                            "date": "03/15/2022",
+                            "challenge_id": 2,
+                            "num_of_visitors": 102
+                        },
+                        {
+                            "date": "03/16/2022",
+                            "challenge_id": 2,
+                            "num_of_visitors": 606
+                        }
+                    ]
+                },
+                "posts": [
+                    {
+                        "challenge_id": 2,
+                        "user_id": 32,
+                        "user_name": "Dapne WInter",
+                        "post_id": 2,
+                        "content": "MOrning ROutine let's go!",
+                        "date": "03/23/2022 12:00:00",
+                        "like": 100,
+                        "dislike": 0,
+                        "comments": [
+                            {
+                                "user_id": 23,
+                                "user_name": "Jhon S. Green",
+                                "comment": "heheheh sadasda"
+                            }
+                        ]
+                        
+                    },
+                    {
+                        "challenge_id": 2,
+                        "user_id": 32,
+                        "user_name": "Dapne WInter",
+                        "post_id": 2,
+                        "content": "MOrning ROutine let's go!",
+                        "date": "03/23/2022 12:00:00",
+                        "like": 100,
+                        "dislike": 0,
+                        "comments": [
+                            {
+                                "user_id": 23,
+                                "user_name": "Jhon S. Green",
+                                "comment": "heheheh sadasda"
+                            }
+                        ]
+                        
+                    }
+                ]
+            }
+}
