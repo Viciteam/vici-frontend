@@ -8,7 +8,7 @@ import BrandProfileModal from './Components/BrandProfileModal';
 import { ProfileContext } from '../Profile/ProfileContext'
 import auth from '../../../services/auth';
 import AuthService from '../../../services/AuthService';
-
+//import Image from '../../../../public/img/avatarguest.png';
 import LoginModal from '../Auth/LoginModal';
 
 class ClanHeader extends React.Component {
@@ -261,7 +261,7 @@ class ClanHeader extends React.Component {
                         </div>
                         <div className="dproficon mt-1 mx-3">
                             <div className="relative">
-                                <img alt="" onClick={this.handleOpenAccountSettings} src={auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png'} className="cursor-pointer rounded-lg w-14"/>
+                                <img alt="" onClick={this.handleOpenAccountSettings} src={auth.userProfile() !== 'undefined' && auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png'} className="cursor-pointer rounded-lg w-14 max-h-14"/>
                                 {
                                     this.state.openAccountSettings &&
                                     <div className="absolute bg-white_color right-0 shadow-vici rounded z-10" style={{width: '270px'}}>
@@ -425,7 +425,6 @@ class ClanHeader extends React.Component {
                                 </div>
                             }
                         </div>
-                        
                         {isAuthHeader()}
                     </div>
                 </div>

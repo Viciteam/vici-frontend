@@ -19,7 +19,8 @@ const api = axios.create({
       'Content-Type' : 'application/json',
       'Accept' : 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'Authorization' : 'Bearer '+auth.getAccessToken(),
+      'Authorization' : `Bearer ${auth.getAccessToken()}`,
+        'X-CSRF-TOKEN': auth.getAccessToken()
     }
   })
   

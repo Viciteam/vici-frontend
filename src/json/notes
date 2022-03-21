@@ -1,0 +1,17 @@
+Feature: Manage Challenge
+New: challenge_id 
+Edit: challenge_id 
+Display:
+params: challenge_id 
+Overview Tab : 
+    required fields to display : overview.json
+Participants Tab : 
+    required fields to display : participants.json
+Actions Tab : 
+    required fields to display : actions.json
+Rewards Tab : 
+    required fields to display : rewards.json
+History Tab : 
+    required fields to display : rewards.json
+Settings Tab : 
+    required fields to display : managechallenge.json

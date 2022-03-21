@@ -56,6 +56,7 @@ class mainProfileContent extends React.Component{
     }
 
     toggleMakeMyDay () {
+        console.log('user', auth.userProfile())
         if(this.state.toggleMakeMyDay){
             this.setState({ toggleMakeMyDay: false });
         }else{
