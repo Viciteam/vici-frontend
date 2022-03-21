@@ -31,7 +31,7 @@ class StepOne extends React.Component {
     }
 
     createActive(setactive){
-        console.log('Type ->', setactive);
+        // console.log('Type ->', setactive);
         this.setState({activepart: setactive});
     }
 

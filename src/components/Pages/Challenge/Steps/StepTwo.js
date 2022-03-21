@@ -24,7 +24,7 @@ class StepTwo extends React.Component {
             allow_penalty: false,
             actionList: [],
             social_list: [],
-            penalty: [],
+            penalty: {},
             showformPart: 1,
         }
 
@@ -48,7 +48,7 @@ class StepTwo extends React.Component {
     }
 
     createActive(setactive){
-        console.log('Type ->', setactive);
+        // console.log('Type ->', setactive);
         this.setState({activepart: setactive})
     }
 
@@ -112,7 +112,7 @@ class StepTwo extends React.Component {
     }
 
     showAllSteps(event, item){
-        console.log('show selected ->', event.target.checked);
+        // console.log('show selected ->', event.target.checked);
         if(event.target.checked){
             this.setState({showformPart: 5});
 		}
