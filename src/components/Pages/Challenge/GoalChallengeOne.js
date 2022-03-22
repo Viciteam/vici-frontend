@@ -32,7 +32,8 @@ const api = axios.create({
     'Content-Type' : 'application/json',
     'Accept' : 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Authorization' : 'Bearer '+auth.getAccessToken(),
+    'Authorization' : `Bearer ${auth.getAccessToken()}`,
+    'X-CSRF-TOKEN': auth.getAccessToken()
   }
 })
 
@@ -239,7 +240,7 @@ class GoalChallengeOne extends React.Component {
 
             api.post('/action', penalties)
             .then((response) => {
-                console.log('Penalty response -> ', response.data.challenge.id);
+                console.log('Penalty response -> ', response.data);
             });
 
 

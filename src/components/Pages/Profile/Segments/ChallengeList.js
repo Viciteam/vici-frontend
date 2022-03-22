@@ -11,6 +11,22 @@ import CookieService from '../../../../services/CookieService';
 
 import LoginModal from '../../Auth/LoginModal';
 
+import axios from 'axios'
+
+import moment from 'moment';
+
+const api = axios.create({
+    baseURL: 'https://api.vici.life/api/',
+    headers: {
+      'Content-Type' : 'application/json',
+      'Accept' : 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization' : `Bearer ${auth.getAccessToken()}`,
+        'X-CSRF-TOKEN': auth.getAccessToken()
+    }
+  })
+  
+
 class ChallengeList extends React.Component {
     constructor(props){
         super(props);
@@ -18,6 +34,19 @@ class ChallengeList extends React.Component {
             uinfo: this.props.uinfo,
             challenge_id: this.props.challenge_id,
             challenge_info: {
+                id: 0,
+                avatar: '/img/avatarguest.png',
+                name: '',
+                time: '',
+                challenge_image: '/img/cards.JPG',
+                challenge_title: '',
+                challenge_text: '',
+                challenge_frequency: '',
+                challenge_current_milestone: '',
+                like: '',
+                dislike: '',
+                islikeselected: '',
+                view_comment: false,
                 challenge_tags: []
             },
             challengeComments: [],
@@ -35,32 +64,61 @@ class ChallengeList extends React.Component {
         this.processCommentSend = this.processCommentSend.bind(this);
         this.prepCommentHolder = this.prepCommentHolder.bind(this);
         this.profile_main_image = this.profile_main_image.bind(this);
+        this.goViewChallenge = this.goViewChallenge.bind(this);
 
         this.handleOpenLogin = this.handleOpenLogin.bind(this);
         this.handleCloseLogin = this.handleCloseLogin.bind(this);
     }
 
-    getChallengeInfo($id){
-        let challenge_information = {
-            id: 1,
-            avatar: '/img/user_main.jpg',
-            name: 'John Peter Doe haw',
-            time: '5m ago',
-            challenge_tags: ['health', 'productibity'],
-            challenge_image: '/img/cards.JPG',
-            challenge_title: 'Healthy Spirits!',
-            challenge_text: 'Discipline yourself to drink water more ofter. Begin a healthy life with a small step',
-            challenge_frequency: 'Daily',
-            challenge_current_milestone: '243 Glasses',
-            like: 2,
-            dislike: 3,
-            islikeselected: '',
-            view_comment: false
-        };
-        this.setState({challenge_info: challenge_information});
+    getChallengeInfo(id){
+        console.log('challenge -> ', id);
+        let pullOriginDatra = 0;
+
+        let self = this;
+
+        api.get('/challenge/'+id, {})
+        .then((response) => {
+            console.log('API response -> ', response.data);
+            let activeChallenge = response.data.challenges[0];
+            let challengeinfo = self.state.challenge_info;
+
+            challengeinfo.id = activeChallenge.id;
+            challengeinfo.time = activeChallenge.created_at;
+            challengeinfo.challenge_title = activeChallenge.name;
+            challengeinfo.challenge_text = activeChallenge.description;
+
+            self.setState({challenge_info: challengeinfo});
+
+            self.getOwnerInfo(activeChallenge.owner_id);
+
+
+        });
     }
 
-    getChallengeComments($id){
+    getOwnerInfo(userid){
+        console.log('user id -:>', userid);
+
+        let self = this;
+
+        api.get('/userprofile/'+userid, {})
+        .then((response) => {
+            console.log('User response -> ', response.data.user);
+            let userinfomarmation = response.data.user;
+
+
+            let challengeinfo = self.state.challenge_info;
+
+            challengeinfo.avatar = userinfomarmation.profpic_link;
+            challengeinfo.name = userinfomarmation.name;
+
+            self.setState({challenge_info: challengeinfo});
+
+            // self.getOwnerInfo(activeChallenge.owner_id);
+
+        });
+    }
+
+    getChallengeComments(id){
         let comments_data = [
             {
                 id: 1,
@@ -189,7 +247,6 @@ class ChallengeList extends React.Component {
 
     postComment(e){
         let textbase = e.target.value;
-        // console.log('text ->', textbase);
         this.setState({buildComment: textbase});
     }
 
@@ -245,6 +302,10 @@ class ChallengeList extends React.Component {
         }
     }
 
+    goViewChallenge(id){
+        console.log('visit challenge -> ', id);
+    }
+
     componentDidMount(){
         this.getChallengeInfo(this.state.challenge_id);
         this.getChallengeComments(this.state.challenge_id);
@@ -272,7 +333,7 @@ class ChallengeList extends React.Component {
                         </div>
                         <div className="dheadtile">
                             <h3><span className="dusername">{this.state.challenge_info.name}</span> created a <span className="dactivity">Challenge for herself!</span></h3>
-                            <div className="dtime">{this.state.challenge_info.time}</div>
+                            <div className="dtime">{moment(this.state.challenge_info.time).fromNow()}</div>
                             <div className="dtags">
                                 {this.state.challenge_info.challenge_tags.map((message, i) => (
                                     <span key={i}>{message}</span>
@@ -301,7 +362,7 @@ class ChallengeList extends React.Component {
                                         </div>
                                     </div>
                                     <div className="dbuttons">
-                                        <button>View Challenge</button>
+                                        <button onClick={() => this.goViewChallenge(this.state.challenge_info.id)}>View Challenge</button>
                                         <button className="dwhitebg">Join Challenge</button>
                                     </div>
                                 </div>

@@ -58,6 +58,7 @@ class mainProfileContent extends React.Component{
     }
 
     toggleMakeMyDay () {
+console.log('user', auth.userProfile())
         console.log('all', this.state.allChallenges)
         if(this.state.toggleMakeMyDay){
             this.setState({ toggleMakeMyDay: false });
