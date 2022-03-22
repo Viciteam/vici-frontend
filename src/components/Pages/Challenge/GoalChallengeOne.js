@@ -26,8 +26,6 @@ import auth from '../../../services/auth';
 
 import axios from 'axios'
 
-import auth from '../../../services/auth';
-
 const api = axios.create({
   baseURL: 'https://api.vici.life/api/',
   headers: {
@@ -242,7 +240,7 @@ class GoalChallengeOne extends React.Component {
 
             api.post('/action', penalties)
             .then((response) => {
-                console.log('Penalty response -> ', response.data.challenge.id);
+                console.log('Penalty response -> ', response.data);
             });
 
 
