@@ -96,6 +96,8 @@ class Challenge extends React.Component {
             Object.keys(challenges).forEach(function(xkey) {
                 cids.push(challenges[xkey].id);
             });
+            cids = cids.reverse();
+            cids = cids.slice(0, 4);
 
             self.setState({challengeList: cids});
         });

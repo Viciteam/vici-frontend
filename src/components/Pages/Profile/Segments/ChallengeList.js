@@ -13,6 +13,8 @@ import LoginModal from '../../Auth/LoginModal';
 
 import axios from 'axios'
 
+import moment from 'moment';
+
 const api = axios.create({
     baseURL: 'https://api.vici.life/api/',
     headers: {
@@ -62,6 +64,7 @@ class ChallengeList extends React.Component {
         this.processCommentSend = this.processCommentSend.bind(this);
         this.prepCommentHolder = this.prepCommentHolder.bind(this);
         this.profile_main_image = this.profile_main_image.bind(this);
+        this.goViewChallenge = this.goViewChallenge.bind(this);
 
         this.handleOpenLogin = this.handleOpenLogin.bind(this);
         this.handleCloseLogin = this.handleCloseLogin.bind(this);
@@ -95,19 +98,20 @@ class ChallengeList extends React.Component {
     getOwnerInfo(userid){
         console.log('user id -:>', userid);
 
+        let self = this;
+
         api.get('/userprofile/'+userid, {})
         .then((response) => {
-            console.log('User response -> ', response);
+            console.log('User response -> ', response.data.user);
+            let userinfomarmation = response.data.user;
 
-            // let activeChallenge = response.data.challenges[0];
-            // let challengeinfo = self.state.challenge_info;
 
-            // challengeinfo.id = activeChallenge.id;
-            // challengeinfo.time = activeChallenge.created_at;
-            // challengeinfo.challenge_title = activeChallenge.name;
-            // challengeinfo.challenge_text = activeChallenge.description;
+            let challengeinfo = self.state.challenge_info;
 
-            // self.setState({challenge_info: challengeinfo});
+            challengeinfo.avatar = userinfomarmation.profpic_link;
+            challengeinfo.name = userinfomarmation.name;
+
+            self.setState({challenge_info: challengeinfo});
 
             // self.getOwnerInfo(activeChallenge.owner_id);
 
@@ -243,7 +247,6 @@ class ChallengeList extends React.Component {
 
     postComment(e){
         let textbase = e.target.value;
-        // console.log('text ->', textbase);
         this.setState({buildComment: textbase});
     }
 
@@ -299,6 +302,10 @@ class ChallengeList extends React.Component {
         }
     }
 
+    goViewChallenge(id){
+        console.log('visit challenge -> ', id);
+    }
+
     componentDidMount(){
         this.getChallengeInfo(this.state.challenge_id);
         this.getChallengeComments(this.state.challenge_id);
@@ -326,7 +333,7 @@ class ChallengeList extends React.Component {
                         </div>
                         <div className="dheadtile">
                             <h3><span className="dusername">{this.state.challenge_info.name}</span> created a <span className="dactivity">Challenge for herself!</span></h3>
-                            <div className="dtime">{this.state.challenge_info.time}</div>
+                            <div className="dtime">{moment(this.state.challenge_info.time).fromNow()}</div>
                             <div className="dtags">
                                 {this.state.challenge_info.challenge_tags.map((message, i) => (
                                     <span key={i}>{message}</span>
@@ -355,7 +362,7 @@ class ChallengeList extends React.Component {
                                         </div>
                                     </div>
                                     <div className="dbuttons">
-                                        <button>View Challenge</button>
+                                        <button onClick={() => this.goViewChallenge(this.state.challenge_info.id)}>View Challenge</button>
                                         <button className="dwhitebg">Join Challenge</button>
                                     </div>
                                 </div>
