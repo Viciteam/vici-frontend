@@ -26,13 +26,13 @@ class History extends React.Component {
                     <div className="w-1/4 border-r border-bottom_gray py-3">
                         <div className="text-xl font-bold text-other_challenges">{ this.props.details.name }</div>
                         <div className="flex mt-2">
-                            <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6" />
+                            <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6 rounded-full" />
                             <div className="text-xs font-bold pl-2 pt-1">{auth.userProfile() ? auth.userProfile().name : auth.user().name}</div>
                         </div>
                     </div>
                     <div className="w-3/4 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl">498 times</div>
+                            <div className="font-bold text-2xl">0 times</div>
                         </div>
                         <div className="text-sm text-center">Challenge Happened</div>
                     </div>

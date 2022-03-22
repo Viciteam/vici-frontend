@@ -304,6 +304,7 @@ class ChallengeList extends React.Component {
 
     goViewChallenge(id){
         console.log('visit challenge -> ', id);
+        window.location="/challenge/" + id
     }
 
     componentDidMount(){
