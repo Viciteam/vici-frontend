@@ -44,7 +44,7 @@ class StepThree extends React.Component {
     }
 
     toogleSelectSpecificLocation(e){
-        console.log('istrue -> ', e);
+        // console.log('istrue -> ', e);
         if(e === 'select_location'){
             this.populateInput('selected_location', 'specific')
             this.setState({participantsLocation: true});
@@ -137,7 +137,7 @@ class StepThree extends React.Component {
     }
 
     showAllSteps(event, item){
-        console.log('show selected ->', event.target.checked);
+        // console.log('show selected ->', event.target.checked);
         if(event.target.checked){
             this.setState({showformPart: 4});
 		}
