@@ -1,11 +1,11 @@
 import { useHistory } from 'react-router-dom';
 
-const ManageChallenge = () => {
+const ManageChallenge = ({challenge}) => {
 
     const history = useHistory();
 
     function handleRedirect() {
-        history.push("/challenge/dashboard");
+        history.push("/challenge/dashboard/" + challenge.id);
     }
     return (
         <div className='p-6'>

@@ -6,15 +6,45 @@ import Actions from '../Dashboard/Actions';
 import Rewards from '../Dashboard/Rewards';
 import History from '../Dashboard/History';
 import Settings from '../Dashboard/Settings'
+import auth from '../../../../services/auth';
+import axios from 'axios'
+
+const api = axios.create({
+    baseURL: 'https://api.vici.life/api/',
+    headers: {
+      'Content-Type' : 'application/json',
+      'Accept' : 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization' : 'Bearer '+auth.getAccessToken(),
+    }
+})
 
 class ManageDashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          activeTab : 0
+          activeTab : 0,
+          challengeDetails : []
         };
         this.handleSelect = this.handleSelect.bind(this);
     }
+
+    componentDidMount(){
+        api.get('challenge/'+window.location.pathname.split('/')[3]).then(
+          (response) => {
+            console.log('response -> ', response.data.challenges);
+            let challenges = response.data.challenges[0];
+
+            if(challenges.owner_id !== auth.user().id){
+              window.location="/challenge/" +window.location.pathname.split('/')[3] 
+            }
+            this.setState({challengeDetails: challenges});
+          }
+        ).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+
 
     handleSelect(index){
         this.setState({
@@ -37,22 +67,22 @@ class ManageDashboard extends React.Component {
                         </TabList>
 
                         <TabPanel>
-                            <Overview />
+                            <Overview details={this.state.challengeDetails} />
                         </TabPanel>
                         <TabPanel>
-                            <Participants />
+                            <Participants details={this.state.challengeDetails} />
                         </TabPanel>
                         <TabPanel>
-                            <Actions />
+                            <Actions details={this.state.challengeDetails} />
                         </TabPanel>
                         <TabPanel>
-                            <Rewards />
+                            <Rewards details={this.state.challengeDetails} />
                         </TabPanel>
                         <TabPanel>
-                            <History />
+                            <History details={this.state.challengeDetails} />
                         </TabPanel>
                         <TabPanel>
-                            <Settings />
+                            <Settings details={this.state.challengeDetails} />
                         </TabPanel>
                     </Tabs>
                 </div>
