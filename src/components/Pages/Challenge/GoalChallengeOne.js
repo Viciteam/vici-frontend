@@ -306,7 +306,7 @@ class GoalChallengeOne extends React.Component {
 
         api.post('/challenge', parameters)
         .then((response) => {
-            console.log('API response -> ', response.data.challenge.id);
+            // console.log('API response -> ', response.data.challenge.id);
             self.addAction(response.data.challenge.id);
             self.addPenalty(response.data.challenge.id);
         });

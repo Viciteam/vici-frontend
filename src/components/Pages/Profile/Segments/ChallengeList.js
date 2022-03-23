@@ -48,7 +48,7 @@ class ChallengeList extends React.Component {
                 like: '',
                 dislike: '',
                 islikeselected: '',
-                view_comment: false,
+                view_comment: true,
                 challenge_tags: []
             },
             challengeComments: [],
@@ -85,14 +85,14 @@ class ChallengeList extends React.Component {
     }
 
     getChallengeInfo(id){
-        console.log('challenge -> ', id);
+        // console.log('challenge -> ', id);
         let pullOriginDatra = 0;
 
         let self = this;
 
         api.get('/challenge/'+id, {})
         .then((response) => {
-            console.log('API response -> ', response.data);
+            // console.log('API response -> ', response.data);
             let activeChallenge = response.data.challenges[0];
             let challengeinfo = self.state.challenge_info;
 
@@ -110,13 +110,13 @@ class ChallengeList extends React.Component {
     }
 
     getOwnerInfo(userid){
-        console.log('user id -:>', userid);
+        // console.log('user id -:>', userid);
 
         let self = this;
 
         api.get('/userprofile/'+userid, {})
         .then((response) => {
-            console.log('User response -> ', response.data.user);
+            // console.log('User response -> ', response.data.user);
             let userinfomarmation = response.data.user;
 
 
@@ -132,30 +132,64 @@ class ChallengeList extends React.Component {
         });
     }
 
-    getChallengeComments(id){
-        let comments_data = [
-            {
-                id: 1,
-                avatar: '/img/prof_icon.png',
-                name: 'John S. White',
-                time: '3m ago',
-                message: 'Sound like fun! Count me in!',
-                like: 1,
-                dislike: 2,
-                islikeselected: 'like'
-            },
-            {
-                id: 2,
-                avatar: '/img/prof_icon.png',
-                name: 'Black S. Panther',
-                time: '3m ago',
-                message: 'Sound like fun!\nCount me in!',
-                like: 0,
-                dislike: 2,
-                islikeselected: ''
-            },
-        ];
-        this.setState({challengeComments: comments_data});
+    getChallengeCommentDetails(item){
+        // console.log('comment -> ', item);
+
+        let self = this;
+        api.get('/userprofile/'+item.user_id, {})
+        .then((response) => {
+            // console.log('challenge commetns for '+item.user_id+' -> ', response.data.user.profpic_link);
+            item['name'] = response.data.user.name;
+            item['avatar'] = response.data.user.profpic_link;
+            // console.log('d items -> ', item);
+            
+            let dcommentinfo = self.state.challengeComments;
+            dcommentinfo.push(item);
+            self.setState({challengeComments: dcommentinfo});
+
+        });
+
+    }
+
+    getChallengeComments(challengeid){
+        // console.log('challenge challengeid -> ', challengeid);
+        this.setState({challengeComments: []});
+        let self = this;
+
+        api.get('/getchallenge_comments/'+challengeid, {})
+        .then((response) => {
+            // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
+
+            response.data.comments.data.map((answer, i) => {     
+                self.getChallengeCommentDetails(answer);
+            })
+            // self.getChallengeCommentDetails();
+            // self.setState({challengeComments: response.data.comments.data});
+        });
+
+        // let comments_data = [
+        //     {
+        //         id: 1,
+        //         avatar: '/img/prof_icon.png',
+        //         name: 'John S. White',
+        //         time: '3m ago',
+        //         message: 'Sound like fun! Count me in!',
+        //         like: 1,
+        //         dislike: 2,
+        //         islikeselected: 'like'
+        //     },
+        //     {
+        //         id: 2,
+        //         avatar: '/img/prof_icon.png',
+        //         name: 'Black S. Panther',
+        //         time: '3m ago',
+        //         message: 'Sound like fun!\nCount me in!',
+        //         like: 0,
+        //         dislike: 2,
+        //         islikeselected: ''
+        //     },
+        // ];
+        // this.setState({challengeComments: comments_data});
     }
 
     viewComment(){
@@ -284,21 +318,45 @@ class ChallengeList extends React.Component {
         let newCommentContent = comment_to_add.replace(/(?:\r\n|\r|\n)/g, '\n');
 
         // console.log('new paret -> ', newCommentContent);
-
-        let comment_build = {
-            id: 3,
-            avatar: this.profile_main_image(),
-            name: auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User',
-            time: '3m ago',
-            message: newCommentContent,
-            like: 0,
-            dislike: 0,
-            islikeselected: ''
+        let userid = auth.user();
+        let comment_info = {
+            "user_id": userid.id,
+            "challenge_id": this.state.challenge_info.id,
+            "time":"0 mins ago",
+            "post_media":"",
+            "post_message": newCommentContent,
+            "likes":"0",
+            "dislikes":"0",
+            "islikeselected": "",
+            "isPrivate":"0"
         };
 
-        comments_infos.push(comment_build);
-        this.setState({challengeComments: comments_infos});
-        this.setState({buildComment: ''});
+        let self = this;
+
+        api.post('/challenge_comment', comment_info)
+        .then((response) => {
+            console.log('challenge comment-> ', response.data.challenge_comment);
+            self.getChallengeComments(this.state.challenge_info.id);
+            self.setState({buildComment: ''});
+        });
+
+        
+        
+
+        // let comment_build = {
+        //     id: 3,
+        //     avatar: this.profile_main_image(),
+        //     name: auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User',
+        //     time: '3m ago',
+        //     message: newCommentContent,
+        //     like: 0,
+        //     dislike: 0,
+        //     islikeselected: ''
+        // };
+
+        // comments_infos.push(comment_build);
+        // this.setState({challengeComments: comments_infos});
+        // this.setState({buildComment: ''});
     }
 
     profile_main_image(){
@@ -317,7 +375,7 @@ class ChallengeList extends React.Component {
     }
 
     goViewChallenge(id){
-        console.log('visit challenge -> ', id);
+        // console.log('visit challenge -> ', id);
 
         window.location.replace('/challenge/'+id);
     
@@ -584,9 +642,10 @@ class ChallengeList extends React.Component {
                                             <img alt="" src={comment.avatar} />
                                         </div>
                                         <div className="dtm-comment-content">
-                                            <div className="dpagetitle">{ comment.name }<span className="dtime">{ comment.time }</span></div>
+                                            <div className="dpagetitle">{ comment.name }<span className="dtime">{moment(comment.created_at).fromNow()}</span></div>
                                             <div className="dcommentcontent">
-                                                <div className="dcm-text">{ this.prepCommentHolder(comment.message) }</div>
+                                                <div className="dcm-text">{ (comment.comment_message ? this.prepCommentHolder(comment.comment_message) : comment.comment_message) }</div>
+                                                {/* <div className="dcm-text">{ comment.comment_message }</div> */}
                                                 <div className="dcm-options">
                                                     <div className="doptleft">
                                                         <div className="dc-left-item" onClick={() => this.addCommentReaction('like', index)}>

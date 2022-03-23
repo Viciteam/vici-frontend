@@ -168,7 +168,7 @@ console.log('user', auth.userProfile())
                                                     {
                                                         allChallenges.length > 0 ?
                                                         allChallenges.map((item, i) => (
-                                                            <div onClick={() => this.handleClickChallenge(item)} className="w-36 h-50 rounded-lg cursor-pointer shadow-vici mx-1">
+                                                            <div onClick={() => this.handleClickChallenge(item)} key={i} className="w-36 h-50 rounded-lg cursor-pointer shadow-vici mx-1">
                                                                 <div className="truncate rounded-lg h-full w-full relative">
                                                                     <img src="/img/dummy/Rectangle1.png" className="w-full h-full object-cover" />
                                                                     <div className="z-10 absolute bottom-0 text-xs truncate w-full text-center bg-vici_secondary text-white_color p-2">
