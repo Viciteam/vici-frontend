@@ -2,6 +2,8 @@ import './../../../styles/profiles.css';
 import React from 'react';
 import Index from '../Index';
 
+import ReactModal from 'react-modal';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSmile } from '@fortawesome/free-regular-svg-icons'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
@@ -51,7 +53,12 @@ class ChallengeList extends React.Component {
             },
             challengeComments: [],
             buildComment: '',
-            openModal: false
+            openModal: false,
+            joinChallengeModal: false,
+            joinChallengeStep: 1,
+            joinChallengeSelected: 'individual',
+            joinChallengeSelectedSquad: 'Please select a Squad',
+            joinChallengeSelectedClan: 'Please select a Clan',
         }
         
         this.addPostReaction = this.addPostReaction.bind(this);
@@ -68,6 +75,13 @@ class ChallengeList extends React.Component {
 
         this.handleOpenLogin = this.handleOpenLogin.bind(this);
         this.handleCloseLogin = this.handleCloseLogin.bind(this);
+
+        // join challenge
+        this.openJoinChallenge = this.openJoinChallenge.bind(this);
+        this.joinChallengeOption = this.joinChallengeOption.bind(this);
+        this.closeJoinChallenge = this.closeJoinChallenge.bind(this);
+        this.confirmJoinChallenge = this.confirmJoinChallenge.bind(this);
+        this.showChallengeDetails = this.showChallengeDetails.bind(this);
     }
 
     getChallengeInfo(id){
@@ -306,7 +320,47 @@ class ChallengeList extends React.Component {
         console.log('visit challenge -> ', id);
 
         window.location.replace('/challenge/'+id);
+    
+    
     }
+
+    openJoinChallenge(){
+        this.setState({ joinChallengeStep: 1 });
+        this.setState({ joinChallengeModal: true });
+    }
+
+    joinChallengeOption(selected){
+        this.setState({ joinChallengeSelected: selected });
+    }
+
+    closeJoinChallenge(){
+        this.setState({ joinChallengeModal: false });
+    }
+
+    confirmJoinChallenge(){
+        let self = this;
+        let userid = auth.user();
+        let params = {
+            "challenge_id": this.state.challenge_info.id,
+            "user_id": userid.id,
+            "status": "Active",
+        };
+
+        // let parameters = JSON.stringify(params);
+
+        api.post('/participant', params)
+        .then((response) => {
+            console.log(response);
+
+            self.setState({ joinChallengeStep: 2 });
+        });
+        
+    }
+
+    showChallengeDetails(){
+        window.location.replace('/challenge/'+this.state.challenge_info.id);
+    }
+
 
     componentDidMount(){
         this.getChallengeInfo(this.state.challenge_id);
@@ -323,6 +377,122 @@ class ChallengeList extends React.Component {
     
 
     render () {
+
+        let joinChallenge = () => {
+            if(this.state.joinChallengeStep === 1){
+
+                let clanOptions = () => {
+                    if(this.state.joinChallengeSelected === 'clan'){
+                        return (
+                            <div className="join-challenge-idv-options">
+                                <div className="join-challenge-idv-options-items">
+                                    <label htmlFor="">Coming soon</label>
+                                    {/* <div className="d-select-squad">
+                                        <div className="d-selected-squad">{this.state.joinChallengeSelectedClan}</div>
+                                        <div className="d-squad-options">
+                                            <div className="d-select-squad-item">Clan 1</div>
+                                            <div className="d-select-squad-item">Clan 2</div>
+                                            <div className="d-select-squad-item">Clan 3</div>
+                                        </div>
+                                    </div> */}
+                                </div>
+                            </div>
+                        );
+                    }
+                }
+
+                let squadOptions = () => {
+                    if(this.state.joinChallengeSelected === 'squad'){
+                        return (
+                            <div className="join-challenge-idv-options">
+                                <div className="join-challenge-idv-options-items">
+                                    <label htmlFor="">Coming soon</label>
+                                    {/* <div className="d-select-squad">
+                                        <div className="d-selected-squad">{this.state.joinChallengeSelectedSquad}</div>
+                                        <div className="d-squad-options">
+                                            <div className="d-select-squad-item">Squad 1</div>
+                                            <div className="d-select-squad-item">Squad 2</div>
+                                            <div className="d-select-squad-item">Squad 3</div>
+                                            <div className="d-select-squad-item create-a-squad">Create a squad</div>
+                                        </div>
+                                    </div> */}
+                                </div>
+                            </div>
+                        );
+                    }
+                }
+                return (
+                    <div className="join-challenge-steps challenge-step-one">
+                        <div className="join-challenge-inner">
+                            <div className="join-challenge-header">Join Challenge - {this.state.challenge_info.challenge_title}</div>
+                            <div className="join-challenge-content">
+                                <div className="join-challenge-content-inner">
+                                    <h3>How do you want to join the challenge?</h3>
+                                    <div className="join-challenge-item">
+                                        <div className="d-join-checkbox">
+                                            <input type="radio" name="selectjoin[]" defaultChecked onChange={() => this.joinChallengeOption('individual')} />
+                                        </div>
+                                        <div className="d-join-content">
+                                            <div className="join-challenge-item-title">Join as an indvidual</div>
+                                            <div className="join-challenge-item-subtitle">Join the challenge as yourself.</div>
+                                        </div>
+                                        {/* {individualOptions()} */}
+                                    </div>
+                                    <div className="join-challenge-item">
+                                        <div className="d-join-checkbox">
+                                            <input disabled type="radio" name="selectjoin[]" onChange={() => this.joinChallengeOption('clan')} />
+                                        </div>
+                                        <div className="d-join-content">
+                                            <div className="join-challenge-item-title">Represent a Clan (Coming soon)</div>
+                                            <div className="join-challenge-item-subtitle">Choose a clan to represent when doing the challenge, chosen clan name will be shown in participant progress.</div>
+                                        </div>
+                                        {clanOptions()}
+                                    </div>
+                                    <div className="join-challenge-item">
+                                        <div className="d-join-checkbox">
+                                            <input disabled type="radio" name="selectjoin[]" onChange={() => this.joinChallengeOption('squad')} />
+                                        </div>
+                                        <div className="d-join-content">
+                                            <div className="join-challenge-item-title">Join as a Squad (Coming soon)</div>
+                                            <div className="join-challenge-item-subtitle">Invite your squad members to join the challenge with you.</div>
+                                        </div>
+                                        {squadOptions()}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="join-challenge-footer">
+                                <button className="cancel-option" onClick={() => this.closeJoinChallenge()}>Cancel</button>
+                                <button className="join-option" onClick={() => this.confirmJoinChallenge()}>Join Challenge</button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if(this.state.joinChallengeStep === 2){
+                return (
+                    <div className="join-challenge-steps challenge-step-two">
+                        <div className="ms-watch-modal">
+                            <div className="ms-watch-modal-inner">
+                                <div className="ms-watch-header-top">
+                                    <img src="/img/watch_header.png" alt="" />
+                                </div>
+                                <div className="ms-watch-content">
+                                    <div className="ms-watch-join">
+                                        <h3>Challenge Joined!</h3>
+                                        <div className="ms-join-success">Start doing the actions now or<br />invite some friends to join you!</div>
+                                    </div>
+                                    <div className="dsub-desc-ops">
+                                        <button className="cancel-option" onClick={() => this.closeJoinChallenge()}>Close</button>
+                                        <button className="savebutton" onClick={() => this.showChallengeDetails()}>Challenge Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        };
 
         return (
             <div className="dch-item">
@@ -365,7 +535,7 @@ class ChallengeList extends React.Component {
                                     </div>
                                     <div className="dbuttons">
                                         <button onClick={() => this.goViewChallenge(this.state.challenge_info.id)}>View Challenge</button>
-                                        <button className="dwhitebg">Join Challenge</button>
+                                        <button className="dwhitebg" onClick={() => this.openJoinChallenge()}>Join Challenge</button>
                                     </div>
                                 </div>
                             </div>
@@ -485,7 +655,18 @@ class ChallengeList extends React.Component {
                                 </div>
                             </div>
                         </div>
+                </div>
+
+                <ReactModal
+                    isOpen={this.state.joinChallengeModal}
+                    contentLabel="Example Modal"
+                    className="join_challenge_modal"
+                    ariaHideApp={false}
+                >
+                    <div className="ms-watch-modal">
+                        {joinChallenge()}
                     </div>
+                </ReactModal>
             </div>
         )
     }
