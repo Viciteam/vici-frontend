@@ -189,31 +189,45 @@ class GoalChallengeOne extends React.Component {
     }
 
     addAction(challenge_id){
-        console.log('challenge id -> ', challenge_id);
+        // console.log('challenge id -> ', challenge_id);
         let finalvalues = this.state.finalValues;
+        console.log('challenge actions -> ', finalvalues);
         if(finalvalues.actions != null){
-            let actionsInfo = finalvalues.actions.action;
+            let actionsInfo = finalvalues.actions;
             console.log('actions -> ', actionsInfo);
-            let actions = {};
-            actions['name'] = actionsInfo.title;
-            actions['description'] = ' '+actionsInfo.instructions;
-            actions['challenge_id'] = challenge_id;
-            actions['details'] = [];
-            Object.keys(actionsInfo).forEach(function(key) {
-                let subdetails = {};
-                if(key !== 'details' && key !== 'title' && key !== 'instructions'){
-                    subdetails['field'] = key;
-                    subdetails['data'] = JSON.stringify(actionsInfo[key]);
-                    actions['details'].push(subdetails);
-                }
+            Object.keys(actionsInfo).forEach(function(xkey) {
+                let itemActions = actionsInfo[xkey];
+                let actions = {};
+                actions['name'] = itemActions.title;
+                actions['description'] = ' '+itemActions.instructions;
+                actions['challenge_id'] = challenge_id;
+                actions['details'] = [];
+                Object.keys(itemActions).forEach(function(key) {
+                    let subdetails = {};
+                    if(key !== 'details' && key !== 'title' && key !== 'instructions'){
+                        subdetails['field'] = key;
+                        // subdetails['data'] = JSON.stringify(itemActions[key]);
+                        subdetails['data'] = itemActions[key];
+                        actions['details'].push(subdetails);
+                    }
+                });
+                // console.log('action -> ', actions);
+                api.post('/action', actions)
+                .then((response) => {
+                    console.log('Actions response -> ', response.data);
+                });
+
+
             });
+
+            
 
             // console.log('actions -> ', actions);
 
-            api.post('/action', actions)
-            .then((response) => {
-                console.log('Actions response -> ', response.data);
-            });
+            // api.post('/action', actions)
+            // .then((response) => {
+            //     console.log('Actions response -> ', response.data);
+            // });
         }
     }
 
@@ -222,26 +236,38 @@ class GoalChallengeOne extends React.Component {
         if(finalvalues.penalty != null){
             let penaltiesInfo = finalvalues.penalty;
             console.log('penalty -> ', penaltiesInfo);
-            let penalties = {};
-            penalties['name'] = penaltiesInfo.title;
-            penalties['description'] = 'penalties for '+penaltiesInfo.title;
-            penalties['challenge_id'] = challenge_id;
-            penalties['details'] = [];
-            Object.keys(penaltiesInfo).forEach(function(key) {
-                let subdetails = {};
-                if(key !== 'details' && key !== 'title' && key !== 'instructions'){
-                    subdetails['field'] = key;
-                    subdetails['data'] = JSON.stringify(penaltiesInfo[key]);
-                    penalties['details'].push(subdetails);
-                }
+
+            Object.keys(penaltiesInfo).forEach(function(xkey) {
+                let activePenalty = penaltiesInfo[xkey];
+                let penalties = {};
+                penalties['name'] = activePenalty.title;
+                penalties['description'] = 'penalties for '+activePenalty.title;
+                penalties['challenge_id'] = challenge_id;
+                penalties['details'] = [];
+                Object.keys(activePenalty).forEach(function(key) {
+                    let subdetails = {};
+                    if(key !== 'details' && key !== 'title' && key !== 'instructions'){
+                        subdetails['field'] = key;
+                        subdetails['data'] = JSON.stringify(activePenalty[key]);
+                        penalties['details'].push(subdetails);
+                    }
+                });
+
+                // console.log('penalty -> ', penalties);
+                api.post('/action', penalties)
+                .then((response) => {
+                    console.log('Penalty response -> ', response.data);
+                });
             });
+
+            
             
             // console.log('penalties ->', penalties);
 
-            api.post('/action', penalties)
-            .then((response) => {
-                console.log('Penalty response -> ', response.data);
-            });
+            // api.post('/action', penalties)
+            // .then((response) => {
+            //     console.log('Penalty response -> ', response.data);
+            // });
 
 
         }   
@@ -275,7 +301,7 @@ class GoalChallengeOne extends React.Component {
 
         // let params = JSON.stringify(Object.assign({}, parameters));
 
-        console.log(parameters);
+        // console.log(parameters);
 
 
         api.post('/challenge', parameters)

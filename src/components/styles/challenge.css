@@ -4015,13 +4015,15 @@
 
 .d-action-current-step .d-add-instructions-fields .d-link-options .d-link-option-text {
     display: inline-block;
-    width: 25%;
-    text-align: center;
+    width: 29%;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .d-action-current-step .d-add-instructions-fields .d-link-options .d-link-option-input {
     display: inline-block;
-    width: 69%;
+    width: 65%;
     text-align: center;
 }
 

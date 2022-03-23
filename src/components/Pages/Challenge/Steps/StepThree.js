@@ -5,6 +5,10 @@ import Switch from "react-switch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faGlobeEurope, faMapMarkerAlt, faArrowDown} from '@fortawesome/free-solid-svg-icons'
 
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+
 class StepThree extends React.Component {
     constructor(props){
         super(props);
@@ -19,6 +23,8 @@ class StepThree extends React.Component {
             showCity: false,
             enableFormAfterJoining: false,
             showformPart: 1,
+            startDate: '',
+            endDate: '',
         }
 
         this.createActive = this.createActive.bind(this);
@@ -35,6 +41,19 @@ class StepThree extends React.Component {
         this.proceedToPrev = this.proceedToPrev.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this); 
         this.showAllSteps = this.showAllSteps.bind(this); 
+
+        this.setStartDate = this.setStartDate.bind(this); 
+        this.setEndDate = this.setEndDate.bind(this); 
+    }
+
+    setStartDate(date){
+        this.setState({startDate: date});
+        this.populateInput('challenge_duration_fixed_start_date', date);
+    }
+
+    setEndDate(date){
+        this.setState({endDate: date});
+        this.populateInput('challenge_duration_fixed_end_date', date);
     }
 
     populateInput(state, e){
@@ -319,10 +338,12 @@ class StepThree extends React.Component {
                                 <div className={"cd-option-one dshowoptions " + (this.state.showOptionOne ? 'active_item' : 'inactive_item')}>
                                     <div className="cd-option-item">
                                         <div className="cd-input-item">
-                                            <input type="text" name="" placeholder="Start Date" onChange={(e) => this.populateInput('challenge_duration_fixed_start_date', e.target.value)} />
+                                            <DatePicker selected={this.state.startDate} onChange={(date) => this.setStartDate(date)} placeholderText="Start Date" />
+                                            {/* <input type="text" name="" placeholder="Start Date" onChange={(e) => this.populateInput('challenge_duration_fixed_start_date', e.target.value)} /> */}
                                         </div>
                                         <div className="cd-input-item">
-                                            <input type="text" name="" placeholder="End Date" onChange={(e) => this.populateInput('challenge_duration_fixed_end_date', e.target.value)} />
+                                            <DatePicker selected={this.state.endDate} onChange={(date) => this.setEndDate(date)} placeholderText="End Date" />
+                                            {/* <input type="text" name="" placeholder="End Date" onChange={(e) => this.populateInput('challenge_duration_fixed_end_date', e.target.value)} /> */}
                                         </div>
                                         <div className="cd-input-item">
                                             <input type="text" name="" placeholder="11:00 am" onChange={(e) => this.populateInput('challenge_duration_fixed_end_time', e.target.value)} />

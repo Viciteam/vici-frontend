@@ -15,7 +15,7 @@ class AddSocialAction extends React.Component {
         this.state = {
             isactive: this.props.isactive,
             socialType: 'facebook',
-
+            socialActionSLide: false,
             isOpenSingleRewardModal: false, // open social action modal,
             
 
@@ -550,7 +550,7 @@ class AddSocialAction extends React.Component {
                                 {SelectPhotoVideoOption()}
                             </div>
                         </div>
-                        <ReactTooltip html="true" />
+                        <ReactTooltip html={true} />
                     </div>
                 );
             }

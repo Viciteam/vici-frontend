@@ -24,7 +24,7 @@ class StepTwo extends React.Component {
             allow_penalty: false,
             actionList: [],
             social_list: [],
-            penalty: {},
+            penalty: [],
             showformPart: 1,
         }
 
@@ -88,9 +88,10 @@ class StepTwo extends React.Component {
     }
 
     pullChallengeAction(actionDetails){
+        console.log(actionDetails);
         let currentlist = this.state.actionList;
-        // currentlist.push(actionDetails);
-        currentlist['action'] = actionDetails;
+        currentlist.push(actionDetails);
+        // currentlist['action'] = actionDetails;
         this.setState({actionList: currentlist});
     }
 
@@ -102,7 +103,8 @@ class StepTwo extends React.Component {
 
     pullPenalties (actionPenalties){
         let currentlist = this.state.penalty;
-        currentlist = actionPenalties;
+        currentlist.push(actionPenalties);
+        // currentlist = actionPenalties;
         this.setState({penalty: currentlist});
     }
 
