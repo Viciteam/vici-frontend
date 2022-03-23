@@ -23,7 +23,7 @@ import Friends from '../Clan/Friends';
 import auth from '../../../services/auth';
 import LoginModal from '../Auth/LoginModal';
 import MakeMyDay from './Modal/MakeMyDay';
-
+import ChallengeService from '../../../services/ChallengeService';
 class mainProfileContent extends React.Component{
     constructor(props){
         super(props);
@@ -47,16 +47,19 @@ class mainProfileContent extends React.Component{
             toggleMakeMyDay: false,
             openLeftScroll: false,
             newChallengeModal: false,
+            allChallenges: [],
         }
         this.handleOpenModal = this.handleOpenModal.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.toggleMakeMyDay = this.toggleMakeMyDay.bind(this);
         this.boxRef = React.createRef();
         this.newChallenge = this.newChallenge.bind(this);
+        this.handleClickChallenge = this.handleClickChallenge.bind(this);
     }
 
     toggleMakeMyDay () {
-        console.log('user', auth.userProfile())
+console.log('user', auth.userProfile())
+        console.log('all', this.state.allChallenges)
         if(this.state.toggleMakeMyDay){
             this.setState({ toggleMakeMyDay: false });
         }else{
@@ -64,8 +67,22 @@ class mainProfileContent extends React.Component{
         }
     }
 
+    handleClickChallenge(item){
+        window.location="/challenge/" + item.id
+    }
+
+    componentDidMount(){
+        ChallengeService.allChallenges().then(data =>
+            this.setState({
+              allChallenges: data
+            })
+          );
+        //this.setState({ allChallenges: ChallengeService.allChallenges() });
+    }
+
     newChallenge(){
         this.setState({ newChallengeModal: true });
+        //console.log('all---',  this.state.allChallenges)
         /* if(this.state.newChallengeModal){
             this.setState({ newChallengeModal: false });
         }else{
@@ -84,7 +101,7 @@ class mainProfileContent extends React.Component{
    scroll = (scrollOffset) => {
        console.log(scrollOffset)
         this.boxRef.current.scrollLeft += scrollOffset;
-        if(scrollOffset == 160){
+        if(scrollOffset <= 260){
             this.setState({ openLeftScroll: true });
         }else{
             this.setState({ openLeftScroll: false });
@@ -94,6 +111,7 @@ class mainProfileContent extends React.Component{
 
     render(){
         const user_information = this.state.userinfo;
+        const { allChallenges } = this.state;
         return (
             <div className="container mx-auto mt-20">
                 <div className="main-content flex">
@@ -147,20 +165,32 @@ class mainProfileContent extends React.Component{
                                                           this.state.toggleMakeMyDay && <MakeMyDay closeModal={this.toggleMakeMyDay } />  
                                                         }
                                                     </div>
-
-                                                    <div className="w-36 h-52 flex justify-center rounded-lg shadow-vici">
-                                                        <img src="/img/dummy/Frame 1693.png" className="w-34" />
-                                                    </div>
-                                                    <div className="w-36 h-52 flex justify-center rounded-lg mx-3 shadow-vici">
+                                                    {
+                                                        allChallenges.length > 0 ?
+                                                        allChallenges.map((item, i) => (
+                                                            <div onClick={() => this.handleClickChallenge(item)} className="w-36 h-50 rounded-lg cursor-pointer shadow-vici mx-1">
+                                                                <div className="truncate rounded-lg h-full w-full relative">
+                                                                    <img src="/img/dummy/Rectangle1.png" className="w-full h-full object-cover" />
+                                                                    <div className="z-10 absolute bottom-0 text-xs truncate w-full text-center bg-vici_secondary text-white_color p-2">
+                                                                        { item.name }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                        :
+                                                        <div className="text-center pt-24">Loading challenge...</div>
+                                                    }
+                                                    
+                                                    {/* <div className="w-36 h-52 flex justify-center rounded-lg mx-3 shadow-vici">
                                                         <img src="/img/dummy/Frame 294.png" className="w-34"/>
                                                     </div>
                                                     <div className="w-36 h-52 flex justify-center rounded-lg shadow-vici">
                                                         <img src="/img/dummy/Frame 1692.png" className="w-34"/>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                             <div className="absolute right-0 top-32 -mr-3 z-10">
-                                                <button onClick={() => this.scroll(160)} className="bg-white_color p-1 rounded-full text-vici_secondary">
+                                                <button onClick={() => this.scroll(260)} className="bg-white_color p-1 rounded-full text-vici_secondary">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                                     </svg>
@@ -169,7 +199,7 @@ class mainProfileContent extends React.Component{
                                             {
                                                 this.state.openLeftScroll &&
                                                 <div className="absolute left-0 top-32 -ml-3 z-10">
-                                                    <button onClick={() => this.scroll(-160)} className="bg-white_color p-1 rounded-full text-vici_secondary">
+                                                    <button onClick={() => this.scroll(-260)} className="bg-white_color p-1 rounded-full text-vici_secondary">
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
                                                         </svg>

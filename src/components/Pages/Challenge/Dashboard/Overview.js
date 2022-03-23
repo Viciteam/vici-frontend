@@ -4,6 +4,8 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
 import moment from 'moment';
 import ActivityChart from '../Dashboard/ActivityChart';
+import auth from '../../../../services/auth';
+import CookieService from '../../../../services/CookieService';
 
 class Overview extends React.Component {
     constructor(props) {
@@ -22,6 +24,7 @@ class Overview extends React.Component {
         this.handleSubmitSelected = this.handleSubmitSelected.bind(this);
     }
     handleSelectRange() {
+        console.log('details', this.props.details)
         if(this.state.selectRange){
             this.setState({ selectRange: false });
         }else{
@@ -50,6 +53,22 @@ class Overview extends React.Component {
     }
 
     render () {
+
+        const profile_main_image = () => {
+            let show_image = '';
+            const user_profile = CookieService.get("user_profile");
+            if(user_profile !== undefined ){
+                if(user_profile.fb_user_id !== undefined){
+                    console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                    return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+                } else {
+                    return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+                }
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        }
+
         return (
             <div className="mt-6 pb-12 px-3">
                 <div className="flex justify-between">
@@ -79,10 +98,10 @@ class Overview extends React.Component {
                 </div>
                 <div className="shadow-vici mt-6 p-6 flex">
                     <div className="w-1/6 border-r border-bottom_gray py-3">
-                        <div className="text-xl font-bold text-other_challenges">Morning Routine</div>
+                        <div className="text-xl font-bold text-other_challenges">{ this.props.details.name }</div>
                         <div className="flex mt-2">
-                            <img src="/img/explore/avatar.png" />
-                            <div className="text-xs font-bold pl-2 pt-1">John S. Green</div>
+                            <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6" />
+                            <div className="text-xs font-bold pl-2 pt-1">{auth.userProfile() ? auth.userProfile().name : auth.user().name}</div>
                         </div>
                     </div>
                     <div className="w-1/6 pt-4">

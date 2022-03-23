@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faEye, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import axios from 'axios'
+import auth from '../../../services/auth';
 
 const api = axios.create({
   baseURL: 'https://api.vici.life/api/',
@@ -21,7 +22,7 @@ const api = axios.create({
     'Content-Type' : 'application/json',
     'Accept' : 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Authorization' : 'Bearer 1|74Q5WHcDLDhCb5M9NtabCridB2ZN68CGFaS5r2yN'
+    'Authorization' : 'Bearer '+auth.getAccessToken(),
   }
 })
 
@@ -35,7 +36,8 @@ class ViewChallenge extends React.Component {
             isWatching: false,
             isWatchingText: 'Watch Challenge',
             challengeDetails: [],
-            challengeActions: []
+            challengeActions: [],
+            isOwner: false,
         }
 
         // this.getChallengeInfo();
@@ -45,6 +47,7 @@ class ViewChallenge extends React.Component {
     }
 
     componentDidMount(){
+        console.log('props', this.props)
       api.get('challenge/'+this.state.challengeID).then(
         (response) => {
           console.log('response -> ', response.data.challenges);
@@ -53,8 +56,9 @@ class ViewChallenge extends React.Component {
           let challenge_details = [];
           challenge_details['name'] = challenges.name;
           challenge_details['description'] = challenges.description;
+          challenge_details['id'] = challenges.id;
           this.setState({challengeDetails: challenge_details});
-
+        
           // set actioms
           // let actions = [];
           // challenges.actions.map((item, index) => {
@@ -67,7 +71,11 @@ class ViewChallenge extends React.Component {
           // })
           // console.log('actions ->', actions);
           this.setState({challengeActions: challenges.actions});
-
+          if(challenges.owner_id == auth.user().id){
+            this.setState({isOwner: true});
+          }else{
+            this.setState({isOwner: false});
+          }
           // challenge actions
         }
       ).catch((error) => {
@@ -149,9 +157,12 @@ class ViewChallenge extends React.Component {
                 </div>
                 <div className="dview-right">
                     <div className="dview-right-inner">
-                        <div>
-                           <ManageChallenge />
-                        </div>
+                        {
+                            this.state.isOwner &&
+                            <div>
+                                <ManageChallenge challenge={this.state.challengeDetails} />
+                            </div>
+                        }
                         <div className="dvr-notif-bar">
                             <span className="dvr-notif-eye"><FontAwesomeIcon icon={faEye} /></span>
                             <span className="dvr-notif-text">You are watching the challenge with 230 other people.</span>

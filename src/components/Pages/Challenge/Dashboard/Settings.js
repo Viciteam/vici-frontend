@@ -1,8 +1,23 @@
 import React from 'react';
-
+import auth from '../../../../services/auth';
+import CookieService from '../../../../services/CookieService';
 class Settings extends React.Component {
 
     render () {
+        const profile_main_image = () => {
+            let show_image = '';
+            const user_profile = CookieService.get("user_profile");
+            if(user_profile !== undefined ){
+                if(user_profile.fb_user_id !== undefined){
+                    console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                    return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+                } else {
+                    return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+                }
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        }
         return (
             <div className="mt-6 pb-12 px-3">
                <div className="flex justify-between">
@@ -31,7 +46,7 @@ class Settings extends React.Component {
                         <div className="mx-6 flex justify-between py-3 border-b border-vici_gray">
                             <div>
                                 <div>Title</div>
-                                <div className="pt-3 text-vici_secondary_text">Morning Routine</div>
+                                <div className="pt-3 text-vici_secondary_text">{ this.props.details.name }</div>
                             </div>
                             <div className="pt-4 pr-6">
                                 <button className="text-sm text-vici_secondary font-bold">Edit</button>
@@ -40,7 +55,7 @@ class Settings extends React.Component {
                         <div className="mx-6 flex justify-between pb-3 pt-5 border-b border-vici_gray">
                             <div>
                                 <div>Tagline</div>
-                                <div className="pt-3 text-vici_secondary_text">A morning routine challenge for those who want to start their day with a healthy mindset!</div>
+                                <div className="pt-3 text-vici_secondary_text">{ this.props.details.description }</div>
                             </div>
                             <div className="pt-4 pr-6">
                                 <button className="text-sm text-vici_secondary font-bold">Edit</button>
