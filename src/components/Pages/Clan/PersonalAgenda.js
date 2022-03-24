@@ -1,7 +1,24 @@
 import React from 'react';
-
+import ChallengeService from '../../../services/ChallengeService';
 class PersonalAgenda extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            allChallenges: [],
+        }
+    }
+
+    componentDidMount(){
+        ChallengeService.todaysChallenge().then(data =>
+            this.setState({
+              allChallenges: data
+            })
+        );
+    }
     render () {
+        const { allChallenges } = this.state;
+        console.log('all----', this.state.allChallenges)
+        console.log('date', new Date().toISOString().split('T')[0])
         const agenda = [
             {
                 img: '/img/dummy/Rectangle2.png',
@@ -31,7 +48,7 @@ class PersonalAgenda extends React.Component {
                     </button>
                 </div>
                 {
-                   agenda.map((item, i) => (
+                   allChallenges.map((item, i) => (
                         <div className="flex justify-between my-3" key={i}>
                             <div className="w-full flex justify-between">
                                 <div className="flex">
@@ -51,7 +68,13 @@ class PersonalAgenda extends React.Component {
                     ))
                 }   
                 <div className="flex justify-center">
-                    <button className="font-bold text-vici_secondary">View all</button>
+                    {
+                        allChallenges.length > 3 ?
+                        <button className="font-bold text-vici_secondary">View all</button>
+                        :
+                        <div>No agenda</div>
+                    }
+                    
                 </div>       
             </div>
         )

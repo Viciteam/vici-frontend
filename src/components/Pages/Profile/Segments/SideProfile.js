@@ -343,15 +343,15 @@ class SideProfile extends React.Component {
                             </div>
                             <div className="grid grid-cols-3 mt-3 pb-3 border-b border-vici_gray side-profile-badge">
                                     <div className="text-center badge-data">
-                                        <div className="font-bold">2</div>
+                                        <div className="font-bold">0</div>
                                         <div className="badge-details">Following</div>
                                     </div>
                                     <div className="text-center badge-data">
-                                        <div className="font-bold">25</div>
+                                        <div className="font-bold">0</div>
                                         <div className="badge-details">Followers</div>
                                     </div>
                                     <div className="text-center badge-data">
-                                        <div className="font-bold">259</div>
+                                        <div className="font-bold">0</div>
                                         <div className="badge-details">Friends</div>
                                     </div>
                             </div>
