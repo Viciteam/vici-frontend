@@ -3,8 +3,26 @@ import React from 'react';
 
 import PostUser from './PostUser'
 
+import auth from '../../../../services/auth';
+import CookieService from '../../../../services/CookieService';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSmile } from '@fortawesome/free-regular-svg-icons'
+
+import axios from 'axios'
+
+import moment from 'moment';
+
+const api = axios.create({
+    baseURL: 'https://api.vici.life/api/',
+    headers: {
+      'Content-Type' : 'application/json',
+      'Accept' : 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization' : `Bearer ${auth.getAccessToken()}`,
+        'X-CSRF-TOKEN': auth.getAccessToken()
+    }
+})
 
 class Timeline extends React.Component {
     
@@ -15,7 +33,7 @@ class Timeline extends React.Component {
             postMessage: '',
             postComments: '',
             openAttach: false,
-            post_list: [1,2,3],
+            post_list: [],
             posts: [
                 {
                     id: 1,
@@ -135,21 +153,77 @@ class Timeline extends React.Component {
     }
 
     _handleKeyDown = (e) => { 
-            const data = {
-                avatar: '/img/user_main.jpg',
-                name: 'John Peter Doe',
-                time: '5m ago',
-                message: [
-                    {
-                        text: this.state.postMessage
-                    }
-                ],
-                comments: []
-            }
-            this.setState({ 
-                posts: [data, ...this.state.posts],
+        console.log('add post ->', this.state.postMessage);
+        let userid = auth.user();
+        let post_data = {
+            "user_id": userid.id,
+            "time":"10 mins ago",
+            "post_media": "",
+            "post_message": this.state.postMessage,
+            "likes":"0",
+            "dislikes":"0",
+            "islikeselected": "",
+            "isPrivate":"0"
+        };
+
+        let self = this;
+
+        api.post('/newsfeed', post_data)
+        .then((response) => {
+            console.log('challenge comment-> ', response.data.newsfeed_comment);
+            self.getPostListByUser();
+            self.setState({ 
+                posts: [post_data, ...this.state.post_list],
                 postMessage: ''
-            })       
+            })  
+        });
+        
+            // const data = {
+            //     avatar: '/img/user_main.jpg',
+            //     name: 'John Peter Doe',
+            //     time: '5m ago',
+            //     message: [
+            //         {
+            //             text: this.state.postMessage
+            //         }
+            //     ],
+            //     comments: []
+            // }
+                 
+    }
+
+    profile_main_image(){
+        let show_image = '';
+        const user_profile = CookieService.get("user_profile");
+        if(user_profile !== undefined ){
+            if(user_profile.fb_user_id !== undefined){
+                console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        } else {
+            return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+        }
+    }
+
+    getPostListByUser(){
+        let userid = auth.user();
+
+        console.log('get user id -> ', userid.id);
+
+        let self = this;
+
+        api.get('/getnewsfeed/'+userid.id, {})
+        .then((response) => {
+            console.log('this posts _>',response.data.newsfeed.data);
+            // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
+            self.setState({post_list: response.data.newsfeed.data});
+        });
+    }
+
+    componentDidMount(){
+        this.getPostListByUser();
     }
 
     render () {
@@ -160,7 +234,7 @@ class Timeline extends React.Component {
                 <div className="tm-onmind">
                     <div className="om-inner">
                         <div className="dprofpic">
-                            <img alt="" src="/img/user_main.jpg"/>
+                            <img alt="" src={ this.profile_main_image() }/>
                         </div>
                         <div className="dtextarea">
                             <textarea value={this.state.postMessage} onChange={this.handleChange} placeholder="Write Something.."></textarea>
@@ -203,9 +277,16 @@ class Timeline extends React.Component {
                     </div>
                 </div>
 
-                {this.state.post_list.map((post, i) => (
-                    <PostUser postinfo={post} key={i}  />
-                ))}
+                {
+                    (this.state.post_list.length > 0 ?
+                        this.state.post_list.map((post, i) => (
+                            <PostUser postinfo={post} key={i}  />
+                        ))    
+                    :
+                        <div className='no-user-posts-yet'>No post yet</div>
+                    )
+                
+                }
 
             </div>
         )

@@ -35,7 +35,7 @@ class Challenge extends React.Component {
             challengeCurrentSteps: 1,
             challengeDesc: '',
             challengeName: '',
-            challengeList: [1,2]
+            challengeList: []
         }
         
         this.newChallenge = this.newChallenge.bind(this);
@@ -92,14 +92,15 @@ class Challenge extends React.Component {
         .then((response) => {
             // console.log('API response -> ', response.data.challenges);
             let challenges = response.data.challenges;
-            let cids = [];
-            Object.keys(challenges).forEach(function(xkey) {
-                cids.push(challenges[xkey].id);
-            });
-            cids = cids.reverse();
-            cids = cids.slice(0, 4);
+            console.log('d challegnes -> ', challenges);
+            // let cids = [];
+            // Object.keys(challenges).forEach(function(xkey) {
+            //     cids.push(challenges[xkey].id);
+            // });
+            // cids = cids.reverse();
+            // cids = cids.slice(0, 4);
 
-            self.setState({challengeList: cids});
+            self.setState({challengeList: challenges});
         });
     }
 
@@ -129,9 +130,17 @@ class Challenge extends React.Component {
             <div className="challenges-inner">
                 <div className="dchallenge-list">
                     <div className="dch-inner">
-                        {this.state.challengeList.map((challenge, i) => (
-                            <ChallengeList challenge_id={challenge} key={i}  />
-                        ))}
+                        {
+                            (
+                                this.state.challengeList.length > 0 ?
+                                    this.state.challengeList.map((challenge, i) => (
+                                        <ChallengeList challenge_id={challenge} key={i}  />
+                                    ))
+                                :
+                                <div className='dloadingmean'>Loading...</div>
+                            )
+                            
+                        }
                     </div>
                 </div>
             </div>

@@ -584,6 +584,7 @@ ul.tabtitles > li {
 .tm-onmind {
     position: relative;
     margin-top: 50px;
+    margin-bottom: 60px;
 }
 .tm-onmind .doptions .leftops .ditmone {
     display: inline-block;
@@ -624,7 +625,7 @@ ul.tabtitles > li {
 }
 
 .dtimelinemain {
-    margin-top: 60px;
+    margin-bottom: 60px;
 }
 
 .dtimelinemain .dtm-item .dtm-item-inner {
@@ -2017,6 +2018,25 @@ ul.tabtitles > li {
     background: #dcdcdc;
 }
 
+.dloadingmean {
+    text-align: center;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 80px;
+}
+
+.no-user-posts-yet {
+    text-align: center;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 80px;
+}
+
+.dchallenge-list .dch-inner {
+    margin-bottom: 80px;
+}
 
 
 

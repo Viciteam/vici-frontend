@@ -34,23 +34,7 @@ class ChallengeList extends React.Component {
         super(props);
         this.state = {
             uinfo: this.props.uinfo,
-            challenge_id: this.props.challenge_id,
-            challenge_info: {
-                id: 0,
-                avatar: '/img/avatarguest.png',
-                name: '',
-                time: '',
-                challenge_image: '/img/cards.JPG',
-                challenge_title: '',
-                challenge_text: '',
-                challenge_frequency: '',
-                challenge_current_milestone: '',
-                like: '',
-                dislike: '',
-                islikeselected: '',
-                view_comment: true,
-                challenge_tags: []
-            },
+            challenge_info: this.props.challenge_id,
             challengeComments: [],
             buildComment: '',
             openModal: false,
@@ -84,112 +68,30 @@ class ChallengeList extends React.Component {
         this.showChallengeDetails = this.showChallengeDetails.bind(this);
     }
 
-    getChallengeInfo(id){
-        // console.log('challenge -> ', id);
-        let pullOriginDatra = 0;
+    getChallengeInfo(){
+        console.log('challenge -> '+this.props.challenge_id.id+' ', this.props.challenge_id.actions);
+        let setDefaults = this.state.challenge_info;
+        setDefaults.view_comment = false;
+        setDefaults.like = 0;
+        setDefaults.dislike = 0;
+        setDefaults.islikeselected = '';
 
-        let self = this;
-
-        api.get('/challenge/'+id, {})
-        .then((response) => {
-            // console.log('API response -> ', response.data);
-            let activeChallenge = response.data.challenges[0];
-            let challengeinfo = self.state.challenge_info;
-
-            challengeinfo.id = activeChallenge.id;
-            challengeinfo.time = activeChallenge.created_at;
-            challengeinfo.challenge_title = activeChallenge.name;
-            challengeinfo.challenge_text = activeChallenge.description;
-
-            self.setState({challenge_info: challengeinfo});
-
-            self.getOwnerInfo(activeChallenge.owner_id);
-
-
-        });
+        this.setState({challenge_info: setDefaults});
+        
     }
 
-    getOwnerInfo(userid){
-        // console.log('user id -:>', userid);
 
-        let self = this;
-
-        api.get('/userprofile/'+userid, {})
-        .then((response) => {
-            // console.log('User response -> ', response.data.user);
-            let userinfomarmation = response.data.user;
-
-
-            let challengeinfo = self.state.challenge_info;
-
-            challengeinfo.avatar = userinfomarmation.profpic_link;
-            challengeinfo.name = userinfomarmation.name;
-
-            self.setState({challenge_info: challengeinfo});
-
-            // self.getOwnerInfo(activeChallenge.owner_id);
-
-        });
-    }
-
-    getChallengeCommentDetails(item){
-        // console.log('comment -> ', item);
-
-        let self = this;
-        api.get('/userprofile/'+item.user_id, {})
-        .then((response) => {
-            // console.log('challenge commetns for '+item.user_id+' -> ', response.data.user.profpic_link);
-            item['name'] = response.data.user.name;
-            item['avatar'] = response.data.user.profpic_link;
-            // console.log('d items -> ', item);
-            
-            let dcommentinfo = self.state.challengeComments;
-            dcommentinfo.push(item);
-            self.setState({challengeComments: dcommentinfo});
-
-        });
-
-    }
-
-    getChallengeComments(challengeid){
+    getChallengeComments(){
         // console.log('challenge challengeid -> ', challengeid);
         this.setState({challengeComments: []});
         let self = this;
 
-        api.get('/getchallenge_comments/'+challengeid, {})
+        api.get('/getchallenge_comments/'+this.props.challenge_id.id, {})
         .then((response) => {
             // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
-
-            response.data.comments.data.map((answer, i) => {     
-                self.getChallengeCommentDetails(answer);
-            })
-            // self.getChallengeCommentDetails();
-            // self.setState({challengeComments: response.data.comments.data});
+            self.setState({challengeComments: response.data.comments.data});
         });
-
-        // let comments_data = [
-        //     {
-        //         id: 1,
-        //         avatar: '/img/prof_icon.png',
-        //         name: 'John S. White',
-        //         time: '3m ago',
-        //         message: 'Sound like fun! Count me in!',
-        //         like: 1,
-        //         dislike: 2,
-        //         islikeselected: 'like'
-        //     },
-        //     {
-        //         id: 2,
-        //         avatar: '/img/prof_icon.png',
-        //         name: 'Black S. Panther',
-        //         time: '3m ago',
-        //         message: 'Sound like fun!\nCount me in!',
-        //         like: 0,
-        //         dislike: 2,
-        //         islikeselected: ''
-        //     },
-        // ];
-        // this.setState({challengeComments: comments_data});
+        
     }
 
     viewComment(){
@@ -234,16 +136,16 @@ class ChallengeList extends React.Component {
                     post_info.dislike = dislikevals - 1;
                 }
                 post_info.islikeselected = '';
-
             }
-            
         }
 
         this.setState({challenge_info: post_info});
     }
 
     addCommentReaction(reaction, index){
+        
         let comments = this.state.challengeComments;
+        console.log('this copmmnet ->', comments[index]);
 
         if(comments[index].islikeselected == ''){
             console.log('not liked anything');
@@ -283,8 +185,6 @@ class ChallengeList extends React.Component {
 
         this.setState({challengeComments: comments});
 
-
-        // console.log('selected index ->', selected_comment);
     }
 
     prepCommentHolder(text){
@@ -321,7 +221,7 @@ class ChallengeList extends React.Component {
         let userid = auth.user();
         let comment_info = {
             "user_id": userid.id,
-            "challenge_id": this.state.challenge_info.id,
+            "challenge_id": this.props.challenge_id.id,
             "time":"0 mins ago",
             "post_media":"",
             "post_message": newCommentContent,
@@ -336,27 +236,10 @@ class ChallengeList extends React.Component {
         api.post('/challenge_comment', comment_info)
         .then((response) => {
             console.log('challenge comment-> ', response.data.challenge_comment);
-            self.getChallengeComments(this.state.challenge_info.id);
+            self.getChallengeComments(this.props.challenge_id.id);
             self.setState({buildComment: ''});
         });
-
         
-        
-
-        // let comment_build = {
-        //     id: 3,
-        //     avatar: this.profile_main_image(),
-        //     name: auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User',
-        //     time: '3m ago',
-        //     message: newCommentContent,
-        //     like: 0,
-        //     dislike: 0,
-        //     islikeselected: ''
-        // };
-
-        // comments_infos.push(comment_build);
-        // this.setState({challengeComments: comments_infos});
-        // this.setState({buildComment: ''});
     }
 
     profile_main_image(){
@@ -399,7 +282,7 @@ class ChallengeList extends React.Component {
         let self = this;
         let userid = auth.user();
         let params = {
-            "challenge_id": this.state.challenge_info.id,
+            "challenge_id": this.props.challenge_id.id,
             "user_id": userid.id,
             "status": "Active",
         };
@@ -421,8 +304,8 @@ class ChallengeList extends React.Component {
 
 
     componentDidMount(){
-        this.getChallengeInfo(this.state.challenge_id);
-        this.getChallengeComments(this.state.challenge_id);
+        this.getChallengeInfo();
+        this.getChallengeComments();
     }
 
     handleOpenLogin(){
@@ -482,7 +365,7 @@ class ChallengeList extends React.Component {
                 return (
                     <div className="join-challenge-steps challenge-step-one">
                         <div className="join-challenge-inner">
-                            <div className="join-challenge-header">Join Challenge - {this.state.challenge_info.challenge_title}</div>
+                            <div className="join-challenge-header">Join Challenge</div>
                             <div className="join-challenge-content">
                                 <div className="join-challenge-content-inner">
                                     <h3>How do you want to join the challenge?</h3>
@@ -558,16 +441,16 @@ class ChallengeList extends React.Component {
                     <div className="dchallengeheadpart">
                         <div className="dpartimage">
                             <div className="dpimageinner">
-                                <img alt="" src={this.state.challenge_info.avatar}/>
+                                <img alt="" src={this.props.challenge_id.profpic_link}/>
                             </div>
                         </div>
                         <div className="dheadtile">
-                            <h3><span className="dusername">{this.state.challenge_info.name}</span> created a <span className="dactivity">Challenge for herself!</span></h3>
-                            <div className="dtime">{moment(this.state.challenge_info.time).fromNow()}</div>
+                            <h3><span className="dusername">{this.props.challenge_id.name}</span> created a <span className="dactivity">Challenge for herself!</span></h3>
+                            <div className="dtime">{moment(this.props.challenge_id.created_at).fromNow()}</div>
                             <div className="dtags">
-                                {this.state.challenge_info.challenge_tags.map((message, i) => (
+                                {/* {this.props.challenge_id.challenge_tags.map((message, i) => (
                                     <span key={i}>{message}</span>
-                                ))}
+                                ))} */}
                             </div>
                         </div>
                     </div>
@@ -575,24 +458,38 @@ class ChallengeList extends React.Component {
                         <div className="cc_inner">
                             <div className="dimage">
                                 <div className="dimg-inner">
-                                    <img alt="" src={this.state.challenge_info.challenge_image}/>
+                                    {/* <img alt="" src={this.props.challenge_id.challenge_image}/> */}
+                                    <img alt="" src='/img/cards.JPG'/>
                                 </div>
                             </div>
                             <div className="dinfo">
                                 <div className="dinfo-inner">
-                                    <div className="dfreq">{this.state.challenge_info.challenge_frequency}</div>
-                                    <div className="dtitle">{this.state.challenge_info.challenge_title}</div>
-                                    <div className="ddesc">{this.state.challenge_info.challenge_text}</div>
-                                    <div className="dstatus">
-                                        <span>Current milestone:</span> {this.state.challenge_info.challenge_current_milestone}
-                                    </div>
+                                    {/* <div className="dfreq">{this.props.challenge_id.challenge_frequency}</div>
+                                    <div className="dtitle">{this.props.challenge_id.challenge_title}</div> */}
+                                    <div className="ddesc">{this.props.challenge_id.description}</div>
+                                    {
+                                        (this.props.challenge_id.actions.length > 0  ? 
+                                            <div>
+                                                <div className="dstatus">
+                                                    <span>Current milestone:</span> {this.props.challenge_id.actions[0].name}
+                                                </div>
+                                            </div>
+                                            
+                                            :
+                                            <div>
+                                                <div className="dstatus">
+                                                    <span>Currently no milestone yet</span>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
                                     <div className="dprogress">
                                         <div className="douter">
                                             <div className="dorange">&nbsp;</div>
                                         </div>
                                     </div>
                                     <div className="dbuttons">
-                                        <button onClick={() => this.goViewChallenge(this.state.challenge_info.id)}>View Challenge</button>
+                                        <button onClick={() => this.goViewChallenge(this.props.challenge_id.id)}>View Challenge</button>
                                         <button className="dwhitebg" onClick={() => this.openJoinChallenge()}>Join Challenge</button>
                                     </div>
                                 </div>
@@ -601,25 +498,25 @@ class ChallengeList extends React.Component {
                     </div>
                     <div className="challengebuttom">
                         <div className="dcb-inner">
-                            <div className={"dcleft " + (this.state.challenge_info.islikeselected != '' ? 'has-selected-item' : '')}>
-                                <div onClick={() => this.addPostReaction('like')} className={"dc-left-item " + (this.state.challenge_info.islikeselected == 'like' ? 'isactive_tab' : '')}>
+                            <div className={"dcleft " + (this.props.challenge_id.islikeselected != '' ? 'has-selected-item' : '')}>
+                                <div onClick={() => this.addPostReaction('like')} className={"dc-left-item " + (this.props.challenge_id.islikeselected == 'like' ? 'isactive_tab' : '')}>
                                     <div className="dicon">
                                         <div className="dclikable">
-                                            <img alt="" src={(this.state.challenge_info.islikeselected == 'like' ? '/img/like_h.png' : '/img/like.png')}/>
+                                            <img alt="" src={(this.props.challenge_id.islikeselected == 'like' ? '/img/like_h.png' : '/img/like.png')}/>
                                         </div>
                                     </div>
                                     <div className="dvals">
-                                        <div className="dv-inner">{this.state.challenge_info.like}</div>
+                                        <div className="dv-inner">{this.props.challenge_id.like}</div>
                                     </div>
                                 </div>
-                                <div onClick={() => this.addPostReaction('dislike')} className={"dc-left-item " + (this.state.challenge_info.islikeselected == 'dislike' ? 'isactive_tab' : '')}>
+                                <div onClick={() => this.addPostReaction('dislike')} className={"dc-left-item " + (this.props.challenge_id.islikeselected == 'dislike' ? 'isactive_tab' : '')}>
                                     <div className="dicon">
                                         <div className="dclikable">
-                                            <img alt="" src={(this.state.challenge_info.islikeselected == 'dislike' ? '/img/dislike_h.png' : '/img/dislike.png')}/>
+                                            <img alt="" src={(this.props.challenge_id.islikeselected == 'dislike' ? '/img/dislike_h.png' : '/img/dislike.png')}/>
                                         </div>
                                     </div>
                                     <div className="dvals">
-                                        <div className="dv-inner">{this.state.challenge_info.dislike}</div>
+                                        <div className="dv-inner">{this.props.challenge_id.dislike}</div>
                                     </div>
                                 </div>
                             </div>
@@ -633,13 +530,13 @@ class ChallengeList extends React.Component {
                     </div>
                     
                 </div>
-                <div className={"dtm-comments " + (this.state.challenge_info.view_comment ? 'active_comments' : 'inactive_comments')} style={{marginTop: '45px'}}>
+                <div className={"dtm-comments " + (this.props.challenge_id.view_comment ? 'active_comments' : 'inactive_comments')} style={{marginTop: '45px'}}>
                         <div className="drm-comments-inner">
                             {
                                 this.state.challengeComments.map((comment, index) => (
                                     <div className="dtm-comment-inner" key={index}>
                                         <div className="dtm-comment-image">
-                                            <img alt="" src={comment.avatar} />
+                                            <img alt="" src={comment.profpic_link} />
                                         </div>
                                         <div className="dtm-comment-content">
                                             <div className="dpagetitle">{ comment.name }<span className="dtime">{moment(comment.created_at).fromNow()}</span></div>
@@ -655,7 +552,7 @@ class ChallengeList extends React.Component {
                                                                 </div>
                                                             </div>
                                                             <div className="dvals">
-                                                                <div className="dv-inner">{comment.like}</div>
+                                                                <div className="dv-inner">{comment.likes}</div>
                                                             </div>
                                                         </div>
                                                         <div className="dc-left-item" onClick={() => this.addCommentReaction('dislike', index)}>
@@ -665,7 +562,7 @@ class ChallengeList extends React.Component {
                                                                 </div>
                                                             </div>
                                                             <div className="dvals">
-                                                                <div className="dv-inner">{comment.dislike}</div>
+                                                                <div className="dv-inner">{comment.dislikes}</div>
                                                             </div>
                                                         </div>
                                                     </div>

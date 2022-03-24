@@ -11,12 +11,27 @@ import CookieService from '../../../../services/CookieService';
 
 import LoginModal from '../../Auth/LoginModal';
 
+import axios from 'axios'
+
+import moment from 'moment';
+
+const api = axios.create({
+    baseURL: 'https://api.vici.life/api/',
+    headers: {
+      'Content-Type' : 'application/json',
+      'Accept' : 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization' : `Bearer ${auth.getAccessToken()}`,
+        'X-CSRF-TOKEN': auth.getAccessToken()
+    }
+})
+
 class PostUser extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             isactive: this.props.isactive,
-            post_id: this.props.postinfo,
+            post_information: this.props.postinfo,
             post: [],
             comments: [],
             buildComment: ''
@@ -36,52 +51,70 @@ class PostUser extends React.Component {
     }
 
     loadPostData(){
-        console.log('load post information -> ', this.state.post_id);
+
+        let baseinfo = this.state.post_information;
+        console.log('user information ->', baseinfo);
+
+        baseinfo.name = auth.userProfile().name;
+        baseinfo.view_comment = false;
+
+        this.setState({post_information: baseinfo});
 
         // pull post information as per API
-        let post_info = {
-            id: 1,
-            avatar: '/img/user_main.jpg',
-            name: 'John Peter Doe',
-            time: '5m ago',
-            message: [
-                {
-                    text: 'Think i wanna do the bookwork challenge soon, haven\'t read a book since! Who wants to join?',
-                    image: '/img/profile-timeline.jpg',
-                }
-            ],
-            like: 2,
-            dislike: 3,
-            islikeselected: '',
-            view_comment: false
-        };
-        this.setState({post: post_info});
+        // let post_info = {
+        //     id: 1,
+        //     avatar: '/img/user_main.jpg',
+        //     name: 'John Peter Doe',
+        //     time: '5m ago',
+        //     message: [
+        //         {
+        //             text: 'Think i wanna do the bookwork challenge soon, haven\'t read a book since! Who wants to join?',
+        //             image: '/img/profile-timeline.jpg',
+        //         }
+        //     ],
+        //     like: 2,
+        //     dislike: 3,
+        //     islikeselected: '',
+        //     view_comment: false
+        // };
+        // this.setState({post: post_info});
     }
 
     loadComments(){
-        let comments_data = [
-            {
-                id: 1,
-                avatar: '/img/prof_icon.png',
-                name: 'John S. White',
-                time: '3m ago',
-                message: 'Sound like fun! Count me in!',
-                like: 1,
-                dislike: 2,
-                islikeselected: 'like'
-            },
-            {
-                id: 2,
-                avatar: '/img/prof_icon.png',
-                name: 'Black S. Panther',
-                time: '3m ago',
-                message: 'Sound like fun!\nCount me in!',
-                like: 0,
-                dislike: 2,
-                islikeselected: ''
-            },
-        ];
-        this.setState({comments: comments_data});
+
+        this.setState({comments: []});
+        let self = this;
+
+        api.get('/getnewsfeed_comments/'+this.props.postinfo.id, {})
+        .then((response) => {
+            console.log('post commetns for -> ', response.data.comments.data);
+            self.setState({comments: response.data.comments.data});
+        });
+
+
+        // let comments_data = [
+        //     {
+        //         id: 1,
+        //         avatar: '/img/prof_icon.png',
+        //         name: 'John S. White',
+        //         time: '3m ago',
+        //         message: 'Sound like fun! Count me in!',
+        //         like: 1,
+        //         dislike: 2,
+        //         islikeselected: 'like'
+        //     },
+        //     {
+        //         id: 2,
+        //         avatar: '/img/prof_icon.png',
+        //         name: 'Black S. Panther',
+        //         time: '3m ago',
+        //         message: 'Sound like fun!\nCount me in!',
+        //         like: 0,
+        //         dislike: 2,
+        //         islikeselected: ''
+        //     },
+        // ];
+        // this.setState({comments: comments_data});
     }
 
     addPostReaction(reaction){
@@ -171,11 +204,11 @@ class PostUser extends React.Component {
 
     viewComment(){
 
-        let post_info = this.state.post;
-
+        let post_info = this.state.post_information;
+        console.log('this -> ', post_info.view_comment);
         post_info.view_comment = !post_info.view_comment;
 
-        this.setState({post: post_info});
+        this.setState({post_information: post_info});
     }
 
     processCommentSend(e){
@@ -199,8 +232,8 @@ class PostUser extends React.Component {
     }
 
     prepCommentHolder(text){
-        console.log(text);
-        let newText = text.split('\n').map(str => <p>{str}</p>);
+        // console.log(text);
+        let newText = text.split('\n').map((str, k) => <p key={k}>{str}</p>);
         return newText;
     }
     
@@ -209,20 +242,30 @@ class PostUser extends React.Component {
         let comment_to_add = this.state.buildComment;
         let newCommentContent = comment_to_add.replace(/(?:\r\n|\r|\n)/g, '\n');
 
-        let comment_build = {
-            id: 3,
-            avatar: this.profile_main_image(),
-            name: auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User',
-            time: '3m ago',
-            message: newCommentContent,
-            like: 0,
-            dislike: 0,
-            islikeselected: ''
-        };
+        let userid = auth.user();
 
-        comments_infos.push(comment_build);
-        this.setState({comments: comments_infos});
-        this.setState({buildComment: ''});
+        let comments_build = {
+            "user_id": userid.id,
+            "post_id": this.props.postinfo.id,
+            "time":"10 mins ago",
+            "post_media":"",
+            "post_message": newCommentContent,
+            "likes":"0",
+            "dislikes":"0",
+            "islikeselected": "",
+            "isPrivate":"0"
+        };
+        let self = this;
+        api.post('/newsfeed_comment', comments_build)
+        .then((response) => {
+            console.log('challenge comment-> ', response.data.newsfeed_comment);
+            self.loadComments(this.props.postinfo.id);
+            self.setState({buildComment: ''});
+        });
+
+        // comments_infos.push(comment_build);
+        // this.setState({comments: comments_infos});
+        // this.setState({buildComment: ''});
     }
 
     profile_main_image(){
@@ -257,7 +300,7 @@ class PostUser extends React.Component {
         
         return (
             <div className="dtimelinemain">
-                { Object.keys(this.state.post).length == 0 ? 
+                { Object.keys(this.state.post_information).length == 0 ? 
                     <div className='loading-part'>
                         Loading
                     </div>
@@ -269,50 +312,49 @@ class PostUser extends React.Component {
                                 <div className="dtm-header">
                                     <div className="dtm-item-image">
                                         <div className="dtm-item-image-inner">
-                                            <img alt="" src={ this.state.post.avatar }/>
+                                            {/* <img alt="" src={ this.state.post_information.avatar }/> */}
+                                            <img alt="" src={ this.profile_main_image() }/>
                                         </div>
                                     </div>
                                     <div className="dtm-item-info">
                                         <div className="dtm-item-info-inner">
-                                            <h3>{ this.state.post.name }</h3>
-                                            <div className="subinfo">{ this.state.post.time }</div>
+                                            <h3>{ this.state.post_information.name }</h3>
+                                            <div className="subinfo">{moment(this.state.post_information.created_at).fromNow()}</div>
                                         </div>
                                     </div>
                                     <br className="clear" />
                                 </div>
                                 <div className="dtm-content">
-                                    {this.state.post.message.map((mess, index) => (
-                                        <div className="dtm-content-inner" key={index}>
-                                            { mess.text }
-                                        </div>  
-                                    ))}
+                                    <div className='dtm-content-inner'>
+                                    { this.prepCommentHolder(this.state.post_information.post_message) }
+                                    </div>
                                 </div>
                                 <div className="challengebuttom dtimeline">
                                     <div className="dcb-inner">
-                                        <div className={"dcleft " + (this.state.post.islikeselected != '' ? 'has-selected-item' : '')}>
-                                            <div onClick={() => this.addPostReaction('like')} className={"dc-left-item " + (this.state.post.islikeselected == 'like' ? 'isactive_tab' : '')}>
+                                        <div className={"dcleft " + (this.state.post_information.islikeselected != '' ? 'has-selected-item' : '')}>
+                                            <div onClick={() => this.addPostReaction('like')} className={"dc-left-item " + (this.state.post_information.islikeselected == 'like' ? 'isactive_tab' : '')}>
                                                 <div className="dicon">
                                                     <div className="dclikable">
-                                                        <img alt="" src={(this.state.post.islikeselected == 'like' ? '/img/like_h.png' : '/img/like.png')}/>
+                                                        <img alt="" src={(this.state.post_information.islikeselected == 'like' ? '/img/like_h.png' : '/img/like.png')}/>
                                                     </div>
                                                 </div>
                                                 <div className="dvals">
-                                                    <div className="dv-inner">{ this.state.post.like }</div>
+                                                    <div className="dv-inner">{ this.state.post_information.likes }</div>
                                                 </div>
                                             </div>
-                                            <div onClick={() => this.addPostReaction('dislike')} className={"dc-left-item " + (this.state.post.islikeselected == 'dislike' ? 'isactive_tab' : '')}>
+                                            <div onClick={() => this.addPostReaction('dislike')} className={"dc-left-item " + (this.state.post_information.islikeselected == 'dislike' ? 'isactive_tab' : '')}>
                                                 <div className="dicon">
                                                     <div className="dclikable">
-                                                        <img alt="" src={(this.state.post.islikeselected == 'dislike' ? '/img/dislike_h.png' : '/img/dislike.png')}/>
+                                                        <img alt="" src={(this.state.post_information.islikeselected == 'dislike' ? '/img/dislike_h.png' : '/img/dislike.png')}/>
                                                     </div>
                                                 </div>
                                                 <div className="dvals">
-                                                    <div className="dv-inner">{ this.state.post.dislike }</div>
+                                                    <div className="dv-inner">{ this.state.post_information.dislikes }</div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="dcright">
-                                            <div className="dccomment" onClick={() => this.viewComment()}>
+                                        <div className="dcright" onClick={() => this.viewComment()}>
+                                            <div className="dccomment" >
                                                 <img alt="" src="/img/comment.png"/>
                                             </div>
                                         </div>
@@ -320,18 +362,21 @@ class PostUser extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className={"dtm-comments " + (this.state.post.view_comment ? 'active_comments' : 'inactive_comments')}>
+                            <div className={"dtm-comments " + (this.state.post_information.view_comment ? 'active_comments' : 'inactive_comments')}>
                                 <div className="drm-comments-inner">
                                     {
                                         this.state.comments.map((comment, index) => (
                                             <div className="dtm-comment-inner" key={index}>
                                                 <div className="dtm-comment-image">
-                                                    <img alt="" src={comment.avatar} />
+                                                    <img alt="" src={comment.profpic_link} />
                                                 </div>
                                                 <div className="dtm-comment-content">
-                                                    <div className="dpagetitle">{ comment.name }<span className="dtime">{ comment.time }</span></div>
+                                                    <div className="dpagetitle">{ comment.name }<span className="dtime">{moment(comment.created_at).fromNow()}</span></div>
                                                     <div className="dcommentcontent">
-                                                        <div className="dcm-text">{ this.prepCommentHolder(comment.message) }</div>
+                                                        <div className="dcm-text">
+                                                            this isa tomment
+                                                        {/* { this.prepCommentHolder(comment.message) } */}
+                                                        </div>
                                                         <div className="dcm-options">
                                                             <div className="doptleft">
                                                                 <div className="dc-left-item" onClick={() => this.addCommentReaction('like', index)}>
@@ -341,7 +386,7 @@ class PostUser extends React.Component {
                                                                         </div>
                                                                     </div>
                                                                     <div className="dvals">
-                                                                        <div className="dv-inner">{comment.like}</div>
+                                                                        <div className="dv-inner">{comment.likes}</div>
                                                                     </div>
                                                                 </div>
                                                                 <div className="dc-left-item" onClick={() => this.addCommentReaction('dislike', index)}>
@@ -351,7 +396,7 @@ class PostUser extends React.Component {
                                                                         </div>
                                                                     </div>
                                                                     <div className="dvals">
-                                                                        <div className="dv-inner">{comment.dislike}</div>
+                                                                        <div className="dv-inner">{comment.dislikes}</div>
                                                                     </div>
                                                                 </div>
                                                             </div>
