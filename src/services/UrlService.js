@@ -24,6 +24,10 @@ class UrlService {
     static uploadProfPic() {
         return apiDomain + "api/uploadFile";
     }
+
+    static follow() {
+        return apiDomain + "api/friend/follow";
+    }
 }
 
 export default UrlService
