@@ -110,6 +110,7 @@ class ChallengeList extends React.Component {
 
             challengeinfo.avatar = userinfomarmation.profpic_link;
             challengeinfo.name = userinfomarmation.name;
+            challengeinfo.id = userinfomarmation.user_id;
 
             self.setState({challenge_info: challengeinfo});
 
@@ -333,7 +334,7 @@ class ChallengeList extends React.Component {
                             </div>
                         </div>
                         <div className="dheadtile">
-                            <h3><span className="dusername">{this.state.challenge_info.name}</span> created a <span className="dactivity">Challenge for herself!</span></h3>
+                            <h3><a href={`/profile/${this.state.challenge_info.id}`}><span className="dusername cursor-pointer">{this.state.challenge_info.name}</span></a> created a <span className="dactivity">Challenge for herself!</span></h3>
                             <div className="dtime">{moment(this.state.challenge_info.time).fromNow()}</div>
                             <div className="dtags">
                                 {this.state.challenge_info.challenge_tags.map((message, i) => (

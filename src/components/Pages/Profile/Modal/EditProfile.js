@@ -155,7 +155,7 @@ function EditProfile ({ closeModal }) {
             if(response){
                 console.log('uesr',response)
                 CookieService.set("user_profile", response.user);
-                window.location.href = "/profile";
+                window.location.href = "/profile/"+response.user.id;
             }
             closeModal()
         }
