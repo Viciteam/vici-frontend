@@ -19,9 +19,9 @@ function EditProfile ({ closeModal }) {
     let [bio, setBio] = useState('');
     let [mission, setMission] = useState('');
     let [country, setCountry] = useState('Philippines');
-    let [setImgType] = useState('');
-    let [setImgName] = useState('');
-    let [setImgFile] = useState(null);
+    let [imgType, setImgType] = useState('');
+    let [imgName, setImgName] = useState('');
+    let [imgFile, setImgFile] = useState(null);
     const [profile_banner_link, setBanner] = useState()
     const fileUploader = useRef(null)
     const profileUploader = useRef(null)
@@ -32,7 +32,7 @@ function EditProfile ({ closeModal }) {
     const mparticle = mParticleService;
 
     useEffect(() => {
-        // getUserProfile();
+        getUserProfile();
     }, []);
 
     const uploadBanner = () => {
@@ -40,6 +40,7 @@ function EditProfile ({ closeModal }) {
       };
 
     async function setFile(event) {
+        console.log('banner', event.target.files)
         const objectUrl = URL.createObjectURL(event.target.files[0])
         setBanner(objectUrl)
 
@@ -68,8 +69,9 @@ function EditProfile ({ closeModal }) {
             response.user = user_information;
         }
 
+        console.log('response', response)
 
-        if(response){
+        if(response.user){
             var mnpartdata = {
             username:response.user.name,
             }
@@ -81,7 +83,7 @@ function EditProfile ({ closeModal }) {
         // const mpart = await mparticle.sendEvent(mpartevent,mnpartdata);
 
         console.log('edit propfile', response)
-        if(response){
+        if(response.user){
             setBanner(response.user.profile_banner_link ? response.user.profile_banner_link : '/img/default_banner.png')
             setProfLink(response.user.profpic_link ? response.user.profpic_link : '/img/avatarguest.png')
             setBgColor(response.user.bgcolor)
@@ -97,6 +99,7 @@ function EditProfile ({ closeModal }) {
     }
 
     async function setProfile(event) {
+        console.log('profile', event.target.files)
         const objectUrl = URL.createObjectURL(event.target.files[0])
         setImgFile(event.target.files[0])
         setImgType(event.target.files[0].type.split('/')[1])
@@ -179,7 +182,7 @@ function EditProfile ({ closeModal }) {
                     <div className="h-28 flex relative justify-center bg-vici_gray rounded-xl">
                         <img alt="" src={profile_banner_link} className="absolute w-full rounded-xl object-cover h-28" />
                         <button onClick={uploadBanner} className="text-vici_secondary cursor-pointer z-10">Upload Banner</button>
-                        <input type="file" id="file" onChange={setFile.bind(this)}  ref={fileUploader} style={{display: "none"}}/>
+                        <input type="file" id="bannerfile" onChange={setFile.bind(this)}  ref={fileUploader} style={{display: "none"}}/>
                     </div>
 
 

@@ -3,6 +3,8 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
 import moment from 'moment';
+import auth from '../../../../services/auth';
+import CookieService from '../../../../services/CookieService';
 class Participants extends React.Component {
     constructor(props) {
         super(props);
@@ -48,6 +50,21 @@ class Participants extends React.Component {
         console.log('date start', dateStart)
     }
     render () {
+
+        const profile_main_image = () => {
+            let show_image = '';
+            const user_profile = CookieService.get("user_profile");
+            if(user_profile !== undefined ){
+                if(user_profile.fb_user_id !== undefined){
+                    console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                    return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+                } else {
+                    return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+                }
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        }
         return (
             <div className="mt-6 pb-12 px-3">
                 <div className="flex justify-between">
@@ -77,15 +94,15 @@ class Participants extends React.Component {
                 </div>
                 <div className="shadow-vici mt-6 p-6 flex">
                     <div className="w-1/6 border-r border-bottom_gray py-3">
-                        <div className="text-xl font-bold text-other_challenges">Morning Routine</div>
+                        <div className="text-xl font-bold text-other_challenges">{ this.props.details.name }</div>
                         <div className="flex mt-2">
-                            <img src="/img/explore/avatar.png" />
-                            <div className="text-xs font-bold pl-2 pt-1">John S. Green</div>
+                            <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6 rounded-full" />
+                            <div className="text-xs font-bold pl-2 pt-1">{auth.userProfile() ? auth.userProfile().name : auth.user().name}</div>
                         </div>
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">200</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
@@ -96,7 +113,7 @@ class Participants extends React.Component {
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">145</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_error" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -107,7 +124,7 @@ class Participants extends React.Component {
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl">78%</div>
+                            <div className="font-bold text-2xl">0%</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_error" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -118,13 +135,13 @@ class Participants extends React.Component {
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">5</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
                         <div className="text-sm text-center">Clans</div>
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">15</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
                         <div className="text-sm text-center">Squads</div>
                     </div>

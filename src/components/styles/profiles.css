@@ -489,9 +489,20 @@ ul.tabtitles > li {
     padding: 0px 0px;
     position: relative;
 }
+
+/* .challengebuttom.dtimeline .dcleft.has-selected-item .dc-left-item {
+    display: none;
+}
+.challengebuttom.dtimeline .dcleft.has-selected-item .dc-left-item.isactive_tab {
+    display: block;
+} */
 .challengebuttom .dc-left-item {
     display: inline-block;
     margin-right: 10px;
+    cursor: pointer;
+}
+.challengebuttom .dc-left-item.isactive_tab .dvals{
+    color: #ffca28;
 }
 .challengebuttom .dc-left-item .dicon {
     display: inline-block;
@@ -520,6 +531,7 @@ ul.tabtitles > li {
     position: absolute;
     right: 0;
     border-radius: 5px;
+    cursor: pointer;
 }
 .challengebuttom .dccomment img {
     display: inline-block;
@@ -675,10 +687,15 @@ ul.tabtitles > li {
 .challengebuttom.dtimeline .dcright {
     right: -20px;
     bottom: -20px;
+    cursor: pointer;
 }
 
 .dtm-comments {
     margin-top: 25px;
+}
+
+.dtm-comments.inactive_comments {
+    display: none;
 }
 
 .dtm-comment-inner {
@@ -701,6 +718,7 @@ ul.tabtitles > li {
 .dtm-comments .dtm-comment-inner .dtm-comment-content .dpagetitle span.dtime {
     font-size: 12px;
     color: #a0a8b0;
+    margin-left: 10px;
 }
 
 .dcommentcontent .dcm-text {
@@ -723,6 +741,7 @@ ul.tabtitles > li {
 .dcm-options .doptleft .dc-left-item {
     display: inline-block;
     margin-right: 13px;
+    cursor: pointer;
 }
 .dcm-options .doptleft .dc-left-item > div {
     display: inline-block;
@@ -773,6 +792,7 @@ ul.tabtitles > li {
     width: 100%;
     font-size: 14px;
     height: 30px;
+    background: none;
 }
 .dreplypart .dformpart .dforminner .demoticons {
     display: inline-block;
@@ -785,6 +805,12 @@ ul.tabtitles > li {
     color: #596366;
     font-size: 30px;
     line-height: 1em;
+}
+
+.dreplypart .dformpart .dforminner.dcommentloginnow {
+    box-shadow: none;
+    text-align: center;
+    font-size: 13px;
 }
 
 /* daily challenges sidebar */
@@ -880,6 +906,15 @@ ul.tabtitles > li {
     font-size: 15px;
 }
 
+.login_in_comment {
+    cursor: pointer;
+    color: #ffc928;
+    font-weight: bold;
+}
+
+.d-friends-list {
+    cursor: pointer;
+}
 
 /* clan challenge */
 .cc-inner {
@@ -1797,6 +1832,193 @@ ul.tabtitles > li {
     font-size: 14px;
     font-weight: bold;
 }
+
+.d-open-new-message {
+    position: fixed;
+    bottom: 10px;
+    right: 30px;
+    width: 450px;
+    z-index: 9;
+    text-align: right;
+}
+
+.d-open-heads-list > .d-pop-list-base {
+    display: inline-block;
+    border-radius: 100px;
+    width: 45px;
+    height: 45px;
+    border: 2px solid #ffc928;
+    background: #ffc928;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.d-open-new-message > .d-pop-list-base .d-open-new-message-inner{
+    display: inline-block;
+    background: #fff;
+    box-shadow: 0 0 12px #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+    margin-left: 10px;
+}
+
+.d-new-message-container .d-open-header {
+    background: #FFCA28;
+    padding: 10px 15px;
+}
+
+.d-new-message-container .d-open-header > .d-image-part {
+    display: inline-block;
+    width: 20%;
+    vertical-align: middle;
+}
+
+.d-new-message-container .d-open-header > .d-image-part img {
+    width: 45px;
+    border-radius: 100px;
+    overflow: hidden;
+    border: 2px solid #fff;
+}
+
+.d-new-message-container .d-open-header > .d-image-info {
+    display: inline-block;
+    width: 69%;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.d-new-message-container .d-open-header > .d-image-options {
+    display: inline-block;
+    width: 10%;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.d-new-message-container .d-open-header > .d-image-info .d-header-top {
+    display: block;
+    line-height: 1em;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.d-new-message-container .d-open-header > .d-image-info .d-header-subtop {
+    display: block;
+    font-size: 13px;
+    line-height: 1em;
+    margin-top: 5px;
+}
+
+.d-new-message-container .d-open-header > .d-image-options button {
+    color: #fff;
+}
+
+.d-new-message-container .d-open-content .d-content-greybar {
+    background: #F2F2F2;
+    text-align: center;
+    line-height: 1em;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 0 0 10px 10px;
+    padding: 10px 0;
+}
+
+.d-new-message-container .d-open-footer {
+    border-top: 1px solid #EBECEF;
+    padding: 10px 20px;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext > * {
+    display: inline-block;
+    vertical-align: middle;
+    color: #A0A8B0;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-smiley {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-attach {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-mic {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-photo {
+    width: 5%;
+    margin: 0 .5%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-showtext {
+    width: 70%;
+    margin: 0 3%;
+}
+
+.d-new-message-container .d-open-footer .d-open-addtext .d-showtext textarea {
+    width: 100%;
+    display: block;
+    max-height: 24px;
+    font-size: 13px;
+}
+
+.d-new-message-container .d-open-content .d-main-content {
+    min-height: 180px;
+    padding: 10px 10px;
+}
+
+.d-open-new-message > .d-open-heads-list {
+    display: inline-block;
+    width: 15%;
+}
+
+.d-open-new-message > .d-open-message-info {
+    display: inline-block;
+    width: 83%;
+
+    background: #fff;
+    box-shadow: 0 0 12px #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+    margin-left: 10px;
+}
+
+.ismessage {
+    margin-bottom: 10px;
+}
+
+.ismessage.incomming-message {
+    text-align: left;
+}
+
+.ismessage.outgoing-message {
+    text-align: right;
+}
+
+.ismessage-inner {
+    font-size: 12px;
+    display: inline-block;
+    padding: 10px 20px;
+    line-height: 1.2em;
+    box-shadow: 0 0 10px #ddd;
+    border-radius: 5px;
+}
+
+.ismessage.incomming-message .ismessage-inner {
+    background: #ffc928;
+}
+
+.ismessage.outgoing-message .ismessage-inner {
+    background: #dcdcdc;
+}
+
+
+
 
 @media only screen and (max-width: 1022px) {
     .middle-content {

@@ -1,0 +1,15 @@
+{
+    "settings": {
+        "challenge_id": 2,
+        "challenge_title": "Morning ROutine",
+        "challenge_tagline": "A morning routine challenge for those who want to start their day with a healthy mindset!",
+        "challenge_instructions": "Do the completed set of actions daily ",
+        "challenge_photo": "",
+        "challenge_color": "#25345C",
+        "challenge_duration": "daily",
+        "challenge_privacy": "everyone",
+        "challenge_location": "anywhere",
+        "enable_penalty": false,
+        "date": "03/12/2022"
+    }
+}

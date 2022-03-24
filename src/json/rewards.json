@@ -1,0 +1,44 @@
+{
+    "rewards": {
+        "challenge_id": 2,
+        "total_rewards": 232,
+        "actions_failed": 7,
+        "notifications": [
+            {
+                "id": 1,
+                "challenge_id": 2,
+                "num": 1,
+                "notif": "Rewards",
+                "text": "Manual Reward"
+            }
+        ],
+        "rewards": [
+            {
+                "id": 1,
+                "reward": "10 vici tokens",
+                "attachments": ""
+            },
+            {
+                "id": 2,
+                "reward": "FILE",
+                "attachments": "thereward.doc"
+            }
+        ],
+        "confirm_rewards": [
+            {
+                "user_id": 2,
+                "action_id": 2,
+                "user_name": "Dapne WInter",
+                "status": "waiting"
+            }
+        ],
+        "rewards_given": [
+            {
+                "user_id": 2,
+                "action_id": 2,
+                "user_name": "Dapne WInter",
+                "status": "waiting"
+            }
+        ]
+    }
+}

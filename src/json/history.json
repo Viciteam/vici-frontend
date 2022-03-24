@@ -1,0 +1,28 @@
+{
+    "history": {
+        "challenge_id": 2,
+        "challenge_happened": 100,
+        "challenge_history": [
+            {
+                "date":"03/12/2022",
+                "num_of_participants": 12,
+                "num_of_failed_actions": 0
+            },
+            {
+                "date":"03/12/2022",
+                "num_of_participants": 12,
+                "num_of_failed_actions": 0
+            },
+            {
+                "date":"03/12/2022",
+                "num_of_participants": 12,
+                "num_of_failed_actions": 0
+            },
+            {
+                "date":"03/12/2022",
+                "num_of_participants": 12,
+                "num_of_failed_actions": 0
+            }
+        ]
+    },
+}

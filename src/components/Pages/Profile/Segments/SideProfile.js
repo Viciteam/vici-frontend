@@ -3,7 +3,6 @@ import React from 'react';
 // import ReactModal from 'react-modal';
 // import { HexColorPicker } from "react-colorful";
 import auth from '../../../../services/auth';
-
 import CookieService from '../../../../services/CookieService';
 
 
@@ -38,6 +37,7 @@ class SideProfile extends React.Component {
     data_initialize(){
         console.log('stats', this.state.uinfo.stats);
     }
+    
 
     handleOpenEmojis(){
         console.log('open imoji')
@@ -189,8 +189,8 @@ class SideProfile extends React.Component {
                                    <img src="/img/dummy/fitness.png" />
                                    <span className="pl-1">Fitness Clan</span>
                                    <button>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                                         </svg>
                                    </button>
                                 </div>
@@ -299,9 +299,9 @@ class SideProfile extends React.Component {
                                 </svg>
                             </a>
                             <a href="#" className="">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
                             </a>
                         </div>
@@ -314,7 +314,7 @@ class SideProfile extends React.Component {
                             <div className="avatar flex justify-center bg-vici_prof_bg py-10">
                                 <div className="d-profile-avatar">
                                     <div className="d-profile-avatar-inner">
-                                        <img src={profile_main_image()} alt="" className="object-cover rounded-full w-40 h-40" />
+                                        <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} alt="" className="object-cover rounded-full w-40 h-40" />
                                     </div>
                                 </div>
                             </div>
@@ -331,27 +331,27 @@ class SideProfile extends React.Component {
                         <div className="ud-inner">
                             <div className="flex justify-between side-profile-name">
                                 <div className="w-48 truncate">
-                                    <h3><a href='/profile' className="truncate">{ auth.isAuthenticated() ? auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User'}</a></h3>
+                                    <h3><a href='/profile' className="overflow-hidden truncate">{ auth.isAuthenticated() ? auth.userProfile() !== 'undefined' && auth.userProfile() ? auth.userProfile().name : auth.user().name : 'Guest User'}</a></h3>
                                 </div>
                                 <div className="flex">
                                     {
                                         badges.map((item, i) => (
-                                            <img src={item.badge} className="w-8 h-8 ml-2" />
+                                            <img src={item.badge} key={i} className="w-8 h-8 ml-2" />
                                         ))
                                     }
                                 </div>
                             </div>
                             <div className="grid grid-cols-3 mt-3 pb-3 border-b border-vici_gray side-profile-badge">
                                     <div className="text-center badge-data">
-                                        <div className="font-bold">2</div>
+                                        <div className="font-bold">0</div>
                                         <div className="badge-details">Following</div>
                                     </div>
                                     <div className="text-center badge-data">
-                                        <div className="font-bold">25</div>
+                                        <div className="font-bold">0</div>
                                         <div className="badge-details">Followers</div>
                                     </div>
                                     <div className="text-center badge-data">
-                                        <div className="font-bold">259</div>
+                                        <div className="font-bold">0</div>
                                         <div className="badge-details">Friends</div>
                                     </div>
                             </div>
@@ -365,8 +365,8 @@ class SideProfile extends React.Component {
                                         <img src={this.state.emoji} />
                                         <span className="text-sm font-bold pl-2 pt-1 capitalize">{ this.state.emojiText }</span>
                                         <div className="pt-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                                             </svg>
                                         </div>
                                     </div>
@@ -375,7 +375,7 @@ class SideProfile extends React.Component {
                                         <div className="absolute p-3 bg-white_color w-32 shadow-card_border rounded-md">
                                             {
                                                 emojis.map((item, i) => (
-                                                    <div onClick={()=>this.setState({ emoji: item.emoji, emojiText: item.name, openEmojis: false})} className="flex py-2 cursor-pointer">
+                                                    <div onClick={()=>this.setState({ emoji: item.emoji, emojiText: item.name, openEmojis: false})} key={i} className="flex py-2 cursor-pointer">
                                                         <img src={item.emoji} />
                                                         <span className="capitalize text-sm font-bold pl-2">{ item.name }</span>
                                                     </div>

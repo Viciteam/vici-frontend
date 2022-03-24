@@ -22,6 +22,7 @@ import { faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free
 import { HexColorPicker } from "react-colorful";
 
 import ReactTooltip from 'react-tooltip';
+import auth from '../../../services/auth';
 
 import axios from 'axios'
 
@@ -31,8 +32,8 @@ const api = axios.create({
     'Content-Type' : 'application/json',
     'Accept' : 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Authorization' : 'Bearer 1|74Q5WHcDLDhCb5M9NtabCridB2ZN68CGFaS5r2yN',
-    'X-CSRF-TOKEN': '1|74Q5WHcDLDhCb5M9NtabCridB2ZN68CGFaS5r2yN'
+    'Authorization' : `Bearer ${auth.getAccessToken()}`,
+    'X-CSRF-TOKEN': auth.getAccessToken()
   }
 })
 
@@ -187,8 +188,104 @@ class GoalChallengeOne extends React.Component {
         console.log('params ->', params);
     }
 
+    addAction(challenge_id){
+        console.log('challenge id -> ', challenge_id);
+        let finalvalues = this.state.finalValues;
+        if(finalvalues.actions != null){
+            let actionsInfo = finalvalues.actions.action;
+            console.log('actions -> ', actionsInfo);
+            let actions = {};
+            actions['name'] = actionsInfo.title;
+            actions['description'] = ' '+actionsInfo.instructions;
+            actions['challenge_id'] = challenge_id;
+            actions['details'] = [];
+            Object.keys(actionsInfo).forEach(function(key) {
+                let subdetails = {};
+                if(key !== 'details' && key !== 'title' && key !== 'instructions'){
+                    subdetails['field'] = key;
+                    subdetails['data'] = JSON.stringify(actionsInfo[key]);
+                    actions['details'].push(subdetails);
+                }
+            });
+
+            // console.log('actions -> ', actions);
+
+            api.post('/action', actions)
+            .then((response) => {
+                console.log('Actions response -> ', response.data);
+            });
+        }
+    }
+
+    addPenalty(challenge_id){
+        let finalvalues = this.state.finalValues;
+        if(finalvalues.penalty != null){
+            let penaltiesInfo = finalvalues.penalty;
+            console.log('penalty -> ', penaltiesInfo);
+            let penalties = {};
+            penalties['name'] = penaltiesInfo.title;
+            penalties['description'] = 'penalties for '+penaltiesInfo.title;
+            penalties['challenge_id'] = challenge_id;
+            penalties['details'] = [];
+            Object.keys(penaltiesInfo).forEach(function(key) {
+                let subdetails = {};
+                if(key !== 'details' && key !== 'title' && key !== 'instructions'){
+                    subdetails['field'] = key;
+                    subdetails['data'] = JSON.stringify(penaltiesInfo[key]);
+                    penalties['details'].push(subdetails);
+                }
+            });
+            
+            // console.log('penalties ->', penalties);
+
+            api.post('/action', penalties)
+            .then((response) => {
+                console.log('Penalty response -> ', response.data);
+            });
+
+
+        }   
+    }
+
     processSubmit(){
         console.log('step finalValues -> ', this.state.finalValues);
+        console.log('auth data -> ', auth.user());
+        console.log('auth data -> ', auth.getAccessToken());
+
+        let self = this;
+
+        let finalvalues = this.state.finalValues;
+
+        let parameters = {};
+        parameters['name'] = finalvalues.title;
+        parameters['description'] = finalvalues.tagline;
+        parameters['is_template'] = 'No';
+        parameters['owner_id'] = auth.user().id;
+        parameters['details'] = [];
+
+        Object.keys(finalvalues).forEach(function(xkey) {
+            let subdetails = {};
+            console.log('key -> ', xkey);
+            if(xkey != 'details' && xkey != 'title' && xkey != 'tagline' && xkey != 'actions' && xkey != 'penalty' && xkey != 'social'){
+                subdetails['field'] = xkey;
+                subdetails['data'] = finalvalues[xkey];
+                parameters['details'].push(subdetails);
+            }
+        });
+
+        // let params = JSON.stringify(Object.assign({}, parameters));
+
+        console.log(parameters);
+
+
+        api.post('/challenge', parameters)
+        .then((response) => {
+            console.log('API response -> ', response.data.challenge.id);
+            self.addAction(response.data.challenge.id);
+            self.addPenalty(response.data.challenge.id);
+        });
+
+
     }
 
     processStepPerStep(info){

@@ -38,9 +38,10 @@ function LoginModal ({ closeModal }) {
         }else{
             const postData = { email, password }
             const response = await AuthService.doUserLogin(postData)
-            console.log('response-', response)
+            // console.log('response-', response)
             if(response){
                 const loginSuccessResponse = await AuthService.handleLoginSuccess(response);
+                // console.log('login succss -> ', loginSuccessResponse);
                 CookieService.set("user_profile", loginSuccessResponse.user);
                 setValid(true)
                 setLoading(false)

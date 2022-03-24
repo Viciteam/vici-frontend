@@ -51,6 +51,7 @@ import SearchResults from './components/Pages/Search/SearchResults';
 import CookieService from './services/CookieService';
 import axios from 'axios';
 
+
 axios.interceptors.request.use(function (config){
   const token = CookieService.get("access_token");
   config.headers.Authorization = token ? `Bearer ${token}` : '';
@@ -124,7 +125,7 @@ function App() {
               <ClanHeader />
               <ClanChallenge />
             </Route>
-            <Route path="/challenge/dashboard">
+            <Route path="/challenge/dashboard/:id">
               <ClanHeader />
               <ManageDashboard />
             </Route>

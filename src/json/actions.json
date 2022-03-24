@@ -1,0 +1,102 @@
+{
+    "actions": {
+        "challenge_id": 2,
+        "actions_completed": 102,
+        "actions_failed": 7,
+        "actions_verified": 60,
+        "items": [
+            {
+                "action_id": 1,
+                "action_name": "Eat a healthy breakfast",
+                "participants": [
+                    {
+                        "user_id": 2,
+                        "action_id": 1,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 1,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 1,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 1,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 1,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    }
+                ]
+            },
+            {
+                "action_id": 2,
+                "action_name": "Eat a healthy breakfast",
+                "participants": [
+                    {
+                        "user_id": 2,
+                        "action_id": 2,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 2,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 2,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 2,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    },
+                    {
+                        "user_id": 2,
+                        "action_id": 2,
+                        "user_name": "Dapne WInter",
+                        "clan": "fitness Clan",
+                        "progress": 0,
+                        "socials": "fb"
+                    }
+                ]
+            }
+        ]
+    }
+}
