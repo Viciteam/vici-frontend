@@ -67,7 +67,8 @@ class GoalChallengeOne extends React.Component {
             stepFourData: '',
             showPublishChallengeModal: false,
             newChallengeID: 0,
-            showLoading: false
+            showLoading: false,
+            isSaveasTemplate: false
         }
         this.createActive = this.createActive.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this);
@@ -86,6 +87,7 @@ class GoalChallengeOne extends React.Component {
         this.processSubmit = this.processSubmit.bind(this);
         this.handleStepFourColor = this.handleStepFourColor.bind(this);
         this.handleStepFourSelectedImage = this.handleStepFourSelectedImage.bind(this);
+        this.getSaveAsTemplate = this.getSaveAsTemplate.bind(this);
 
         this.activity_list = [
             {"activity": ""}
@@ -288,7 +290,7 @@ class GoalChallengeOne extends React.Component {
         let parameters = {};
         parameters['name'] = finalvalues.title;
         parameters['description'] = finalvalues.tagline;
-        parameters['is_template'] = 'No';
+        parameters['is_template'] = (this.state.isSaveasTemplate ? 'Yes': 'No');
         parameters['owner_id'] = auth.user().id;
         parameters['details'] = [];
 
@@ -350,6 +352,11 @@ class GoalChallengeOne extends React.Component {
     handleStepFourSelectedImage(stepfourimage){
         this.setState({selectedPreviewHeaderImage: stepfourimage});
     }
+
+    getSaveAsTemplate(vals){
+        // console.log('vals -> ', vals );
+        this.setState({isSaveasTemplate: vals});
+    }
     
     render () {
         const tip_images = [
@@ -379,7 +386,7 @@ class GoalChallengeOne extends React.Component {
                                 </div>
                             </div>
                             <div className="dmenu-side">
-                                <Menu isactive={this.state.menuActive} />
+                                <Menu isactive={this.state.menuActive} isSaveAsTemplete={this.getSaveAsTemplate} />
                             </div>
                         </div>
                     </div>

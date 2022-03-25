@@ -8,14 +8,28 @@ class Menu extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            isactive: this.props.isactive
+            isactive: this.props.isactive,
+            isSaveStatus: false
         }
+
+        this.saveAsTemplate = this.saveAsTemplate.bind(this); 
+        this.backToNewChallenge = this.backToNewChallenge.bind(this); 
+    }
+
+    saveAsTemplate(){
+        let issavestatus = this.state.isSaveStatus;
+        this.setState({isSaveStatus: !issavestatus});
+        this.props.isSaveAsTemplete(!issavestatus);
+    }
+
+    backToNewChallenge(){
+        window.location.replace('/challenge/new');
     }
 
     render () {
         
         const selectedMenu = parseInt(this.props.isactive);
-        console.log('this state ->', selectedMenu);
+        // console.log('this state ->', selectedMenu);
         return (
             <div className="goal-menu-inner">
                 <div className="dmenu-main">
@@ -41,11 +55,11 @@ class Menu extends React.Component {
                         <div className="ds-item-icon no-icon">
                             &nbsp;
                         </div>
-                        <div className="ds-item-text">
-                            <button>Save as Termplate</button>
+                        <div className="ds-item-text" onClick={() => this.saveAsTemplate()}>
+                            <button className={(this.state.isSaveStatus ? 'active-save-templete-button': 'inactive-save-templete-button')}>Save as Termplate</button>
                         </div> 
                     </div>
-                    <div className="dsitem">
+                    <div className="dsitem" onClick={() => this.backToNewChallenge()}>
                         <div className="ds-item-icon">
                             <span><FontAwesomeIcon icon={faArrowLeft} /></span>
                         </div>

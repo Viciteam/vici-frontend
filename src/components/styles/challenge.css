@@ -4417,3 +4417,25 @@
 .dlistofcountry .dcountrylist ul li span {
     display: inline-block;
 }
+
+button.active-save-templete-button {
+    box-shadow: 0 0 12px #ccc;
+    line-height: 1em;
+    padding: 10px 15px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: bold;
+    background: #ffca28;
+    color: #111;
+}
+
+button.inactive-save-templete-button {
+    box-shadow: 0 0 12px #ccc;
+    line-height: 1em;
+    padding: 10px 15px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: bold;
+    background: #fff7dd;
+    color: #111;
+}
