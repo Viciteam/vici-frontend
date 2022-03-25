@@ -227,7 +227,7 @@ console.log('user', auth.userProfile())
                                 </div>
                                 <div className="middle-part">
                                     <div className="mp-inner pt-0">
-                                        <Tabs defaultIndex={1} className="mt-6" >
+                                        <Tabs defaultIndex={0} className="mt-6" >
                                             <TabList className="tabtitles px-6">
                                                 <Tab>Challenges & Achievements</Tab>
                                                 <Tab>Timeline</Tab>

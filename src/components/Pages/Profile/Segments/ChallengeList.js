@@ -43,6 +43,7 @@ class ChallengeList extends React.Component {
             joinChallengeSelected: 'individual',
             joinChallengeSelectedSquad: 'Please select a Squad',
             joinChallengeSelectedClan: 'Please select a Clan',
+            hasUserLogin: false
         }
         
         this.addPostReaction = this.addPostReaction.bind(this);
@@ -85,12 +86,14 @@ class ChallengeList extends React.Component {
         // console.log('challenge challengeid -> ', challengeid);
         this.setState({challengeComments: []});
         let self = this;
-
-        api.get('/getchallenge_comments/'+this.props.challenge_id.id, {})
-        .then((response) => {
-            // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
-            self.setState({challengeComments: response.data.comments.data});
-        });
+        if(this.state.hasUserLogin){
+            api.get('/getchallenge_comments/'+this.props.challenge_id.id, {})
+            .then((response) => {
+                // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
+                self.setState({challengeComments: response.data.comments.data});
+            });
+        }
+        
         
     }
 
@@ -104,42 +107,48 @@ class ChallengeList extends React.Component {
     }
 
     addPostReaction(reaction){
-        
-        let post_info = this.state.challenge_info;
-
-        if(post_info.islikeselected == ''){ 
-            console.log('blank isliked');
-            if(reaction == 'like'){
-                console.log('+1 like');
-                let likevals = post_info.like;
-                post_info.like = likevals + 1;
-            }
-
-            if(reaction == 'dislike'){
-                console.log('+1 dislike');
-                let dislikevals = post_info.dislike;
-                post_info.dislike = dislikevals + 1;
-            }
-            post_info.islikeselected = reaction;
-        } else {
-            let postSelected = post_info.islikeselected;
-            if(reaction == postSelected){
+        if(this.state.hasUserLogin){
+            let post_info = this.state.challenge_info;
+            if(post_info.islikeselected == ''){ 
+                console.log('blank isliked');
                 if(reaction == 'like'){
                     console.log('+1 like');
                     let likevals = post_info.like;
-                    post_info.like = likevals - 1;
+                    post_info.like = likevals + 1;
                 }
-    
+
                 if(reaction == 'dislike'){
                     console.log('+1 dislike');
                     let dislikevals = post_info.dislike;
-                    post_info.dislike = dislikevals - 1;
+                    post_info.dislike = dislikevals + 1;
                 }
-                post_info.islikeselected = '';
+                post_info.islikeselected = reaction;
+            } else {
+                let postSelected = post_info.islikeselected;
+                if(reaction == postSelected){
+                    if(reaction == 'like'){
+                        console.log('+1 like');
+                        let likevals = post_info.like;
+                        post_info.like = likevals - 1;
+                    }
+        
+                    if(reaction == 'dislike'){
+                        console.log('+1 dislike');
+                        let dislikevals = post_info.dislike;
+                        post_info.dislike = dislikevals - 1;
+                    }
+                    post_info.islikeselected = '';
+                }
             }
-        }
 
-        this.setState({challenge_info: post_info});
+            this.setState({challenge_info: post_info});
+        } else {
+            console.log('no user login');
+            let post_info = this.state.challenge_info;
+            post_info.view_comment = !post_info.view_comment;
+            this.setState({challenge_info: post_info});
+        }
+        
     }
 
     addCommentReaction(reaction, index){
@@ -302,8 +311,17 @@ class ChallengeList extends React.Component {
         window.location.replace('/challenge/'+this.state.challenge_info.id);
     }
 
+    checkHasUserLogin(){
+        if(auth.isAuthenticated()){
+            this.setState({hasUserLogin: true});
+        } else {
+            this.setState({hasUserLogin: false});
+        }
+    }
+
 
     componentDidMount(){
+        this.checkHasUserLogin();
         this.getChallengeInfo();
         this.getChallengeComments();
     }
@@ -490,7 +508,14 @@ class ChallengeList extends React.Component {
                                     </div>
                                     <div className="dbuttons">
                                         <button onClick={() => this.goViewChallenge(this.props.challenge_id.id)}>View Challenge</button>
-                                        <button className="dwhitebg" onClick={() => this.openJoinChallenge()}>Join Challenge</button>
+                                        {
+                                            (this.state.hasUserLogin ? 
+                                                <button className="dwhitebg" onClick={() => this.openJoinChallenge()}>Join Challenge</button>
+                                            :
+                                                <div>&nbsp;</div>
+                                            )
+                                        }
+                                        
                                     </div>
                                 </div>
                             </div>

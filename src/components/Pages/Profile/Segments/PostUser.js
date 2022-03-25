@@ -51,11 +51,14 @@ class PostUser extends React.Component {
     }
 
     loadPostData(){
+        
 
         let baseinfo = this.state.post_information;
         console.log('user information ->', baseinfo);
+        console.log('user profile ->', auth.isAuthenticated());
 
-        baseinfo.name = auth.userProfile().name;
+        
+        // baseinfo.name = (auth.isAuthenticated() ? auth.userProfile().name : '');
         baseinfo.view_comment = false;
 
         this.setState({post_information: baseinfo});

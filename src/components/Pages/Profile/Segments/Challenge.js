@@ -137,7 +137,7 @@ class Challenge extends React.Component {
                                         <ChallengeList challenge_id={challenge} key={i}  />
                                     ))
                                 :
-                                <div className='dloadingmean'>Loading...</div>
+                                <div className='dloadingmean'><img src="/img/loading.gif" alt="" /></div>
                             )
                             
                         }

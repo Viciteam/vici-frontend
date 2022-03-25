@@ -33,6 +33,7 @@ class Timeline extends React.Component {
             postMessage: '',
             postComments: '',
             openAttach: false,
+            hasUserLogin: false,
             post_list: [],
             posts: [
                 {
@@ -210,19 +211,30 @@ class Timeline extends React.Component {
     getPostListByUser(){
         let userid = auth.user();
 
-        console.log('get user id -> ', userid.id);
+        // console.log('get user id -> ', userid.id);
 
         let self = this;
+        if(auth.isAuthenticated()){
+            api.get('/getnewsfeed/'+userid.id, {})
+            .then((response) => {
+                console.log('this posts _>',response.data.newsfeed.data);
+                // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
+                self.setState({post_list: response.data.newsfeed.data});
+            });
+        }
+        
+    }
 
-        api.get('/getnewsfeed/'+userid.id, {})
-        .then((response) => {
-            console.log('this posts _>',response.data.newsfeed.data);
-            // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
-            self.setState({post_list: response.data.newsfeed.data});
-        });
+    checkIfHasUserLogin(){
+        if(auth.isAuthenticated()){
+            this.setState({hasUserLogin: true});
+        } else {
+            this.setState({hasUserLogin: false});
+        }
     }
 
     componentDidMount(){
+        this.checkIfHasUserLogin();
         this.getPostListByUser();
     }
 
@@ -231,60 +243,76 @@ class Timeline extends React.Component {
         
         return (
             <div className="timeline-inner">
-                <div className="tm-onmind">
-                    <div className="om-inner">
-                        <div className="dprofpic">
-                            <img alt="" src={ this.profile_main_image() }/>
-                        </div>
-                        <div className="dtextarea">
-                            <textarea value={this.state.postMessage} onChange={this.handleChange} placeholder="Write Something.."></textarea>
-                        </div>
-                        {
-                            this.state.openAttach &&
-                            <div className="h-48 relative w-full flex justify-center border rounded-lg border-medium_gray bg-primary_background">
-                                <div onClick={this.handleCloseAttach} className="absolute cursor-pointer text-medium_gray right-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                {
+                    (this.state.hasUserLogin ?
+                        <div className="tm-onmind">
+                            <div className="om-inner">
+                                <div className="dprofpic">
+                                    <img alt="" src={ this.profile_main_image() }/>
                                 </div>
-                                <div onClick={this.handleClick} className="mt-12 cursor-pointer">
-                                    <div className="w-full flex justify-center">
-                                        <img alt="" src="/img/Group 1270.png"/>
+                                <div className="dtextarea">
+                                    <textarea value={this.state.postMessage} onChange={this.handleChange} placeholder="Write Something.."></textarea>
+                                </div>
+                                {
+                                    this.state.openAttach &&
+                                    <div className="h-48 relative w-full flex justify-center border rounded-lg border-medium_gray bg-primary_background">
+                                        <div onClick={this.handleCloseAttach} className="absolute cursor-pointer text-medium_gray right-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div onClick={this.handleClick} className="mt-12 cursor-pointer">
+                                            <div className="w-full flex justify-center">
+                                                <img alt="" src="/img/Group 1270.png"/>
+                                            </div>
+                                            <div className="text-vici_secondary font-bold">Add Attachments</div>
+                                        </div>
+                                        <input type="file" id="file" ref="fileUploader" style={{display: "none"}}/>
                                     </div>
-                                    <div className="text-vici_secondary font-bold">Add Attachments</div>
+                                }
+                                <div className="doptions">
+                                    <div className="leftops">
+                                        <div className="ditmone">
+                                            <img alt="" src="/img/addimage.png"/>
+                                        </div>
+                                        <button onClick={this.handleOpenAttach} className="ditmone">
+                                            <img alt="" src="/img/clip.png"/>
+                                        </button>
+                                        <button className="ditmone">
+                                            <img alt="" src="/img/notes.png"/>
+                                        </button>
+                                    </div>
+                                    <div className="rightops">
+                                        <button onClick={this._handleKeyDown} className="ditmone">
+                                            <img alt="" src="/img/send.png"/>
+                                        </button>
+                                    </div>
                                 </div>
-                                <input type="file" id="file" ref="fileUploader" style={{display: "none"}}/>
-                            </div>
-                        }
-                        <div className="doptions">
-                            <div className="leftops">
-                                <div className="ditmone">
-                                    <img alt="" src="/img/addimage.png"/>
-                                </div>
-                                <button onClick={this.handleOpenAttach} className="ditmone">
-                                    <img alt="" src="/img/clip.png"/>
-                                </button>
-                                <button className="ditmone">
-                                    <img alt="" src="/img/notes.png"/>
-                                </button>
-                            </div>
-                            <div className="rightops">
-                                <button onClick={this._handleKeyDown} className="ditmone">
-                                    <img alt="" src="/img/send.png"/>
-                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    :
+                        <div>&nbsp;</div>
+                    )
+                }
+                
 
                 {
-                    (this.state.post_list.length > 0 ?
-                        this.state.post_list.map((post, i) => (
-                            <PostUser postinfo={post} key={i}  />
-                        ))    
+                    (this.state.hasUserLogin ? 
+                        (this.state.post_list.length > 0 ?
+                            this.state.post_list.map((post, i) => (
+                                <PostUser postinfo={post} key={i}  />
+                            ))    
+                        :
+                            <div className='no-user-posts-yet'>
+                                <img src="/img/loading.gif" alt="" />
+                            </div>
+                        )
                     :
-                        <div className='no-user-posts-yet'>No post yet</div>
+                        <div className='d-please-login'>
+                            Please login to vue user posts
+                        </div>
                     )
+                    
                 
                 }
 
