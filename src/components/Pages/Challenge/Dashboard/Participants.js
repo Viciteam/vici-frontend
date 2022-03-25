@@ -96,13 +96,13 @@ class Participants extends React.Component {
                     <div className="w-1/6 border-r border-bottom_gray py-3">
                         <div className="text-xl font-bold text-other_challenges">{ this.props.details.name }</div>
                         <div className="flex mt-2">
-                            <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6" />
+                            <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6 rounded-full" />
                             <div className="text-xs font-bold pl-2 pt-1">{auth.userProfile() ? auth.userProfile().name : auth.user().name}</div>
                         </div>
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">200</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
@@ -113,7 +113,7 @@ class Participants extends React.Component {
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">145</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_error" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -124,7 +124,7 @@ class Participants extends React.Component {
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl">78%</div>
+                            <div className="font-bold text-2xl">0%</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_error" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -135,13 +135,13 @@ class Participants extends React.Component {
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">5</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
                         <div className="text-sm text-center">Clans</div>
                     </div>
                     <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">15</div>
+                            <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
                         <div className="text-sm text-center">Squads</div>
                     </div>

@@ -88,7 +88,7 @@ class ChallengeList extends React.Component {
 
         api.get('/getchallenge_comments/'+this.props.challenge_id.id, {})
         .then((response) => {
-            // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
+          // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
             self.setState({challengeComments: response.data.comments.data});
         });
         
@@ -258,7 +258,7 @@ class ChallengeList extends React.Component {
     }
 
     goViewChallenge(id){
-        // console.log('visit challenge -> ', id);
+      // console.log('visit challenge -> ', id);
 
         window.location.replace('/challenge/'+id);
     
@@ -295,7 +295,6 @@ class ChallengeList extends React.Component {
 
             self.setState({ joinChallengeStep: 2 });
         });
-        
     }
 
     showChallengeDetails(){

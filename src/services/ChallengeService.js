@@ -23,11 +23,37 @@ class ChallengeService {
                 return dateB - dateA;
               });
               challenges = response.data.challenges
+
+              challenges.forEach(item=> {
+                  api.get('/userprofile/'+item.owner_id, {})
+                    .then((response) => {
+                        item.owner_name = response.data.user.name   
+                        item.onwer_picture = response.data.user.profpic_link    
+                    });
+              })
+
             }
           ).catch((error) => {
               console.log('error -> ', error);
           });
           return challenges
+    }
+
+    async todaysChallenge(){
+        let todays_challenges = []
+        await api.get('getallchallenges').then(
+            (response) => {
+                let today = new Date().toISOString().split('T')[0]
+                response.data.challenges.forEach(item=>{
+                    if(item.created_at.split('T')[0] == today){
+                        todays_challenges.push(item)
+                    }
+                })
+            }
+          ).catch((error) => {
+              console.log('error -> ', error);
+          });
+        return todays_challenges
     }
 }
 

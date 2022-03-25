@@ -93,8 +93,8 @@ function App() {
               <NewThankyouPage />
             </Route>
 
-            <Route path="/profile">
-            <ProfileProvider>
+            <Route path="/profile/:id">
+              <ProfileProvider>
                 <ClanHeader />
                 <Profile />
               </ProfileProvider>
