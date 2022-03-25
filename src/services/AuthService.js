@@ -57,7 +57,7 @@ class AuthService {
 
     async getUserProfile(){
         const user = CookieService.get("user_info")
-        const user_id = user.id
+        let user_id = user.id
         try {
             const response = await axios.get(UrlService.getUserProfile(user_id));
             if(response.data.user){
@@ -68,6 +68,36 @@ class AuthService {
             }
 
 
+        } catch (error) {
+            return false
+        }
+    }
+
+    async followUser(user) {
+        try {
+            const data = {
+                user_id: user.id,
+                friend_id: user.friend_id
+            }
+            const response = await axios.post(UrlService.follow(), data);
+            if(response.data){
+                return response.data
+            }else{
+                return false
+            }
+        } catch (error) {
+            return false
+        }
+    }
+
+    async getProfile(id){
+        try {
+            const response = await axios.get(UrlService.getUserProfile(id));
+            if(response.data.user){
+                return response.data.user
+            }else{
+                return false
+            }
         } catch (error) {
             return false
         }

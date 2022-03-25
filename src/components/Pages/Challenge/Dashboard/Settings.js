@@ -1,7 +1,52 @@
 import React from 'react';
 import auth from '../../../../services/auth';
 import CookieService from '../../../../services/CookieService';
+import axios from 'axios'
+
+const api = axios.create({
+    baseURL: 'https://api.vici.life/api/',
+    headers: {
+      'Content-Type' : 'application/json',
+      'Accept' : 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Authorization' : `Bearer ${auth.getAccessToken()}`,
+      'X-CSRF-TOKEN': auth.getAccessToken()
+    }
+})
+
 class Settings extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            challenge_title: this.props.details.name,
+            challenge_desc: this.props.details.description,
+            challenge_instruction: this.props.details.actions ? this.props.details.actions[0].description : '',
+            edit_form: true,
+        }
+        this.editForm = this.editForm.bind(this);
+    }
+
+    editForm() {
+        this.setState({ edit_form: false });
+    }
+
+    keyPress = (e) => {
+        if(e.keyCode === 13){
+            const data = {
+                name: this.state.challenge_title,
+                description: this.state.challenge_desc,
+                is_template: 'No',
+                owner_id: auth.user().id,
+                details: []
+            }
+
+            api.patch(`/challenge/${this.props.details.id}`, data)
+            .then((response) => {
+                this.setState({ edit_form: true });
+                console.log('updated-->', response);
+            });
+        } 
+    }
 
     render () {
         const profile_main_image = () => {
@@ -44,30 +89,36 @@ class Settings extends React.Component {
                             Title & Description
                         </div>
                         <div className="mx-6 flex justify-between py-3 border-b border-vici_gray">
-                            <div>
+                            <div className="w-10/12">
                                 <div>Title</div>
-                                <div className="pt-3 text-vici_secondary_text">{ this.props.details.name }</div>
+                                <div className="pt-3 text-vici_secondary_text">
+                                    <input disabled={this.state.edit_form} type="text" onKeyUp={this.keyPress} value={this.state.challenge_title} onChange={event => this.setState({ challenge_title: event.target.value })} className="w-full" />
+                                </div>
                             </div>
-                            <div className="pt-4 pr-6">
-                                <button className="text-sm text-vici_secondary font-bold">Edit</button>
+                            <div className="pt-4 pr-6 w-2/12 flex justify-end">
+                                <button onClick={this.editForm} className="text-sm text-vici_secondary font-bold">Edit</button>
                             </div>
                         </div>
                         <div className="mx-6 flex justify-between pb-3 pt-5 border-b border-vici_gray">
-                            <div>
+                            <div className="w-10/12">
                                 <div>Tagline</div>
-                                <div className="pt-3 text-vici_secondary_text">{ this.props.details.description }</div>
+                                <div className="pt-3 text-vici_secondary_text">
+                                    <input disabled={this.state.edit_form} type="text" onKeyUp={this.keyPress} value={this.state.challenge_desc} onChange={event => this.setState({ challenge_desc: event.target.value })} className="w-full" />
+                                </div>
                             </div>
-                            <div className="pt-4 pr-6">
-                                <button className="text-sm text-vici_secondary font-bold">Edit</button>
+                            <div className="pt-4 pr-6 w-2/12 flex justify-end">
+                                <button onClick={this.editForm} className="text-sm text-vici_secondary font-bold">Edit</button>
                             </div>
                         </div>
                         <div className="mx-6 flex justify-between pb-3 pt-5 border-b border-vici_gray">
-                            <div>
+                            <div className="w-10/12">
                                 <div>Instructions</div>
-                                <div className="pt-3 text-vici_secondary_text">Do the completed set of actions daily </div>
+                                <div className="pt-3 text-vici_secondary_text">
+                                    <input disabled={this.state.edit_form} type="text" value={this.state.challenge_instruction} onChange={event => this.setState({ challenge_instruction: event.target.value })} className="w-full" />
+                                </div>
                             </div>
-                            <div className="pt-4 pr-6">
-                                <button className="text-sm text-vici_secondary font-bold">Edit</button>
+                            <div className="pt-4 pr-6 w-2/12 flex justify-end">
+                                <button onClick={this.editForm} className="text-sm text-vici_secondary font-bold">Edit</button>
                             </div>
                         </div>
                     </div>

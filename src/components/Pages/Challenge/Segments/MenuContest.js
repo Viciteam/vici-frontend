@@ -46,7 +46,7 @@ class MenuContest extends React.Component {
                             &nbsp;
                         </div>
                         <div className="ds-item-text">
-                            Save as Termplate
+                            Save as Template
                         </div>
                     </div>
                     <div className="dsitem">

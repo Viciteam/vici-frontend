@@ -267,7 +267,7 @@ class ChallengeList extends React.Component {
     }
 
     goViewChallenge(id){
-        // console.log('visit challenge -> ', id);
+      // console.log('visit challenge -> ', id);
 
         window.location.replace('/challenge/'+id);
     
@@ -304,7 +304,6 @@ class ChallengeList extends React.Component {
 
             self.setState({ joinChallengeStep: 2 });
         });
-        
     }
 
     showChallengeDetails(){
