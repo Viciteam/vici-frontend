@@ -42,7 +42,7 @@ class Menu extends React.Component {
                             &nbsp;
                         </div>
                         <div className="ds-item-text">
-                            Save as Termplate 
+                            <button>Save as Termplate</button>
                         </div> 
                     </div>
                     <div className="dsitem">

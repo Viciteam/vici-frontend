@@ -554,7 +554,7 @@ class ChallengeGoalActions extends React.Component {
                   <div className="activity-add-button">
                       <div className="daddactions" onClick={() => this.openAddActionModal()}>
                           <span className="dicon"><FontAwesomeIcon icon={faPlus} /></span>
-                          <span className="dtext">Add Action</span>
+                          <span className="dtext">Add an action</span>
                       </div>
                       <ReactModal
                           isOpen={this.state.addActionModal}

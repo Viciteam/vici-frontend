@@ -1074,7 +1074,7 @@ class AddSocialAction extends React.Component {
         return (
             <div className="social-inner">
                 <div className="cg-label">
-                    <div className="cgl-name">Social Actions</div>
+                    <div className="cgl-name">Would you like to add Social Actions?</div>
                     <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.onSocialActionChange} checked={this.state.socialActionSLide} /></div>
                 </div>
                 <div className="cg-input dactivity">

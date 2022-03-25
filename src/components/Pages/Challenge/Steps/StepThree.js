@@ -15,24 +15,28 @@ class StepThree extends React.Component {
         this.state = {
             isactive: this.props.isactive,
             activepart: 'three_challenge_privacy',
-            stepThreeValues: [],
+            stepThreeValues: {
+                "locations_country": []
+            },
             participantsLocation: false,
             showDropOptions: false,
             showCountry: false,
             showState: false,
             showCity: false,
             enableFormAfterJoining: false,
-            showformPart: 1,
+            showformPart: 4,
             startDate: '',
             endDate: '',
+            dstates: [ 'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antigua & Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bonaire', 'Bosnia & Herzegovina', 'Botswana', 'Brazil', 'British Indian Ocean Ter', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Canary Islands', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Channel Islands', 'Chile', 'China', 'Christmas Island', 'Cocos Island', 'Colombia', 'Comoros', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote DIvoire', 'Croatia', 'Cuba', 'Curacao', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern Ter', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar'],
+            showAllCountry: false
         }
 
         this.createActive = this.createActive.bind(this);
         this.populateInput = this.populateInput.bind(this);
         this.showDropBase = this.showDropBase.bind(this);
         this.openCountry = this.openCountry.bind(this);
-        this.openState = this.openCountry.bind(this);
-        this.openCity = this.openCountry.bind(this);
+        this.openState = this.openState.bind(this);
+        this.openCity = this.openCity.bind(this);
         this.activateItem = this.activateItem.bind(this);
         this.resetCount = this.resetCount.bind(this);
         this.toogleSelectSpecificLocation = this.toogleSelectSpecificLocation.bind(this);
@@ -41,6 +45,7 @@ class StepThree extends React.Component {
         this.proceedToPrev = this.proceedToPrev.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this); 
         this.showAllSteps = this.showAllSteps.bind(this); 
+        this.selectLocationParticipantsAll = this.selectLocationParticipantsAll.bind(this); 
 
         this.setStartDate = this.setStartDate.bind(this); 
         this.setEndDate = this.setEndDate.bind(this); 
@@ -142,6 +147,42 @@ class StepThree extends React.Component {
         this.populateInput('enable_form_after_joining', enableForm)
     } 
 
+    selectLocationParticipants(item){
+        let dform = this.state.stepThreeValues;
+        
+        if(dform.locations_country.includes(item)){
+            console.log('');
+            dform.locations_country = dform.locations_country.filter(e => e !== item)
+        } else {
+            dform.locations_country.push(item);
+        }
+        
+        this.setState({stepThreeValues: dform})
+    }
+
+    selectLocationParticipantsAll(e){
+        let dform = this.state.stepThreeValues;
+        
+        if(e){
+            dform.locations_country = this.state.dstates;
+        } else {
+            dform.locations_country = [];
+        }
+
+        this.setState({stepThreeValues: dform})
+        
+    }
+
+    getChecked(item){
+        let dform = this.state.stepThreeValues;
+        
+        if(dform.locations_country.includes(item)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     proceedToNext(){
         this.props.callback(this.state.stepThreeValues);
     }
@@ -174,8 +215,7 @@ class StepThree extends React.Component {
                         <div className="dc_privacy">
                             <select name="" className="dc_privacy_setting" onChange={(e) => this.populateInput('challenge_privacy', e.target.value)}>
                                 <option >Invite Only</option>
-                                <option >Invite Only</option>
-                                <option >Invite Only</option>
+                                <option >Public</option>
                             </select>
                         </div>
                     </div>
@@ -186,15 +226,15 @@ class StepThree extends React.Component {
                     <div className="cg-input dactivity">
 
                         <div className="dlp-inner">
-                            <div className="dlp-item">
+                            <div className="dlp-item" onClick={() => this.toogleSelectSpecificLocation('anywhere')}>
                                 <div className="dlp-radio">
-                                    <input type="radio" name="participants_location" onChange={() => this.toogleSelectSpecificLocation('anywhere')} />
+                                    <input type="radio" name="participants_location" checked={!this.state.participantsLocation} onChange={()=>{}} />
                                 </div>
                                 <div className="dlp-label"><FontAwesomeIcon icon={faGlobeEurope} /> Anywhere</div>
                             </div>
-                            <div className="dlp-item">
+                            <div className="dlp-item" onClick={() => this.toogleSelectSpecificLocation('select_location')}>
                                 <div className="dlp-radio">
-                                    <input type="radio" name="participants_location" onChange={() => this.toogleSelectSpecificLocation('select_location')} />
+                                    <input type="radio" name="participants_location" checked={this.state.participantsLocation} onChange={()=>{}} />
                                 </div>
                                 <div className="dlp-label select_locations"><FontAwesomeIcon icon={faMapMarkerAlt} /> Select Locations</div>
                             </div>
@@ -205,101 +245,29 @@ class StepThree extends React.Component {
                                         <div className="dll-item-label" onClick={() => this.openCountry()}>By Country <span>></span></div>
                                         <div className={"dll-item-dropdown " + (this.state.showCountry === true ? 'show-me': 'hide-me')}>
                                             <div className="dlistofcountry">
-                                                <div className="dinputselect">
+                                                {/* <div className="dinputselect">
                                                     <input type="text" placeholder="Search.." />
-                                                </div>
+                                                </div> */}
                                                 <div className="dcountrylist">
                                                     <ul>
-                                                        <li>Afghanistan</li>
-                                                        <li>Albania</li>
-                                                        <li>Algeria</li>
-                                                        <li>American Samoa</li>
-                                                        <li>Andorra</li>
-                                                        <li>Angola</li>
-                                                        <li>Anguilla</li>
-                                                        <li>Antigua & Barbuda</li>
-                                                        <li>Argentina</li>
-                                                        <li>Armenia</li>
-                                                        <li>Aruba</li>
-                                                        <li>Australia</li>
-                                                        <li>Austria</li>
-                                                        <li>Azerbaijan</li>
-                                                        <li>Bahamas</li>
-                                                        <li>Bahrain</li>
-                                                        <li>Bangladesh</li>
-                                                        <li>Barbados</li>
-                                                        <li>Belarus</li>
-                                                        <li>Belgium</li>
-                                                        <li>Belize</li>
-                                                        <li>Benin</li>
-                                                        <li>Bermuda</li>
-                                                        <li>Bhutan</li>
-                                                        <li>Bolivia</li>
-                                                        <li>Bonaire</li>
-                                                        <li>Bosnia & Herzegovina</li>
-                                                        <li>Botswana</li>
-                                                        <li>Brazil</li>
-                                                        <li>British Indian Ocean Ter</li>
-                                                        <li>Brunei</li>
-                                                        <li>Bulgaria</li>
-                                                        <li>Burkina Faso</li>
-                                                        <li>Burundi</li>
-                                                        <li>Cambodia</li>
-                                                        <li>Cameroon</li>
-                                                        <li>Canada</li>
-                                                        <li>Canary Islands</li>
-                                                        <li>Cape Verde</li>
-                                                        <li>Cayman Islands</li>
-                                                        <li>Central African Republic</li>
-                                                        <li>Chad</li>
-                                                        <li>Channel Islands</li>
-                                                        <li>Chile</li>
-                                                        <li>China</li>
-                                                        <li>Christmas Island</li>
-                                                        <li>Cocos Island</li>
-                                                        <li>Colombia</li>
-                                                        <li>Comoros</li>
-                                                        <li>Congo</li>
-                                                        <li>Cook Islands</li>
-                                                        <li>Costa Rica</li>
-                                                        <li>Cote DIvoire</li>
-                                                        <li>Croatia</li>
-                                                        <li>Cuba</li>
-                                                        <li>Curacao</li>
-                                                        <li>Cyprus</li>
-                                                        <li>Czech Republic</li>
-                                                        <li>Denmark</li>
-                                                        <li>Djibouti</li>
-                                                        <li>Dominica</li>
-                                                        <li>Dominican Republic</li>
-                                                        <li>East Timor</li>
-                                                        <li>Ecuador</li>
-                                                        <li>Egypt</li>
-                                                        <li>El Salvador</li>
-                                                        <li>Equatorial Guinea</li>
-                                                        <li>Eritrea</li>
-                                                        <li>Estonia</li>
-                                                        <li>Ethiopia</li>
-                                                        <li>Falkland Islands</li>
-                                                        <li>Faroe Islands</li>
-                                                        <li>Fiji</li>
-                                                        <li>Finland</li>
-                                                        <li>France</li>
-                                                        <li>French Guiana</li>
-                                                        <li>French Polynesia</li>
-                                                        <li>French Southern Ter</li>
-                                                        <li>Gabon</li>
-                                                        <li>Gambia</li>
-                                                        <li>Georgia</li>
-                                                        <li>Germany</li>
-                                                        <li>Ghana</li>
-                                                        <li>Gibraltar</li>
+                                                        <li>
+                                                            <input type="checkbox" id="forselectall" onChange={(e) => this.selectLocationParticipantsAll(e.target.checked)} />
+                                                            <span htmlFor='forselectall'><strong>Select All</strong></span>
+                                                        </li>
+                                                        {
+                                                            this.state.dstates.map((item, i) => (
+                                                                <li key={i}>
+                                                                    <input type="checkbox" id={i} checked={this.getChecked(item)} onChange={() => this.selectLocationParticipants(item)} />
+                                                                    <label htmlFor={i}>{item}</label>
+                                                                </li>
+                                                            ))
+                                                        }
                                                     </ul>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="dll-item">
+                                    {/* <div className="dll-item">
                                         <div className="dll-item-label" onClick={() => this.openState()}>By State <span>></span></div>
                                         <div className={"dll-item-dropdown " + (this.state.showState === true ? 'show-me': 'hide-me')}>
                                             show dropdown
@@ -310,7 +278,7 @@ class StepThree extends React.Component {
                                         <div className={"dll-item-dropdown " + (this.state.showCity === true ? 'show-me': 'hide-me')}>
                                             show dropdown
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

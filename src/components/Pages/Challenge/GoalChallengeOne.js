@@ -65,6 +65,9 @@ class GoalChallengeOne extends React.Component {
             stepTwoData: [],
             stepThreeData: [],
             stepFourData: '',
+            showPublishChallengeModal: false,
+            newChallengeID: 0,
+            showLoading: false
         }
         this.createActive = this.createActive.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this);
@@ -162,10 +165,10 @@ class GoalChallengeOne extends React.Component {
 
         let parameters = JSON.stringify(params);
 
-        api.post('/challenge', parameters)
-        .then((response) => {
-            console.log(response);
-        });
+        // api.post('/challenge', parameters)
+        // .then((response) => {
+        //     console.log(response);
+        // });
 
         //     api.get('challenge/'+this.state.challengeID).then(
         //     (response) => {
@@ -299,16 +302,22 @@ class GoalChallengeOne extends React.Component {
             }
         });
 
+        this.setState({showPublishChallengeModal: true});
+        this.setState({showLoading: true});
+
         // let params = JSON.stringify(Object.assign({}, parameters));
 
-        // console.log(parameters);
+        console.log('params -> ', parameters);
 
 
         api.post('/challenge', parameters)
         .then((response) => {
-            // console.log('API response -> ', response.data.challenge.id);
+            console.log('API response -> ', response.data.challenge.id);
+                
             self.addAction(response.data.challenge.id);
             self.addPenalty(response.data.challenge.id);
+            self.setState({newChallengeID: response.data.challenge.id});
+            self.setState({showLoading: false});
         });
 
 
@@ -324,7 +333,12 @@ class GoalChallengeOne extends React.Component {
     }
 
     handleStepFourCallback(StepFourInfo){
-        this.processStepPerStep(StepFourInfo);
+        // this.processStepPerStep(StepFourInfo);
+        let getFinalValues = this.state.finalValues;
+        Object.keys(StepFourInfo).forEach(function(key) {
+            getFinalValues[key] = StepFourInfo[key];
+        });
+        this.setState({finalValues: getFinalValues});
         this.processSubmit();
     }
 
@@ -387,6 +401,36 @@ class GoalChallengeOne extends React.Component {
                         <div className={"dstep step_one " + (this.state.stepnumber === 3 ? 'isactive_tab' : '')}>
                             <div className="cgoal-center-inner">
                                 <StepFour selectedcolor={this.handleStepFourColor} selectedimage={this.handleStepFourSelectedImage} toBack={this.handleStepFourPreviousStep} callback={this.handleStepFourCallback} />
+                                <ReactModal 
+                                    isOpen={this.state.showPublishChallengeModal}
+                                    contentLabel="Minimal Modal Example"
+                                    className="Modal publish-challenge-modal"
+                                    // overlayClassName="Overlay"
+                                    ariaHideApp={false}
+                                >
+                                    <div className="publish-challenge-main">
+                                        {
+                                            (
+                                                this.state.showLoading ? 
+                                                <div className='showLoading'>
+                                                    <img src="/img/loading.gif" alt="" />
+                                                </div>
+                                                :
+                                                <div className='publish-modal'>
+                                                    <div className='dpublish-image'>
+                                                        <img src="/img/green_check.png" alt="" />
+                                                    </div>
+                                                    <h3>Your Challenge has been published!</h3>
+                                                    <div className='d-confirm-saving'>
+                                                        <button onClick={() => ( window.location.href = "/challenge/"+this.state.newChallengeID )}>View Challenge</button>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                        
+                                        
+                                    </div>
+                                </ReactModal>
                             </div>
                         </div>
                     </div>

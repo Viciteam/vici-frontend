@@ -540,7 +540,9 @@
 .challenges-goal-page-inner .dlp-item {
     width: 50%;
     margin: 0 auto;
+    cursor: pointer;
 }
+
 
 .challenges-goal-page-inner .dlp-item > * {
     display: inline-block;
@@ -618,7 +620,7 @@
 .challenges-goal-page-inner .ddown_list .dlocationlist .dll-item .dll-item-dropdown {
     left: 100%;
     position: absolute;
-    width: 220px;
+    width: 270px;
     background: #fff;
     box-shadow: 0px 0px 12px #ccc;
     top: 0;
@@ -4358,4 +4360,60 @@
     display: inline-block;
     width: 50%;
     text-align: right;
+}
+
+.publish-challenge-modal {
+    width: 450px;
+}
+
+.publish-challenge-main {
+    box-shadow: 0 0 12px #ccc;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+}
+
+.publish-challenge-main h3 {
+    font-weight: bold;
+    font-size: 22px;
+    font-family: nunito, sans-serif;
+    margin-bottom: 30px;
+}
+
+.publish-challenge-main button {
+    font-family: nunito, sans-serif;
+    background: #FFCA28;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1em;
+    padding: 20px 25px;
+    display: inline-block;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.publish-challenge-main .dpublish-image img {
+    margin: 0 auto 20px;
+}
+
+.ReactModalPortal {
+    position: relative;
+    z-index: 9;
+}
+
+.challenges-goal-page-inner .cgoal-center-inner .cg-item .dlistofcountry .dcountrylist  {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.challenges-goal-page-inner .cgoal-center-inner .cg-item .dlistofcountry .dcountrylist ul li input {
+    display: inline-block;
+    width: 15%;
+    text-align: left;
+}
+
+.dlistofcountry .dcountrylist ul li span {
+    display: inline-block;
 }

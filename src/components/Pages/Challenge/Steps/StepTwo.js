@@ -131,7 +131,7 @@ class StepTwo extends React.Component {
                 <h2>How to Measure the Goal?</h2>
 
                 <div className={"cg-item " + (this.state.activepart === 'two_main_goal' ? 'active_item' : '')} onFocus={() => this.createActive('two_main_goal') }>
-                    <div className="cg-label">Main Goal</div>
+                    <div className="cg-label">Is it one goal or multiple goals?</div>
                     <div className="cg-input">
                         <div className="dmultiple">
                             <div className={"dm-left toogle-clickable " + (this.state.mainGoalValue === 'single' ? 'active_main_goal_item' : '')} onClick={() => this.toogleMainGoalValues('single')}>
@@ -157,15 +157,15 @@ class StepTwo extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="dsdesc">Description</div>
-                        <div className="dsdesc">Single Goal. Only has one goal with multiple actions, enable multiple milestones to create milestones.</div>
+                        {/* <div className="dsdesc">Description</div>
+                        <div className="dsdesc">Single Goal. Only has one goal with multiple actions, enable multiple milestones to create milestones.</div> */}
                         <input type="text" placeholder="What is the main goal? E.g. Be physically fit" />
                     </div>
                 </div>
 
                 <div className={"cg-item " + (this.state.activepart === 'two_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 2 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_actions') }>
 
-                    <div className="cg-label">Actions</div>
+                    <div className="cg-label">What are the actions needed to complete the Goal?</div>
                     <ChallengeGoalActions getData={this.pullChallengeAction} />
                 </div>
 
@@ -175,7 +175,7 @@ class StepTwo extends React.Component {
 
                 <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 4 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_convert_actions') }>
                     <div className="cg-label">
-                        <div className="cgl-name">Convert all actions into points</div>
+                        <div className="cgl-name">Do you want to convert all actions into points?</div>
                         <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleConvertActionToPoints} checked={this.state.convertActionToPoints} /></div>
                     </div>
                     <div className="cg-input dactivity">
@@ -185,7 +185,7 @@ class StepTwo extends React.Component {
 
                 <div className={"cg-item " + (this.state.activepart === 'two_penalty' ? 'active_item' : '')} style={(this.state.showformPart >= 5 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_penalty') }>
                     <div className="cg-label">
-                        <div className="cgl-name">Penalty</div>
+                        <div className="cgl-name">Would you like to set Penalty rules?</div>
                         <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleAllowPenalty} checked={this.state.allowPenalty} /></div>
                     </div>
                     <ChallengePenalties getData={this.pullPenalties} showPenalties={this.state.allowPenalty} />
