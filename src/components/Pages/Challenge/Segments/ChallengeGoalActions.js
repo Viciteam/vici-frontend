@@ -20,7 +20,7 @@ class ChallengeGoalActions extends React.Component {
             stageTwoSelectedOption: '',
             simplipifyAction: false,
             setAsRequired: false,
-            showInstructionForm: false,
+            showInstructionForm: true,
             VerifyAction: false,
             actionPoints: false,
             integratedItems: [],
@@ -31,25 +31,19 @@ class ChallengeGoalActions extends React.Component {
               'title': '',
               'instructions': '',
               'allowAction_link': false,
-              'action_link': '',
+              'action_link': 'none',
               'simplify_action': false,
               'set_required_action': false,
-              'integrations': {
-                'items': [],
-                'measurement_number': '',
-                'measurement_unit': 'meters',
-                'points_every': '10'
-              },
-              'custom_tracking': {
-                'items': [],
-                'verify_action_tracking': false,
-                'action_tracking': "manually_verify",
-              },
-              'points': {
-                'isactive': false,
-                'isvalue': ''
-              },
-              'total': ''
+			  'integrations_items': 'none',
+			  'integrations_measurement_number': '0',
+			  'integrations_measurement_unit': 'meters',
+			  'integrations_points_every': '10',
+			  'custom_tracking_items': 'none',
+			  'custom_tracking_verify_action_tracking': false,
+			  'custom_tracking_action_tracking': 'manually_verify',
+              'points_isactive': false,
+              'points_isvalue': '0',
+              'total': '0'
             },
             ActionList: [],
 			ActionsMustCompleteActionInOrder: false
@@ -127,7 +121,8 @@ class ChallengeGoalActions extends React.Component {
 		}
 
 		let current_actions = this.state.currentActions;
-		current_actions['integrations'].items = integrated_items;
+		const commaSep = integrated_items.map(item => item).join(', ');
+		current_actions['integrations_items'] = commaSep;
 		this.setState({currentActions: current_actions})
 
 		this.setState({integratedItems: integrated_items})
@@ -146,7 +141,8 @@ class ChallengeGoalActions extends React.Component {
 		}
 
 		let current_actions = this.state.currentActions;
-		current_actions['custom_tracking'].items = custom_tracking;
+		const commaSep = custom_tracking.map(item => item).join(', ');
+		current_actions['custom_tracking_items'] = commaSep;
 		this.setState({currentActions: current_actions})
 
 
@@ -158,7 +154,7 @@ class ChallengeGoalActions extends React.Component {
 		this.setState({VerifyAction: newVerifyValues})
 
 		let selectedMeasurement =  this.state.currentActions;
-		selectedMeasurement['custom_tracking'].verify_action_tracking = newVerifyValues;
+		selectedMeasurement['custom_tracking_verify_action_tracking'] = newVerifyValues;
 		this.setState({currentActions: selectedMeasurement});
 	}
 
@@ -167,7 +163,7 @@ class ChallengeGoalActions extends React.Component {
 		this.setState({actionPoints: newActionPoints})
 
 		let selectedMeasurement =  this.state.currentActions;
-		selectedMeasurement['points'].isactive = newActionPoints;
+		selectedMeasurement['points_isactive'] = newActionPoints;
 		this.setState({currentActions: selectedMeasurement});
 	}
 
@@ -176,19 +172,19 @@ class ChallengeGoalActions extends React.Component {
 		this.setState({integrationMeasurement: event.target.value});
 
 		let selectedMeasurement =  this.state.currentActions;
-		selectedMeasurement['integrations'].measurement_unit = event.target.value;
+		selectedMeasurement['integrations_measurement_unit'] = event.target.value;
 		this.setState({currentActions: selectedMeasurement});
 	}
 
 	savePointsEveryWhen(event){
 		let selectedMeasurement =  this.state.currentActions;
-		selectedMeasurement['integrations'].points_every = event.target.value;
+		selectedMeasurement['integrations_points_every'] = event.target.value;
 		this.setState({currentActions: selectedMeasurement});
 	}
 
 	showVerificationToogle(event){
 		let selectedMeasurement =  this.state.currentActions;
-		selectedMeasurement['custom_tracking'].action_tracking = event.target.value;
+		selectedMeasurement['custom_tracking_action_tracking'] = event.target.value;
 		this.setState({currentActions: selectedMeasurement});
 	}
 
@@ -205,25 +201,19 @@ class ChallengeGoalActions extends React.Component {
 			'title': '',
 			'instructions': '',
 			'allowAction_link': false,
-			'action_link': '',
+			'action_link': 'none',
 			'simplify_action': false,
 			'set_required_action': false,
-			'integrations': {
-			  'items': [],
-			  'measurement_number': '',
-			  'measurement_unit': 'meters',
-			  'points_every': '10'
-			},
-			'custom_tracking': {
-			  'items': [],
-			  'verify_action_tracking': false,
-			  'action_tracking': "manually_verify",
-			},
-			'points': {
-			  'isactive': false,
-			  'isvalue': ''
-			},
-			'total': ''
+			'integrations_items': 'none',
+			'integrations_measurement_number': '0',
+			'integrations_measurement_unit': 'meters',
+			'integrations_points_every': '10',
+			'custom_tracking_items': 'none',
+			'custom_tracking_verify_action_tracking': false,
+			'custom_tracking_action_tracking': 'manually_verify',
+			'points_isactive': false,
+			'points_isvalue': '0',
+			'total': '0'
 		};
 		this.setState({currentActions: resetValues});
 		this.setState({actionCurrentStep: 1});
@@ -240,11 +230,11 @@ class ChallengeGoalActions extends React.Component {
 	addIntegrationParameters(isType, isValue){
 		let dform = this.state.currentActions;
 		if(isType == 'measurement_number'){
-			dform['integrations'].measurement_number = isValue;
+			dform['integrations_measurement_number'] = isValue;
 		}
 
 		if(isType == 'number_of_points'){
-			dform['points'].isvalue = isValue;
+			dform['points_isvalue'] = isValue;
 		}
 
 		this.setState({currentActions: dform});
@@ -261,20 +251,20 @@ class ChallengeGoalActions extends React.Component {
         	let showInstrucitionsField = () => {
 				if(this.state.showInstructionForm){
 					return (
-						<div class="d-add-instructions-fields">
-							<div class="d-add-header">Instruction</div>
-							<div class="d-add-close">
+						<div className="d-add-instructions-fields">
+							<div className="d-add-header">Instruction *</div>
+							<div className="d-add-close">
 								<button onClick={() => this.CloneNewInstructions()}><FontAwesomeIcon icon={faTimes} /></button>
 							</div>
-							<div class="d-add-instruction-textarea">
+							<div className="d-add-instruction-textarea">
 								<textarea placeholder="Add instruction on how to do this action" onChange={(e) => this.addActionParameters('instructions', e.target.value)}></textarea>
 							</div>
-							<div class="d-link-options">
-								<div class="d-link-option-checkarea">
+							<div className="d-link-options">
+								<div className="d-link-option-checkarea">
 									<input type="checkbox" onChange={(e) => this.addActionParameters('allowAction_link', e.target.value)} />
 								</div>
-								<div class="d-link-option-text">Action Link</div>
-								<div class="d-link-option-input">
+								<div className="d-link-option-text">Allow Action Link</div>
+								<div className="d-link-option-input">
 									<input type="text" placeholder="www.facebookpage.com"  onChange={(e) => this.addActionParameters('action_link', e.target.value)} />
 								</div>
 							</div>
@@ -284,7 +274,7 @@ class ChallengeGoalActions extends React.Component {
 
 				if(!this.state.showInstructionForm){
 					return (
-						<div class="d-add-instructions">
+						<div className="d-add-instructions">
 							<button onClick={() => this.AddNewInstructions()}><FontAwesomeIcon icon={faPlus} /> <span>Add instruction and link</span></button>
 						</div>
 					);
@@ -442,7 +432,7 @@ class ChallengeGoalActions extends React.Component {
 							<div className="d-action-step-name">
 								<input type="text" placeholder="Action Name" onChange={(e) => this.addActionParameters('title', e.target.value)} value={this.state.currentActions['title']}/>
 							</div>
-							<div class="d-actions-instructions">
+							<div className="d-actions-instructions">
 								{showInstrucitionsField()}
 							</div>
 							<div className="d-action-step-one-options">
@@ -463,7 +453,7 @@ class ChallengeGoalActions extends React.Component {
 						</div>
 						<div className="d-action-steps-options">
 							<button className="d-cancel-action" onClick={() => this.closeAddActionModal()}>Cancel</button>
-							<button className={'d-proceed-action '+(!this.state.currentActions['title'] ? 'disabled-button': '')} disabled={!this.state.currentActions['title']} onClick={() => this.goToNextStep(2)}>Next</button>
+							<button className={'d-proceed-action '+(!this.state.currentActions['title'] || !this.state.currentActions['instructions'] ? 'disabled-button': '')} disabled={!this.state.currentActions['title'] || !this.state.currentActions['instructions']} onClick={() => this.goToNextStep(2)}>Next</button>
 						</div>
 					</div>
 				);
@@ -541,7 +531,7 @@ class ChallengeGoalActions extends React.Component {
 		const showActions = () => {
 			return this.state.ActionList.map(function(d, idx){
 				return (
-					<div className="ac-item">
+					<div className="ac-item" key={idx}>
                           <div className="dleftitems">
                               <span className="dicon"><FontAwesomeIcon icon={faBars} /></span>
                               <span className="dtext">{d.title}</span>
@@ -564,7 +554,7 @@ class ChallengeGoalActions extends React.Component {
                   <div className="activity-add-button">
                       <div className="daddactions" onClick={() => this.openAddActionModal()}>
                           <span className="dicon"><FontAwesomeIcon icon={faPlus} /></span>
-                          <span className="dtext">Add Action</span>
+                          <span className="dtext">Add an action</span>
                       </div>
                       <ReactModal
                           isOpen={this.state.addActionModal}

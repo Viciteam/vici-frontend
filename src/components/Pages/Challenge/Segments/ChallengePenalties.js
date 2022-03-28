@@ -196,12 +196,12 @@ class ChallengePenalties extends React.Component {
 			'title': '',
 			'instructions': '',
 			'allowAction_link': false,
-			'action_link': '',
+			'action_link': 'none',
 			'simplify_action': false,
 			'set_required_action': false,
 			'integrations': {
 			  'items': [],
-			  'measurement_number': '',
+			  'measurement_number': '0',
 			  'measurement_unit': 'meters',
 			  'points_every': '10'
 			},
@@ -212,9 +212,9 @@ class ChallengePenalties extends React.Component {
 			},
 			'points': {
 			  'isactive': false,
-			  'isvalue': ''
+			  'isvalue': '0'
 			},
-			'total': ''
+			'total': '0'
 		};
 		this.setState({currentActions: resetValues});
 		this.setState({actionCurrentStep: 1});
