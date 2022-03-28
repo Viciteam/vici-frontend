@@ -328,7 +328,14 @@ class GoalChallengeOne extends React.Component {
     processStepPerStep(info){
         let getFinalValues = this.state.finalValues;
         Object.keys(info).forEach(function(key) {
-            getFinalValues[key] = info[key];
+            // console.log('process step three -> ', key);
+            if(key == 'locations_country'){
+                // console.log('process step three -> ', info[key].toString());
+                getFinalValues[key] = info[key].toString();
+            } else {
+                getFinalValues[key] = info[key];
+            }
+            
         });
         this.setState({finalValues: getFinalValues});
         this.proceedToNext();

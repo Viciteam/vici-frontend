@@ -16,7 +16,7 @@ class StepThree extends React.Component {
             isactive: this.props.isactive,
             activepart: 'three_challenge_privacy',
             stepThreeValues: {
-                "locations_country": []
+                "locations_country": "anywhere"
             },
             participantsLocation: false,
             showDropOptions: false,
@@ -43,7 +43,7 @@ class StepThree extends React.Component {
         this.toogleEnableFormAfterJoining = this.toogleEnableFormAfterJoining.bind(this);
         this.proceedToNext = this.proceedToNext.bind(this);
         this.proceedToPrev = this.proceedToPrev.bind(this);
-        this.proceedToNext = this.proceedToNext.bind(this); 
+        // this.proceedToNext = this.proceedToNext.bind(this); 
         this.showAllSteps = this.showAllSteps.bind(this); 
         this.selectLocationParticipantsAll = this.selectLocationParticipantsAll.bind(this); 
 
@@ -72,8 +72,14 @@ class StepThree extends React.Component {
         if(e === 'select_location'){
             this.populateInput('selected_location', 'specific')
             this.setState({participantsLocation: true});
+            let dform = this.state.stepThreeValues;
+            dform.locations_country = [];
+            this.setState({stepThreeValues: dform});
         } else {
             this.populateInput('selected_location', 'anywhere')
+            let dform = this.state.stepThreeValues;
+            dform.locations_country = 'anywhere';
+            this.setState({stepThreeValues: dform});
             this.setState({participantsLocation: false});
         }
     }
@@ -149,15 +155,15 @@ class StepThree extends React.Component {
 
     selectLocationParticipants(item){
         let dform = this.state.stepThreeValues;
-        
+        console.log('save local participant actions -> ', dform);
         if(dform.locations_country.includes(item)){
-            console.log('');
             dform.locations_country = dform.locations_country.filter(e => e !== item)
         } else {
             dform.locations_country.push(item);
         }
         
         this.setState({stepThreeValues: dform})
+        
     }
 
     selectLocationParticipantsAll(e){
