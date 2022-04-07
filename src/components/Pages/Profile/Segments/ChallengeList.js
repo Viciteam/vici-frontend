@@ -94,14 +94,17 @@ class ChallengeList extends React.Component {
 
 
     getChallengeComments(){
-        // console.log('challenge challengeid -> ', challengeid);
+        
         this.setState({challengeComments: []});
         let self = this;
-        if(this.state.hasUserLogin){
-            api.get('/getchallenge_comments/'+this.props.challenge_id.id, {})
+        let challenge_id = this.props.challenge_id.id;
+        if(auth.isAuthenticated()){
+            api.get('/getchallenge_comments/'+challenge_id, {})
             .then((response) => {
-                // console.log('challenge commetns for '+challengeid+' -> ', response.data.comments.data);
+                // console.log('challenge commetns for '+challenge_id+' -> ', response.data.comments.data);
                 self.setState({challengeComments: response.data.comments.data});
+            }).catch((error) => {
+                console.log('challenge commetns -> ', error);
             });
         }
         
@@ -256,7 +259,7 @@ class ChallengeList extends React.Component {
         api.post('/challenge_comment', comment_info)
         .then((response) => {
             console.log('challenge comment-> ', response.data.challenge_comment);
-            self.getChallengeComments(this.props.challenge_id.id);
+            self.getChallengeComments();
             self.setState({buildComment: ''});
         });
         
@@ -329,9 +332,14 @@ class ChallengeList extends React.Component {
     checkHasUserLogin(){
         if(auth.isAuthenticated()){
             this.setState({hasUserLogin: true});
+            console.log('is auth');
         } else {
             this.setState({hasUserLogin: false});
+            console.log('is no auth');
         }
+
+        
+        
     }
 
 

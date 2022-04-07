@@ -1623,7 +1623,7 @@
 
 .dvr-participants-list .dvr-participants-header .dvr-title-participants {
     display: inline-block;
-    width: 30%;
+    width: 40%;
     font-size: 13px;
     font-weight: bold;
     line-height: 1em;
@@ -1645,7 +1645,7 @@
 
 .dvr-participants-list .dvr-participants-header .dvr-title-progress {
     display: inline-block;
-    width: 39%;
+    width: 59%;
     font-size: 13px;
     font-weight: bold;
     line-height: 1em;
@@ -1656,7 +1656,7 @@
 
 .dvr-participants-list .dvr-participant .dvr-item-participant {
     display: inline-block;
-    width: 30%;
+    width: 40%;
 }
 
 .dvr-participants-list .dvr-participant .dvr-item-clan {
@@ -1667,7 +1667,7 @@
 
 .dvr-participants-list .dvr-participant .dvr-item-progress {
     display: inline-block;
-    width: 39%;
+    width: 59%;
 }
 
 .dvr-participants-list .dvr-participant .dvr-item-participant .dvr-participant-photo {
@@ -2113,6 +2113,7 @@
 .challenges-page-inner .updates-comments-inner .dpostlist .dpost-list-item.comment-item {
     padding: 0 20px 15px;
     box-shadow: 0px 4px 10px #bdbdbd40;
+    margin-bottom: 15px;
 }
 
 .challenges-page-inner .updates-comments-inner .dpostlist .dpost-list-item .dpost-list-item-post {

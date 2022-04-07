@@ -7,6 +7,7 @@ import WatchRewards from './Segments/WatchRewards'
 import Comments from './Segments/Comments'
 
 import OtherChallenges from './Segments/OtherChallenges'
+import ManageChallengeParticipants from './Segments/ManageChallengeParticipants'
 import OtherMainSIde from './Segments/OtherMainSIde'
 import ManageChallenge from './Segments/ManageChallenge';
 
@@ -48,56 +49,31 @@ class ViewChallenge extends React.Component {
 
     componentDidMount(){
         console.log('props', this.props)
-      api.get('challenge/'+this.state.challengeID).then(
-        (response) => {
-          console.log('response -> ', response.data.challenges);
-          let challenges = response.data.challenges[0];
+        let self = this;
+        api.get('challenge/'+this.state.challengeID).then((response) => {
+            console.log('challegne info -> ', response.data.challenges[0]);
+            let challenges = response.data.challenges[0];
 
-          let challenge_details = [];
-          challenge_details['name'] = challenges.name;
-          challenge_details['description'] = challenges.description;
-          challenge_details['id'] = challenges.id;
-          this.setState({challengeDetails: challenge_details});
-        
-          // set actioms
-          // let actions = [];
-          // challenges.actions.map((item, index) => {
-          //   let info = [];
-          //
-          //   // conert trackings
-          //   info.push(item);
-          //   console.log('info ->', info);
-          //   actions.push(info);
-          // })
-          // console.log('actions ->', actions);
-          this.setState({challengeActions: challenges.actions});
-          if(challenges.owner_id == auth.user().id){
-            this.setState({isOwner: true});
-          }else{
-            this.setState({isOwner: false});
-          }
-          // challenge actions
-        }
-      ).catch((error) => {
-        console.log('error -> ', error);
-      });
+            let challenge_details = [];
+            challenge_details['name'] = challenges.name;
+            challenge_details['description'] = challenges.description;
+            challenge_details['id'] = challenges.id;
+            challenges.challenge_details.map((item, i) => { challenge_details[item.field] = item.data; })
+
+            self.setState({challengeDetails: challenge_details});
+            self.setState({challengeActions: challenges.actions});
+
+            if(challenges.owner_id == auth.user().id){
+                self.setState({isOwner: true});
+            }else{
+                self.setState({isOwner: false});
+            }
+            // challenge actions
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
     }
 
-    // getChallengeInfo = async () => {
-    //   console.log('get challenge');
-    //   let self = this;
-    //
-    //   // get challenge
-    //   api.get('challenge/'+this.state.challengeID).then(
-    //     (response) => {
-    //       console.log('response -> ', response.data.challenges);
-    //       this.setState({challengeDetails: response.data.challenges});
-    //
-    //     }
-    //   ).catch((error) => {
-    //     console.log('error -> ', error);
-    //   });
-    // }
 
     watchChallenge(){
 
@@ -163,11 +139,11 @@ class ViewChallenge extends React.Component {
                                 <ManageChallenge challenge={this.state.challengeDetails} />
                             </div>
                         }
-                        <div className="dvr-notif-bar">
+                        {/* <div className="dvr-notif-bar">
                             <span className="dvr-notif-eye"><FontAwesomeIcon icon={faEye} /></span>
                             <span className="dvr-notif-text">You are watching the challenge with 230 other people.</span>
                             <span className="dvr-notif-close"><FontAwesomeIcon icon={faTimes} /></span>
-                        </div>
+                        </div> */}
                         <div className="dvr-item dvr-main-action">
                             <div className="dvr-action-inner">
                                 <h2>Actions</h2>
@@ -178,18 +154,12 @@ class ViewChallenge extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="dvr-item dvr-main-progress">
+                        {/* <div className="dvr-item dvr-main-progress">
                             <div className="dleftpart">
                                 <img src="/img/user_main.jpg" alt="" />
                             </div>
                             <div className="drightpart">
                                 <div className="dchartpart">
-                                    {/* <div className="donut-chart-block">
-                                        <div className="donut-chart" style={{backgroundColor: this.state.selectedColor+"70"}}>
-                                            <div id="part1" className="portion-block"><div className="circle" style={{backgroundColor: this.state.selectedColor}}></div></div>
-                                            <p className="center"><span className="dnum">0</span><br /><span className="dsubtext">Actions</span></p>
-                                        </div>
-                                    </div> */}
                                     <div className="watch-pie-chart wpc-progress">
                                         <h6>
                                             <span className="dnumbs">0</span>
@@ -214,87 +184,22 @@ class ViewChallenge extends React.Component {
                                     <div className="dpi-join-button">Join Challenge</div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="dvr-item dvr-main-participants-progress">
-                            <div className="dvr-participants-inner">
-                                <h2><span className="dheadertitle">Participant Progress</span><span className="dviewall">View All ></span></h2>
-                                <div className="dvr-item-content">
-                                    <div className="dvr-participants-list">
-                                        <div className="dvr-participants-header">
-                                            <div className="dvr-title-participants">Participant</div>
-                                            <div className="dvr-title-clan">Clan</div>
-                                            <div className="dvr-title-progress">Progress</div>
-                                        </div>
-                                        <div className="dvr-participant-items">
-                                            <div className="dvr-participant dvr-done-item">
-                                                <div className="dvr-item-participant">
-                                                    <div className="dvr-participant-photo">
-                                                        <img src="/img/prof_icon.png" alt="" />
-                                                    </div>
-                                                    <div className="dvr-participant-name">Lorem Ipsum</div>
-                                                </div>
-                                                <div className="dvr-item-clan">Sample Clan</div>
-                                                <div className="dvr-item-progress">
-                                                    <div className="dprogressbar">
-                                                        <div className="dprogressbase">
-                                                            <div className="dprogressvalues" style={{width: 100 + '%'}}>&nbsp;</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="dvectorpagrt"><FontAwesomeIcon icon={faCheckCircle} /></div>
-                                                </div>
-                                            </div>
-                                            <div className="dvr-participant dvr-failed-item">
-                                                <div className="dvr-item-participant">
-                                                    <div className="dvr-participant-photo">
-                                                        <img src="/img/prof_icon.png" alt="" />
-                                                    </div>
-                                                    <div className="dvr-participant-name">Lorem Ipsum</div>
-                                                </div>
-                                                <div className="dvr-item-clan">Sample Clan</div>
-                                                <div className="dvr-item-progress">
-                                                    <div className="dprogressbar">
-                                                        <div className="dprogressbase">
-                                                            <div className="dprogressvalues" style={{width: 75 + '%'}}>&nbsp;</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="dvectorpagrt">failed</div>
-                                                </div>
-                                            </div>
-                                            <div className="dvr-participant">
-                                                <div className="dvr-item-participant">
-                                                    <div className="dvr-participant-photo">
-                                                        <img src="/img/prof_icon.png" alt="" />
-                                                    </div>
-                                                    <div className="dvr-participant-name">Lorem Ipsum</div>
-                                                </div>
-                                                <div className="dvr-item-clan">Sample Clan</div>
-                                                <div className="dvr-item-progress">
-                                                    <div className="dprogressbar">
-                                                        <div className="dprogressbase">
-                                                            <div className="dprogressvalues" style={{width: 75 + '%'}}>&nbsp;</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="dvectorpagrt">2/5</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </div> */}
+                        <ManageChallengeParticipants />
+                        
                         <div className="dvr-item dvr-main-comments no-shadow">
                             <Comments />
                         </div>
                     </div>
                 </div>
-                <div className="dotherinfo">
+                {/* <div className="dotherinfo">
                     <div className="dohterinner">
                         <h2 className="dotherheader">Other challenges</h2>
                         <div className="dotheritems">
                             <OtherChallenges />
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         )
     }

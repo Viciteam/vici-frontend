@@ -56,7 +56,7 @@ class Menu extends React.Component {
                             &nbsp;
                         </div>
                         <div className="ds-item-text" onClick={() => this.saveAsTemplate()}>
-                            <button className={(this.state.isSaveStatus ? 'active-save-templete-button': 'inactive-save-templete-button')}>Save as Termplate</button>
+                            <button className={(this.state.isSaveStatus ? 'active-save-templete-button': 'inactive-save-templete-button')}>Save as Template</button>
                         </div> 
                     </div>
                     <div className="dsitem" onClick={() => this.backToNewChallenge()}>
