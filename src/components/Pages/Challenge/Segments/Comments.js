@@ -30,32 +30,7 @@ class Comments extends React.Component {
             buildComment: '',
             fileComment: '',
             fileUploader: null,
-            userComments: [
-                {
-                    id: 1,
-                    name: 'John snow',
-                    type: 'notif',
-                    time: '5m ago',
-                    action: 'join_challenge'
-                },
-                {
-                    id: 1,
-                    name: 'Lorem Ipsum',
-                    type: 'notif',
-                    time: '5m ago',
-                    action: 'failed_challenge'
-                },
-                {
-                    id: 1,
-                    name: 'John snow',
-                    type: 'comment',
-                    time: '5m ago',
-                    action: 'failed_challenge',
-                    text: 'Morning Routine let’s go!',
-                    like: 20,
-                    dislike: 10
-                }
-            ]
+            showLoading: false
         }
 
         this.processCommentSend = this.processCommentSend.bind(this);
@@ -123,11 +98,13 @@ class Comments extends React.Component {
     }
 
     getComments(id){
+        this.setState({showLoading: true});
         let self = this;
         api.get('/getchallenge_comments/'+id, {})
         .then((response) => {
             console.log('challenge commetns for '+id+' -> ', response.data.comments.data);
             self.setState({challengeComments: response.data.comments.data});
+            self.setState({showLoading: false});
         }).catch((error) => {
             console.log('challenge commetns -> ', error);
         });
@@ -191,18 +168,25 @@ class Comments extends React.Component {
                 </div>
                 <div className="dpostlist">
                     {
-                        (this.state.challengeComments.length === 0 ?
+                        (this.state.showLoading ?
                             <div className='showLoading'>
                                 <img src="/img/load_line.gif" style={{width: '350px', margin: '0 auto'}} alt="" />
                             </div>
                         :    
-                            <div>
-                                {
-                                    this.state.challengeComments.map((item, i) => (
-                                        <ShowComment info={item} key={item.id} />
-                                    ))
-                                }
-                            </div>
+                            (this.state.challengeComments.length === 0 ? 
+                                <div className='d-no-comments-yet'>
+                                    No comments yet
+                                </div>
+                            :        
+                                <div>
+                                    {
+                                        this.state.challengeComments.map((item, i) => (
+                                            <ShowComment info={item} key={item.id} />
+                                        ))
+                                    }
+                                </div>
+                            )
+                            
                         )
                     }
                     {/* {renderComments} */}

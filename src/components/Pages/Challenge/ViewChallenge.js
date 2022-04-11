@@ -158,10 +158,10 @@ class ViewChallenge extends React.Component {
 
                             <OtherMainSIde details={this.state.challengeDetails} />
                         </div>
-                        <div className="dvl-main-sidebar">
+                        {/* <div className="dvl-main-sidebar">
                             <WatchRewards />
-                        </div>
-                        <div className="dvl-main-sidebar">
+                        </div> */}
+                        {/* <div className="dvl-main-sidebar">
                             <div className="dvl-invite-link">
                                 <h2>Invite link</h2>
                                 <div className="dlinkfield">
@@ -173,7 +173,7 @@ class ViewChallenge extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="dview-right">
