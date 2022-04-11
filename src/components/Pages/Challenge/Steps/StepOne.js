@@ -15,7 +15,8 @@ class StepOne extends React.Component {
             isTagline: '',
             isInstructions: '',
             showformPart: 1,
-            stackedStep: 1
+            stackedStep: 1,
+            ifIsHasError: false
         }
 
         this.createActive = this.createActive.bind(this);
@@ -36,28 +37,41 @@ class StepOne extends React.Component {
     }
 
     addChallengeTitle(value){
+        this.setState({ifIsHasError: false})
         this.setState({isChallengeTitle: value});
     }
 
     addChallengehashtag(value){
+        this.setState({ifIsHasError: false})
         this.setState({isHashtags: value});
     }
 
     addChallengeTagline(value){
+        this.setState({ifIsHasError: false})
         this.setState({isTagline: value});
     }
 
     addChallengeInstuctions(value){
+        this.setState({ifIsHasError: false})
         this.setState({isInstructions: value});
     }
     
     proceedToNext(){
+        this.setState({ifIsHasError: false})
         let finalInfo = {
             'title': this.state.isChallengeTitle,
             'hashtag': this.state.isHashtags,
             'tagline': this.state.isTagline,
             'instructions': this.state.isInstructions,
         }
+
+        if(this.state.isChallengeTitle == "" || this.state.isHashtags == "" || this.state.isTagline == "" || this.state.isInstructions == ""){
+            this.setState({ifIsHasError: true});
+            return;
+        }
+
+        // console.log(finalInfo);
+
         this.props.callBack(finalInfo);
     }
 
@@ -106,6 +120,13 @@ class StepOne extends React.Component {
                         <textarea name="" id="" onChange={(e) => this.addChallengeInstuctions(e.target.value)}></textarea>
                     </div>
                 </div>
+                {
+                    (this.state.ifIsHasError ?
+                        <div className='d-errors-show'>
+                            Challenge title, Hashtags, tagline and Instructions are all required, please fill them up to proceed to the next step
+                        </div>
+                    : <div>&nbsp;</div>)
+                }
                 <div className="step-by-step-options" style={(this.state.showformPart < 4 ? {} : {display: 'none'})}>
                     <div className='step-show-all'>
                         <input type="checkbox" onChange={(e) => this.showAllSteps(e, 'show_all')} /> show all steps

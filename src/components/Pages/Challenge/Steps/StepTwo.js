@@ -81,7 +81,9 @@ class StepTwo extends React.Component {
             'penalty': this.state.penalty,
             'convert_actions_to_points': this.state.convertActionToPoints,
         }
-        this.props.callBack(finalInfo);
+
+        console.log('triggered here');
+        // this.props.callBack(finalInfo);
     }
 
     proceedToPrev(){

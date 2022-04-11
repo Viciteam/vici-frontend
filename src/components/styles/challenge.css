@@ -4536,3 +4536,13 @@ button.inactive-save-templete-button {
     letter-spacing: 1px;
     cursor: pointer;
 }
+
+.dstep .d-errors-show {
+    background: #ffbcbc;
+    font-size: 12px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    line-height: 1.3em;
+    border: 1px solid #f50000;
+}
