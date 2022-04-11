@@ -24,7 +24,8 @@ class StepThree extends React.Component {
             showState: false,
             showCity: false,
             enableFormAfterJoining: false,
-            showformPart: 4,
+            showformPart: 1,
+            maxItems: 3,
             startDate: '',
             endDate: '',
             dstates: [ 'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antigua & Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bonaire', 'Bosnia & Herzegovina', 'Botswana', 'Brazil', 'British Indian Ocean Ter', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Canary Islands', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Channel Islands', 'Chile', 'China', 'Christmas Island', 'Cocos Island', 'Colombia', 'Comoros', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote DIvoire', 'Croatia', 'Cuba', 'Curacao', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern Ter', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar'],
@@ -291,16 +292,16 @@ class StepThree extends React.Component {
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'three_enable_form' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('three_enable_form')}>
+                {/* <div className={"cg-item " + (this.state.activepart === 'three_enable_form' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('three_enable_form')}>
                     <div className="cg-label">Enable form</div>
                     <div className="cg-input dactivity">
                         <div className="subheader">Collect additional information from participants</div>
                         <div className="ditem-flow"><div className="dflowtext">Show after joining</div> <Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleEnableFormAfterJoining} checked={this.state.enableFormAfterJoining} /></div>
                     </div>
-                </div>
+                </div> */}
 
 
-                <div className={"cg-item " + (this.state.activepart === 'three_challenge_duration' ? 'active_item' : '')} style={(this.state.showformPart >= 4 ? {} : {display: 'none'})} onFocus={() => this.createActive('three_challenge_duration') }>
+                <div className={"cg-item " + (this.state.activepart === 'three_challenge_duration' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('three_challenge_duration') }>
                     <div className="cg-label">Challenge Duration</div>
                     <div className="cg-input dactivity">
                         <div className="cd-dropbase">
@@ -351,16 +352,16 @@ class StepThree extends React.Component {
                     </div>
                 </div>
 
-                <div className="step-by-step-options" style={(this.state.showformPart < 4 ? {} : {display: 'none'})}>
+                <div className="step-by-step-options" style={(this.state.showformPart < this.state.maxItems ? {} : {display: 'none'})}>
                     <div className='step-show-all'>
                         <input type="checkbox" onChange={(e) => this.showAllSteps(e, 'show_all')} /> show all steps
                     </div>
                     <div className='step-show-once'>
-                        <button onClick={() => this.openIdentifySteps()}>{this.state.showformPart}/4 <FontAwesomeIcon icon={faArrowDown} /></button>
+                        <button onClick={() => this.openIdentifySteps()}>{this.state.showformPart}/{this.state.maxItems} <FontAwesomeIcon icon={faArrowDown} /></button>
                     </div>
                 </div>
 
-                <div className="dnext-button" style={(this.state.showformPart >= 4 ? {} : {display: 'none'})}>
+                <div className="dnext-button" style={(this.state.showformPart >= this.state.maxItems ? {} : {display: 'none'})}>
                     <button className="prev-arrow" onClick={() => this.proceedToPrev()}>Back</button>
                     <button className="next-arrow" onClick={() => this.proceedToNext()}>Next &rarr;</button>
                 </div>
