@@ -9,6 +9,7 @@ import {faImage, faLink, faPaperPlane} from '@fortawesome/free-solid-svg-icons'
 
 import axios from 'axios'
 import auth from '../../../../services/auth';
+import CookieService from '../../../../services/CookieService';
 
 const api = axios.create({
     baseURL: 'https://api.vici.life/api/',
@@ -53,6 +54,8 @@ class Comments extends React.Component {
                 }
             ]
         }
+
+        this.addChallengeComment = this.addChallengeComment.bind(this);
     }
 
     getComments(id){
@@ -64,6 +67,21 @@ class Comments extends React.Component {
         }).catch((error) => {
             console.log('challenge commetns -> ', error);
         });
+    }
+
+    profile_main_image(){
+        let show_image = '';
+        const user_profile = CookieService.get("user_profile");
+        if(user_profile !== undefined ){
+            if(user_profile.fb_user_id !== undefined){
+                console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        } else {
+            return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+        }
     }
 
     componentDidMount(){
@@ -94,7 +112,7 @@ class Comments extends React.Component {
                 <div className="daddpost">
                     <div className="dpostinput">
                         <div className="dpic">
-                            <img src="/img/user_main.jpg" alt="" />
+                            <img src={this.profile_main_image()} alt="" />
                         </div>
                         <div className="daddpostarea">
                             <textarea placeholder="Write something..."></textarea>
@@ -105,7 +123,7 @@ class Comments extends React.Component {
                             <button className="dimagepart"><FontAwesomeIcon icon={faImage} /></button>
                             <button className="dlinkpart"><FontAwesomeIcon icon={faLink} /></button>
                         </div>
-                        <div className="dopsright">
+                        <div className="dopsright" onClick={() => this.addChallengeComment()}>
                             <button className="dsendpost"><FontAwesomeIcon icon={faPaperPlane} /></button>
                         </div>
                     </div>
