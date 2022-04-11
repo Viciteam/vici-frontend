@@ -85,9 +85,7 @@ class ViewChallenge extends React.Component {
         if(this.state.toggleDoAction){
             this.setState({ toggleDoAction: false });
         }else{
-            if(item.trackings.length == 0){
-                this.setState({ toggleDoAction: true });
-            }
+            this.setState({ toggleDoAction: true });
         }
     }
     
