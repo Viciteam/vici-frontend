@@ -157,14 +157,7 @@ class Comments extends React.Component {
     }
 
     render () {
-        const activities = this.state.userComments;
-        const renderComments = activities.map(item => {
-            if(item.type === 'comment'){
-                return <ShowComment info={item} key={item.id} />
-            }
-                
-            return <ShowActivity info={item} key={item.id} />
-        });
+        
         return (
             <div className="updates-comments-inner">
                 <div className="dheadpart">

@@ -7,6 +7,19 @@ import { faArrowLeft, faImage, faCrosshairs} from '@fortawesome/free-solid-svg-i
 import { HexColorPicker } from "react-colorful";
 
 // const inputFile = useRef(null) 
+import auth from '../../../../services/auth';
+import axios from 'axios'
+
+const api = axios.create({
+  baseURL: 'https://api.vici.life/api/',
+  headers: {
+    'content-type': 'multipart/form-data',
+    'Accept' : 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Authorization' : `Bearer ${auth.getAccessToken()}`,
+    'X-CSRF-TOKEN': auth.getAccessToken()
+  }
+})
 
 class StepFour extends React.Component {
     constructor(props){
@@ -83,10 +96,19 @@ class StepFour extends React.Component {
         var reader = new FileReader();
         var url = reader.readAsDataURL(thefile);
 
+        let self = this;
+        const formData = new FormData();
+        formData.append('image',thefile)
+        api.post('/uploadFile', formData)
+        .then((response) => {
+            console.log(response.data);
+            let newimage = self.state.listofimages;
+            newimage.push(response.data.image_url);
+            self.setState({ newUploadedImage: newimage})
+        });
+
         reader.onloadend = function (e) {
-            let newimage = this.state.listofimages;
-            newimage.push(reader.result);
-            this.setState({ newUploadedImage: newimage})
+            
         }.bind(this);
 
         // console.log('iamge url ->', url);

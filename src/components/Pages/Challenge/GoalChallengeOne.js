@@ -45,8 +45,8 @@ class GoalChallengeOne extends React.Component {
             challengeID: this.props.match.params.id,
             uinfo: this.props.uinfo,
             activepart: 'title',
-            stepnumber: 0,
-            menuActive: 1,
+            stepnumber: 2,
+            menuActive: 3,
             activityList: [{"activity": ""}],
             checked: false,
             showOptionOne: true,
@@ -317,7 +317,7 @@ class GoalChallengeOne extends React.Component {
             console.log('API response -> ', response.data.challenge.id);
                 
             self.addAction(response.data.challenge.id);
-            self.addPenalty(response.data.challenge.id);
+            // self.addPenalty(response.data.challenge.id);
             self.setState({newChallengeID: response.data.challenge.id});
             self.setState({showLoading: false});
         });
