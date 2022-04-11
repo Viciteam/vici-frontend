@@ -26,36 +26,10 @@ class Comments extends React.Component {
         super(props);
         this.state = {
             isactive: this.props.isactive,
-            challengeComments: [],
-            userComments: [
-                {
-                    id: 1,
-                    name: 'John snow',
-                    type: 'notif',
-                    time: '5m ago',
-                    action: 'join_challenge'
-                },
-                {
-                    id: 1,
-                    name: 'Lorem Ipsum',
-                    type: 'notif',
-                    time: '5m ago',
-                    action: 'failed_challenge'
-                },
-                {
-                    id: 1,
-                    name: 'John snow',
-                    type: 'comment',
-                    time: '5m ago',
-                    action: 'failed_challenge',
-                    text: 'Morning Routine let’s go!',
-                    like: 20,
-                    dislike: 10
-                }
-            ]
+            challengeComments: []
         }
 
-        this.addChallengeComment = this.addChallengeComment.bind(this);
+        // this.addChallengeComment = this.addChallengeComment.bind(this);
     }
 
     getComments(id){
@@ -93,14 +67,7 @@ class Comments extends React.Component {
     }
 
     render () {
-        const activities = this.state.userComments;
-        const renderComments = activities.map(item => {
-            if(item.type === 'comment'){
-                return <ShowComment info={item} key={item.id} />
-            }
-                
-            return <ShowActivity info={item} key={item.id} />
-        });
+        
         return (
             <div className="updates-comments-inner">
                 <div className="dheadpart">

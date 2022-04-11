@@ -4355,6 +4355,9 @@
 .step-by-step-options .step-show-all {
     display: inline-block;
     width: 48%;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 1em;
 }
 
 .step-by-step-options .step-show-once {
