@@ -41,7 +41,10 @@ class StepFour extends React.Component {
             activepart: 'four_change_photo',
             selectedPreviewHeaderImage: 'https://vici.life/img/prev-header.png',
             selectedColor: '#03488d',
-            stepFourValues:[],
+            stepFourValues: {
+                "challenge_image": 'https://vici.life/img/prev-header.png',
+                "challenge_color": '#03488d',
+            },
             newUploadedImage: '',
             saveAsTemplate: false,
             listofimages: [

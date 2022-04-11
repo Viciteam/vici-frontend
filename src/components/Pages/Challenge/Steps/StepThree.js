@@ -234,6 +234,8 @@ class StepThree extends React.Component {
             this.setState({showOptionOne: false})
             this.setState({showOptionTwo: true})
             this.populateInput('challenge_duration', 'ranged')
+            this.populateInput('challenge_duration_ranged_frequency', 'Once')
+            this.populateInput('challenge_duration_ranged_repeat', 'End on')
         }
     }
 
