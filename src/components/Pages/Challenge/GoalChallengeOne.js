@@ -45,8 +45,8 @@ class GoalChallengeOne extends React.Component {
             challengeID: this.props.match.params.id,
             uinfo: this.props.uinfo,
             activepart: 'title',
-            stepnumber: 1,
-            menuActive: 2,
+            stepnumber:0,
+            menuActive:1,
             activityList: [{"activity": ""}],
             checked: false,
             showOptionOne: true,
@@ -305,22 +305,22 @@ class GoalChallengeOne extends React.Component {
         });
 
         this.setState({showPublishChallengeModal: true});
-        // this.setState({showLoading: true});
+        this.setState({showLoading: true});
 
         // let params = JSON.stringify(Object.assign({}, parameters));
 
         console.log('params -> ', parameters);
 
 
-        // api.post('/challenge', parameters)
-        // .then((response) => {
-        //     console.log('API response -> ', response.data.challenge.id);
+        api.post('/challenge', parameters)
+        .then((response) => {
+            console.log('API response -> ', response.data.challenge.id);
                 
-        //     self.addAction(response.data.challenge.id);
-        //     // self.addPenalty(response.data.challenge.id);
-        //     self.setState({newChallengeID: response.data.challenge.id});
-        //     self.setState({showLoading: false});
-        // });
+            self.addAction(response.data.challenge.id);
+            // self.addPenalty(response.data.challenge.id);
+            self.setState({newChallengeID: response.data.challenge.id});
+            self.setState({showLoading: false});
+        });
 
 
     }
@@ -462,7 +462,7 @@ class GoalChallengeOne extends React.Component {
                         </div>
                     </div>
                     <div className="cgoal-right">
-                        <div className="cgoal-right-inner" style={{display: this.state.stepnumber < 2 ? 'block' : 'none' }} >
+                        <div className="cgoal-right-inner" style={{display: this.state.stepnumber < 3 ? 'block' : 'none' }} >
                             <div className="dimage"><img src={tip_images[this.state.stepnumber]} alt="" /></div>
                             <div className="dtipbase">Tip { this.state.stepnumber + 1}</div>
                             <div className="dtextinfo">{tip_message[this.state.stepnumber]}</div>

@@ -26,7 +26,8 @@ class StepTwo extends React.Component {
             social_list: [],
             penalty: [],
             showformPart: 1,
-            maxItems: 3
+            maxItems: 3,
+            ifIsHasError: false
         }
 
         this.createActive = this.createActive.bind(this);
@@ -73,6 +74,7 @@ class StepTwo extends React.Component {
     }
 
     proceedToNext(){
+        this.setState({ifIsHasError: false});
         let finalInfo = {
             'main_goal': this.state.mainGoalValue,
             'actions': this.state.actionList,
@@ -82,8 +84,13 @@ class StepTwo extends React.Component {
             'convert_actions_to_points': this.state.convertActionToPoints,
         }
 
-        console.log('triggered here');
-        // this.props.callBack(finalInfo);
+        if(this.state.actionList.length === 0){
+            this.setState({ifIsHasError: true});
+            return;
+        }
+
+        // console.log('triggered here');
+        this.props.callBack(finalInfo);
     }
 
     proceedToPrev(){
@@ -193,6 +200,14 @@ class StepTwo extends React.Component {
                     </div>
                     <ChallengePenalties getData={this.pullPenalties} showPenalties={this.state.allowPenalty} />
                 </div> */}
+
+{
+                (this.state.ifIsHasError ?
+                    <div className='d-errors-show'>
+                        Challenge Actions is required, please add atleast one action for you to proceed.
+                    </div>
+                : <div>&nbsp;</div>)
+                }
 
                 <div className="step-by-step-options" style={(this.state.showformPart < this.state.maxItems ? {} : {display: 'none'})}>
                     <div className='step-show-all'>

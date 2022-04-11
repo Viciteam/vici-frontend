@@ -17,7 +17,8 @@ class StepThree extends React.Component {
             isactive: this.props.isactive,
             activepart: 'three_challenge_privacy',
             stepThreeValues: {
-                "locations_country": "anywhere"
+                "locations_country": "anywhere",
+                "challenge_privacy": "Invite Only",
             },
             participantsLocation: false,
             showDropOptions: false,
@@ -116,7 +117,10 @@ class StepThree extends React.Component {
                 {value: 'Ghana', label: 'Ghana'},
                 {value: 'Gibraltar', label: 'Gibraltar'}
             ],
-            showAllCountry: false
+            showAllCountry: false,
+            ifIsHasError: false,
+            showOptionOne: false,
+            showOptionTwo: false,
         }
 
         this.createActive = this.createActive.bind(this);
@@ -228,6 +232,9 @@ class StepThree extends React.Component {
             this.setState({showOptionOne: true})
             this.setState({showOptionTwo: false})
             this.populateInput('challenge_duration', 'fixed')
+            this.populateInput('challenge_duration_fixed_start_date', '')
+            this.populateInput('challenge_duration_fixed_end_date', '')
+            this.populateInput('challenge_duration_fixed_end_time', '')
         }
 
         if(showOption === "option_two"){
@@ -236,6 +243,7 @@ class StepThree extends React.Component {
             this.populateInput('challenge_duration', 'ranged')
             this.populateInput('challenge_duration_ranged_frequency', 'Once')
             this.populateInput('challenge_duration_ranged_repeat', 'End on')
+            this.populateInput('challenge_duration_ranged_end_time', '')
         }
     }
 
@@ -282,6 +290,23 @@ class StepThree extends React.Component {
     }
 
     proceedToNext(){
+        this.setState({ifIsHasError: false});
+
+        if(!this.state.showOptionOne && !this.state.showOptionTwo ){
+            // console.log('no duration was selected');
+            this.setState({ifIsHasError: true});
+            return;
+        }
+
+        if(this.state.showOptionOne){
+            let dform = this.state.stepThreeValues;
+            if(dform['challenge_duration_fixed_start_date'] == '' || dform['challenge_duration_fixed_end_date'] == ''){
+                this.setState({ifIsHasError: true});
+                return;
+            }
+        }
+
+        // console.log('proceed to next');
         this.props.callback(this.state.stepThreeValues);
     }
 
@@ -443,7 +468,7 @@ class StepThree extends React.Component {
                                             </select>
                                         </div>
                                         <div className="cd-input-item">
-                                            <input type="text" name="" placeholder="11:00 am" onChange={(e) => this.populateInput('challenge_duration_ranged_start_time', e.target.value)} />
+                                            <input type="text" name="" placeholder="11:00 am" onChange={(e) => this.populateInput('challenge_duration_ranged_end_time', e.target.value)} />
                                         </div>
                                     </div>
                                 </div>
@@ -451,6 +476,13 @@ class StepThree extends React.Component {
                         </div>
                     </div>
                 </div>
+                {
+                    (this.state.ifIsHasError ?
+                        <div className='d-errors-show'>
+                            Challenge Duration is required, please select one and fill the following details for you to proceed.
+                        </div>
+                    : <div>&nbsp;</div>)
+                }
 
                 <div className="step-by-step-options" style={(this.state.showformPart < this.state.maxItems ? {} : {display: 'none'})}>
                     <div className='step-show-all'>
