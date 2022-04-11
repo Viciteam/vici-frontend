@@ -3,7 +3,7 @@ import React, {useRef } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faImage, faCrosshairs} from '@fortawesome/free-solid-svg-icons'
-
+import Switch from "react-switch";
 import { HexColorPicker } from "react-colorful";
 
 // const inputFile = useRef(null) 
@@ -43,6 +43,7 @@ class StepFour extends React.Component {
             selectedColor: '#03488d',
             stepFourValues:[],
             newUploadedImage: '',
+            saveAsTemplate: false,
             listofimages: [
                 'https://vici.life/img/prev-header.png',
                 'https://vici.life/img/prev-header1.png',
@@ -58,11 +59,21 @@ class StepFour extends React.Component {
         this.proceedUploadImage = this.proceedUploadImage.bind(this);
         this.processFileInput = this.processFileInput.bind(this);
         this.submitChallengeForm = this.submitChallengeForm.bind(this);
+        this.toogleSaveAsTemplate = this.toogleSaveAsTemplate.bind(this);
     }
 
     createActive(setactive){
         // console.log('Type ->', setactive);
         this.setState({activepart: setactive})
+    }
+
+    toogleSaveAsTemplate(){
+        let newSaveTempalteVals = !this.state.saveAsTemplate;
+        
+        let dform = this.state.stepFourValues;
+        dform['save_as_template'] = newSaveTempalteVals;
+        this.setState({stepFourValues: dform});
+        this.setState({saveAsTemplate: newSaveTempalteVals});
     }
 
     changeColor(vals){
@@ -179,6 +190,15 @@ class StepFour extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_convert_actions') }>
+                        <div className="cg-label">
+                            <div className="cgl-name">Do you want also save this as a template?</div>
+                            <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleSaveAsTemplate} checked={this.state.saveAsTemplate} /></div>
+                        </div>
+                        <div className="cg-input dactivity">
+                            <div className="subheader">By saving as a template, you can reuse this same flow for another challenge.</div>
                         </div>
                     </div>
                 </div>

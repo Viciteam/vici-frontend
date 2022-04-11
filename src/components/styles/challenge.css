@@ -1871,6 +1871,7 @@
 
 .challenges-page-inner .dview-left .main-sidebar-inner .ms-main-image img {
     width: 100%;
+    border-radius: 20px;
 }
 
 .challenges-page-inner .dview-left .main-sidebar-inner .dshageimage {

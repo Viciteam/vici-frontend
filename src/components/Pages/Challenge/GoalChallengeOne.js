@@ -45,8 +45,8 @@ class GoalChallengeOne extends React.Component {
             challengeID: this.props.match.params.id,
             uinfo: this.props.uinfo,
             activepart: 'title',
-            stepnumber: 0,
-            menuActive: 1,
+            stepnumber: 3,
+            menuActive: 4,
             activityList: [{"activity": ""}],
             checked: false,
             showOptionOne: true,
@@ -290,7 +290,7 @@ class GoalChallengeOne extends React.Component {
         let parameters = {};
         parameters['name'] = finalvalues.title;
         parameters['description'] = finalvalues.tagline;
-        parameters['is_template'] = (this.state.isSaveasTemplate ? 'Yes': 'No');
+        parameters['is_template'] = (finalvalues.save_as_template ? 'Yes': 'No');
         parameters['owner_id'] = auth.user().id;
         parameters['details'] = [];
 
