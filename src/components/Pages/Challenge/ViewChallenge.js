@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 
 import WatchRewards from './Segments/WatchRewards'
 import Comments from './Segments/Comments'
+import DoAction from './Modals/DoAction';
 
 import OtherChallenges from './Segments/OtherChallenges'
 import ManageChallengeParticipants from './Segments/ManageChallengeParticipants'
@@ -38,6 +39,8 @@ class ViewChallenge extends React.Component {
             isWatchingText: 'Watch Challenge',
             challengeDetails: [],
             challengeActions: [],
+            actionsItem: [],
+            toggleDoAction: false,
             isOwner: false,
         }
 
@@ -45,6 +48,9 @@ class ViewChallenge extends React.Component {
 
 
         this.watchChallenge = this.watchChallenge.bind(this);
+        this.addTracking = this.addTracking.bind(this);
+        this.toggleDoAction = this.toggleDoAction.bind(this);
+        this.getAction = this.getAction.bind(this)
     }
 
     componentDidMount(){
@@ -74,6 +80,44 @@ class ViewChallenge extends React.Component {
         });
     }
 
+    toggleDoAction (item) {
+        this.setState({ actionsItem: item });
+        if(this.state.toggleDoAction){
+            this.setState({ toggleDoAction: false });
+        }else{
+            if(item.trackings.length == 0){
+                this.setState({ toggleDoAction: true });
+            }
+        }
+    }
+    
+    getAction () {
+        this.setState({ toggleDoAction: false });
+        this.addTracking(this.state.actionsItem)
+    }
+
+    async addTracking(item){
+        const data = {
+            name: item.name,
+            description: item.description,
+            action_id: item.id,
+            details: [],
+        }
+        if(item.trackings.length == 0){
+            await api.post('tracking', data).then(res => {
+                console.log('action response---------', res.data.tracking)
+                this.state.challengeActions.forEach((action, i) => {
+                    if(item.id == action.id){
+                        action.trackings.push(res.data.tracking)
+                    }
+                })
+                this.setState({ challengeActions: this.state.challengeActions });
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+    }
+
 
     watchChallenge(){
 
@@ -99,7 +143,10 @@ class ViewChallenge extends React.Component {
               <li key={key}>
                 <div className="dradiobutton"><input type="radio" name="" id="" /></div>
                 <div className="dtextlist">{value.name}</div>
-                <div className="ddoaction">Do Action</div>
+                <div onClick={() => this.toggleDoAction(value)} className="ddoaction">{ value.trackings.length > 0 ? 'Doing' : 'Do Action'}</div>
+                {
+                    this.state.toggleDoAction && <DoAction closeModal={this.toggleDoAction } doAction={this.getAction} />  
+                }
               </li>
           ))
         )

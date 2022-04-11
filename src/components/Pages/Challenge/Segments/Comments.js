@@ -181,7 +181,7 @@ class Comments extends React.Component {
                     <div className="dpostops">
                         <div className="dopsleft">
                             <button onClick={this.uploadFile} className="dimagepart"><FontAwesomeIcon icon={faImage} /></button>
-                            <button className="dlinkpart"><FontAwesomeIcon icon={faLink} /></button>
+                            <button onClick={this.uploadFile} className="dlinkpart"><FontAwesomeIcon icon={faLink} /></button>
                             <input type="file" id="commentfile" onChange={this.setFile.bind(this)}  ref={this.inputFileRef} style={{display: "none"}}/>
                         </div>
                         <div className="dopsright" onClick={() => this.processComment()}>
