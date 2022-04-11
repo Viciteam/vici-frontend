@@ -26,10 +26,100 @@ class Comments extends React.Component {
         super(props);
         this.state = {
             isactive: this.props.isactive,
-            challengeComments: []
+            challengeComments: [],
+            buildComment: '',
+            fileComment: '',
+            fileUploader: null,
+            userComments: [
+                {
+                    id: 1,
+                    name: 'John snow',
+                    type: 'notif',
+                    time: '5m ago',
+                    action: 'join_challenge'
+                },
+                {
+                    id: 1,
+                    name: 'Lorem Ipsum',
+                    type: 'notif',
+                    time: '5m ago',
+                    action: 'failed_challenge'
+                },
+                {
+                    id: 1,
+                    name: 'John snow',
+                    type: 'comment',
+                    time: '5m ago',
+                    action: 'failed_challenge',
+                    text: 'Morning Routine let’s go!',
+                    like: 20,
+                    dislike: 10
+                }
+            ]
         }
 
-        // this.addChallengeComment = this.addChallengeComment.bind(this);
+        this.processCommentSend = this.processCommentSend.bind(this);
+        this.postComment = this.postComment.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
+        this.inputFileRef = React.createRef();
+    }
+
+    uploadFile() {
+        this.inputFileRef.current.click();
+    };
+
+
+    async setFile(event) {
+        const objectUrl = URL.createObjectURL(event.target.files[0])
+        this.setState({fileComment: objectUrl});
+        console.log('my file', objectUrl)
+    }
+
+    processCommentSend(e){
+        // console.log('text ->', e.key);
+        if(e.key === 'Enter'){
+            if(e.shiftKey){
+                // console.log('has shift key pressed');
+            } else {
+                // console.log('has pressed enter');
+                this.processComment();
+                e.preventDefault();
+            }
+        }
+    }
+
+    postComment(e){
+        let textbase = e.target.value;
+        this.setState({buildComment: textbase});
+    }
+
+    processComment(){
+        let comment_to_add = this.state.buildComment;
+        let newCommentContent = comment_to_add.replace(/(?:\r\n|\r|\n)/g, '\n');
+        let challenge_path = window.location.pathname.split("/");
+        let challenge_id = challenge_path[challenge_path.length - 1];
+        let userid = auth.user();
+        let comment_info = {
+            "user_id": userid.id,
+            "challenge_id": challenge_id,
+            "time":"0 mins ago",
+            "post_media": this.state.fileComment,
+            "post_message": newCommentContent,
+            "likes":"0",
+            "dislikes":"0",
+            "islikeselected": "",
+            "isPrivate":"0"
+        };
+
+        let self = this;
+
+        api.post('/challenge_comment', comment_info)
+        .then((response) => {
+            console.log('challenge comment-> ', response.data.challenge_comment);
+            self.getComments(challenge_id);
+            self.setState({buildComment: ''});
+            self.setState({fileComment: ''});
+        });   
     }
 
     getComments(id){
@@ -82,15 +172,19 @@ class Comments extends React.Component {
                             <img src={this.profile_main_image()} alt="" />
                         </div>
                         <div className="daddpostarea">
-                            <textarea placeholder="Write something..."></textarea>
+                            <textarea value={this.state.buildComment} onKeyPress={(event) => this.processCommentSend(event)} onChange={(e) => this.postComment(e)} placeholder="Write something..."></textarea>
+                        </div>
+                        <div className="py-3">
+                            <img src={this.state.fileComment} width="50" />
                         </div>
                     </div>
                     <div className="dpostops">
                         <div className="dopsleft">
-                            <button className="dimagepart"><FontAwesomeIcon icon={faImage} /></button>
+                            <button onClick={this.uploadFile} className="dimagepart"><FontAwesomeIcon icon={faImage} /></button>
                             <button className="dlinkpart"><FontAwesomeIcon icon={faLink} /></button>
+                            <input type="file" id="commentfile" onChange={this.setFile.bind(this)}  ref={this.inputFileRef} style={{display: "none"}}/>
                         </div>
-                        <div className="dopsright" onClick={() => this.addChallengeComment()}>
+                        <div className="dopsright" onClick={() => this.processComment()}>
                             <button className="dsendpost"><FontAwesomeIcon icon={faPaperPlane} /></button>
                         </div>
                     </div>
