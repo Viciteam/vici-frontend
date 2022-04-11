@@ -638,6 +638,15 @@
     cursor: pointer;
 }
 
+.challenges-goal-page-inner .dlp-item.ddown_list.select_location_by_country {
+    width: 80%;
+    border: 0 none;
+}
+
+.challenges-goal-page-inner .dlp-item.ddown_list.select_location_by_country .react-drop-base {
+    width: 100%;
+}
+
 .challenges-goal-page-inner .ddown_list .dlocationlist .dll-item .dll-item-dropdown .dinputselect {
     margin-bottom: 20px;
 }

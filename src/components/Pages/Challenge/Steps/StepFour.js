@@ -39,15 +39,15 @@ class StepFour extends React.Component {
         this.state = {
             isactive: this.props.isactive,
             activepart: 'four_change_photo',
-            selectedPreviewHeaderImage: '',
+            selectedPreviewHeaderImage: 'https://vici.life/img/prev-header.png',
             selectedColor: '#03488d',
             stepFourValues:[],
             newUploadedImage: '',
             listofimages: [
-                '/img/prev-header.png',
-                '/img/prev-header1.png',
-                '/img/prev-header2.png',
-                '/img/prev-header3.png',
+                'https://vici.life/img/prev-header.png',
+                'https://vici.life/img/prev-header1.png',
+                'https://vici.life/img/prev-header2.png',
+                'https://vici.life/img/prev-header3.png',
             ]
         }
 
@@ -127,10 +127,10 @@ class StepFour extends React.Component {
 
     render () {
         const challenge_photo = [
-            '/img/prev-header.png',
-            '/img/prev-header1.png',
-            '/img/prev-header2.png',
-            '/img/prev-header3.png',
+            'https://vici.life/img/prev-header.png',
+            'https://vici.life/img/prev-header1.png',
+            'https://vici.life/img/prev-header2.png',
+            'https://vici.life/img/prev-header3.png',
         ];
 
         const todoItems = this.state.listofimages.map((todo, index) =>

@@ -5,6 +5,7 @@ import Switch from "react-switch";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faGlobeEurope, faMapMarkerAlt, faArrowDown} from '@fortawesome/free-solid-svg-icons'
 
+import ReactSelect from 'react-select';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -24,11 +25,97 @@ class StepThree extends React.Component {
             showState: false,
             showCity: false,
             enableFormAfterJoining: false,
-            showformPart: 1,
+            showformPart: 3,
             maxItems: 3,
             startDate: '',
             endDate: '',
-            dstates: [ 'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antigua & Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bonaire', 'Bosnia & Herzegovina', 'Botswana', 'Brazil', 'British Indian Ocean Ter', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Canary Islands', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Channel Islands', 'Chile', 'China', 'Christmas Island', 'Cocos Island', 'Colombia', 'Comoros', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote DIvoire', 'Croatia', 'Cuba', 'Curacao', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern Ter', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar'],
+            selectedLocations: null,
+            dstates: [
+                {value: 'Afghanistan', label: 'Afghanistan'},
+                {value: 'Albania', label: 'Albania'},
+                {value: 'Algeria', label: 'Algeria'},
+                {value: 'American Samoa', label: 'American Samoa'},
+                {value: 'Andorra', label: 'Andorra'},
+                {value: 'Angola', label: 'Angola'},
+                {value: 'Anguilla', label: 'Anguilla'},
+                {value: 'Antigua & Barbuda', label: 'Antigua & Barbuda'},
+                {value: 'Argentina', label: 'Argentina'},
+                {value: 'Armenia', label: 'Armenia'},
+                {value: 'Aruba', label: 'Aruba'},
+                {value: 'Australia', label: 'Australia'},
+                {value: 'Austria', label: 'Austria'},
+                {value: 'Azerbaijan', label: 'Azerbaijan'},
+                {value: 'Bahamas', label: 'Bahamas'},
+                {value: 'Bahrain', label: 'Bahrain'},
+                {value: 'Bangladesh', label: 'Bangladesh'},
+                {value: 'Barbados', label: 'Barbados'},
+                {value: 'Belarus', label: 'Belarus'},
+                {value: 'Belgium', label: 'Belgium'},
+                {value: 'Belize', label: 'Belize'},
+                {value: 'Benin', label: 'Benin'},
+                {value: 'Bermuda', label: 'Bermuda'},
+                {value: 'Bhutan', label: 'Bhutan'},
+                {value: 'Bolivia', label: 'Bolivia'},
+                {value: 'Bonaire', label: 'Bonaire'},
+                {value: 'Bosnia & Herzegovina', label: 'Bosnia & Herzegovina'},
+                {value: 'Botswana', label: 'Botswana'},
+                {value: 'Brazil', label: 'Brazil'},
+                {value: 'British Indian Ocean Ter', label: 'British Indian Ocean Ter'},
+                {value: 'Brunei', label: 'Brunei'},
+                {value: 'Bulgaria', label: 'Bulgaria'},
+                {value: 'Burkina Faso', label: 'Burkina Faso'},
+                {value: 'Burundi', label: 'Burundi'},
+                {value: 'Cambodia', label: 'Cambodia'},
+                {value: 'Cameroon', label: 'Cameroon'},
+                {value: 'Canada', label: 'Canada'},
+                {value: 'Canary Islands', label: 'Canary Islands'},
+                {value: 'Cape Verde', label: 'Cape Verde'},
+                {value: 'Cayman Islands', label: 'Cayman Islands'},
+                {value: 'Central African Republic', label: 'Central African Republic'},
+                {value: 'Chad', label: 'Chad'},
+                {value: 'Channel Islands', label: 'Channel Islands'},
+                {value: 'Chile', label: 'Chile'},
+                {value: 'China', label: 'China'},
+                {value: 'Christmas Island', label: 'Christmas Island'},
+                {value: 'Cocos Island', label: 'Cocos Island'},
+                {value: 'Colombia', label: 'Colombia'},
+                {value: 'Comoros', label: 'Comoros'},
+                {value: 'Congo', label: 'Congo'},
+                {value: 'Cook Islands', label: 'Cook Islands'},
+                {value: 'Costa Rica', label: 'Costa Rica'},
+                {value: 'Cote DIvoire', label: 'Cote DIvoire'},
+                {value: 'Croatia', label: 'Croatia'},
+                {value: 'Cuba', label: 'Cuba'},
+                {value: 'Curacao', label: 'Curacao'},
+                {value: 'Cyprus', label: 'Cyprus'},
+                {value: 'Czech Republic', label: 'Czech Republic'},
+                {value: 'Denmark', label: 'Denmark'},
+                {value: 'Djibouti', label: 'Djibouti'},
+                {value: 'Dominica', label: 'Dominica'},
+                {value: 'Dominican Republic', label: 'Dominican Republic'},
+                {value: 'East Timor', label: 'East Timor'},
+                {value: 'Ecuador', label: 'Ecuador'},
+                {value: 'Egypt', label: 'Egypt'},
+                {value: 'El Salvador', label: 'El Salvador'},
+                {value: 'Equatorial Guinea', label: 'Equatorial Guinea'},
+                {value: 'Eritrea', label: 'Eritrea'},
+                {value: 'Estonia', label: 'Estonia'},
+                {value: 'Ethiopia', label: 'Ethiopia'},
+                {value: 'Falkland Islands', label: 'Falkland Islands'},
+                {value: 'Faroe Islands', label: 'Faroe Islands'},
+                {value: 'Fiji', label: 'Fiji'},
+                {value: 'Finland', label: 'Finland'},
+                {value: 'France', label: 'France'},
+                {value: 'French Guiana', label: 'French Guiana'},
+                {value: 'French Polynesia', label: 'French Polynesia'},
+                {value: 'French Southern Ter', label: 'French Southern Ter'},
+                {value: 'Gabon', label: 'Gabon'},
+                {value: 'Gambia', label: 'Gambia'},
+                {value: 'Georgia', label: 'Georgia'},
+                {value: 'Germany', label: 'Germany'},
+                {value: 'Ghana', label: 'Ghana'},
+                {value: 'Gibraltar', label: 'Gibraltar'}
+            ],
             showAllCountry: false
         }
 
@@ -50,6 +137,8 @@ class StepThree extends React.Component {
 
         this.setStartDate = this.setStartDate.bind(this); 
         this.setEndDate = this.setEndDate.bind(this); 
+
+        this.handleSelectLocation = this.handleSelectLocation.bind(this); 
     }
 
     setStartDate(date){
@@ -203,11 +292,22 @@ class StepThree extends React.Component {
         this.setState({showformPart: steps + 1});
     }
 
+    handleSelectLocation(selectedOption){
+        console.log('selected items -> ', selectedOption);
+        this.setState({selectedLocations: selectedOption});
+        
+        let dform = this.state.stepThreeValues;
+        dform.locations_country = selectedOption;
+        this.setState({stepThreeValues: dform})
+
+    }
+
     showAllSteps(event, item){
         // console.log('show selected ->', event.target.checked);
         if(event.target.checked){
             this.setState({showformPart: 4});
 		}
+        
     }
 
     render () {
@@ -245,16 +345,26 @@ class StepThree extends React.Component {
                                 </div>
                                 <div className="dlp-label select_locations"><FontAwesomeIcon icon={faMapMarkerAlt} /> Select Locations</div>
                             </div>
-                            <div className={"dlp-item ddown_list " + (this.state.participantsLocation ? 'active_item' : '')}>
+                            <div className={"dlp-item ddown_list select_location_by_country " + (this.state.participantsLocation ? 'active_item' : '')}>
+                                <ReactSelect
+                                    className='react-drop-base'
+                                    placeholder="By Country"
+                                    value={this.state.selectedLocations}
+                                    onChange={this.handleSelectLocation}
+                                    options={this.state.dstates}
+                                    isMulti
+                                    closeMenuOnSelect={false}
+                                    hideSelectedOptions={false}
+                                    allowSelectAll={true}
+                                />
+                            </div>
+                            {/* <div className={"dlp-item ddown_list " + (this.state.participantsLocation ? 'active_item' : '')}>
                                 <div className="dselectlocation" onClick={() => this.showDropBase()}>Select Location</div>
                                 <div className={"dlocationlist " + (this.state.showDropOptions === true ? 'show-location-options': 'hide-location-options')}>
                                     <div className="dll-item">
                                         <div className="dll-item-label" onClick={() => this.openCountry()}>By Country <span>></span></div>
                                         <div className={"dll-item-dropdown " + (this.state.showCountry === true ? 'show-me': 'hide-me')}>
                                             <div className="dlistofcountry">
-                                                {/* <div className="dinputselect">
-                                                    <input type="text" placeholder="Search.." />
-                                                </div> */}
                                                 <div className="dcountrylist">
                                                     <ul>
                                                         <li>
@@ -274,20 +384,8 @@ class StepThree extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                    {/* <div className="dll-item">
-                                        <div className="dll-item-label" onClick={() => this.openState()}>By State <span>></span></div>
-                                        <div className={"dll-item-dropdown " + (this.state.showState === true ? 'show-me': 'hide-me')}>
-                                            show dropdown
-                                        </div>
-                                    </div>
-                                    <div className="dll-item">
-                                        <div className="dll-item-label" onClick={() => this.openCity()}>By City <span>></span></div>
-                                        <div className={"dll-item-dropdown " + (this.state.showCity === true ? 'show-me': 'hide-me')}>
-                                            show dropdown
-                                        </div>
-                                    </div> */}
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
