@@ -1869,6 +1869,10 @@
     position: relative;
 }
 
+.challenges-page-inner .dview-left .main-sidebar-inner .ms-main-image img {
+    width: 100%;
+}
+
 .challenges-page-inner .dview-left .main-sidebar-inner .dshageimage {
     position: absolute;
     right: 25px;

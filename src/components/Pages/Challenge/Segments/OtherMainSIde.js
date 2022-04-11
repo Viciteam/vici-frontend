@@ -145,9 +145,9 @@ class OtherMainSIde extends React.Component {
         api.get('challenge/'+id).then((response) => {
             let cinfo = response.data.challenges[0];
             // filter values
-            // console.log(cinfo);
+            // 
             cinfo.challenge_details.map((item, i) => { cinfo[item.field] = item.data; })
-
+            console.log('updated info -> ', cinfo);
             self.setState({challengeInfo: cinfo});
             
         }).catch((error) => {
@@ -168,7 +168,7 @@ class OtherMainSIde extends React.Component {
         // get challenge details
         this.getChallengeInfo(challenge_id);
 
-        // console.log('challenge id ->', challenge_id);
+        console.log('challenge info ->', this.state.challengeInfo);
 
     }
 
@@ -395,7 +395,7 @@ class OtherMainSIde extends React.Component {
                             <h2>{this.state.challengeInfo.name}</h2>
                             <div className="subtitle">Goal</div>
                             <div className="ms-main-image">
-                                <img src="/img/watch_main.png" alt="" />
+                                <img src={this.state.challengeInfo.challenge_image} alt="" />
                             </div>
                             <div className="ms-sub-title">{this.state.challengeInfo.description}</div>
                             <div className="dinfodetails">
