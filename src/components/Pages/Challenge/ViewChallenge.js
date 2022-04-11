@@ -1,5 +1,6 @@
 import './../../styles/challenge.css';
 import React from 'react';
+import ReactModal from 'react-modal';
 
 import { withRouter } from 'react-router-dom'
 
@@ -42,6 +43,11 @@ class ViewChallenge extends React.Component {
             actionsItem: [],
             toggleDoAction: false,
             isOwner: false,
+            openDoAction: false,
+            openExecuteAction: false,
+            openQuitAction: false,
+            selectedAction: [],
+            selectedExecution: [],
         }
 
         // this.getChallengeInfo();
@@ -50,14 +56,20 @@ class ViewChallenge extends React.Component {
         this.watchChallenge = this.watchChallenge.bind(this);
         this.addTracking = this.addTracking.bind(this);
         this.toggleDoAction = this.toggleDoAction.bind(this);
+        this.toggleExecuteAction = this.toggleExecuteAction.bind(this);
+        this.toggleQuitAction = this.toggleQuitAction.bind(this);
         this.getAction = this.getAction.bind(this)
+        this.closeDoAction = this.closeDoAction.bind(this)
+        this.closeExecuteAction = this.closeExecuteAction.bind(this)
+        this.closeQuitAction = this.closeQuitAction.bind(this)
+        this.confirmUserToPerformTask = this.confirmUserToPerformTask.bind(this)
     }
 
     componentDidMount(){
         console.log('props', this.props)
         let self = this;
         api.get('challenge/'+this.state.challengeID).then((response) => {
-            console.log('challegne info -> ', response.data.challenges[0]);
+            console.log('challegne info frm api -> ', response.data.challenges[0]);
             let challenges = response.data.challenges[0];
 
             let challenge_details = [];
@@ -81,11 +93,49 @@ class ViewChallenge extends React.Component {
     }
 
     toggleDoAction (item) {
-        this.setState({ actionsItem: item });
-        if(this.state.toggleDoAction){
-            this.setState({ toggleDoAction: false });
-        }else{
-            this.setState({ toggleDoAction: true });
+        console.log('item -> ', item);
+
+        this.setState({selectedAction: item});
+        this.setState({openDoAction: true});
+    }
+
+    toggleExecuteAction(item){
+
+        console.log('execution -> ', item);
+
+        this.setState({selectedExecution: item});
+        this.setState({openExecuteAction: true});
+    }
+    toggleQuitAction(item){
+        console.log('execution -> ', item);
+
+        this.setState({selectedExecution: item});
+        this.setState({openQuitAction: true});
+    }
+    closeDoAction(){
+        this.setState({selectedAction: []});
+        this.setState({openDoAction: false});
+    }
+
+    closeExecuteAction(){
+        this.setState({selectedExecution: []});
+        this.setState({openExecuteAction: false});
+    }
+
+    closeQuitAction(){
+        this.setState({selectedExecution: []});
+        this.setState({openQuitAction: false});
+    }
+
+    confirmUserToPerformTask(task){
+        console.log('proceed with action -> ', task);
+
+        // prep data
+        const data = {
+            name: task.name,
+            description: task.description,
+            action_id: task.id,
+            details: [],
         }
     }
     
@@ -134,21 +184,21 @@ class ViewChallenge extends React.Component {
 
     render () {
 
-      const ActionList = () => {
 
-        return (
-          Object.entries(this.state.challengeActions).map(([key, value]) => (
-              <li key={key}>
-                <div className="dradiobutton"><input type="radio" name="" id="" /></div>
-                <div className="dtextlist">{value.name}</div>
-                <div onClick={() => this.toggleDoAction(value)} className="ddoaction">{ value.trackings.length > 0 ? 'Doing' : 'Do Action'}</div>
-                {
-                    this.state.toggleDoAction && <DoAction closeModal={this.toggleDoAction } doAction={this.getAction} />  
-                }
-              </li>
-          ))
-        )
-      }
+        const ActionList = () => {
+
+            return (
+            Object.entries(this.state.challengeActions).map(([key, value]) => (
+                <li key={key}>
+                    <div className="dradiobutton"><input type="radio" name="" id="" /></div>
+                    <div className="dtextlist">{value.name}</div>
+                    <div onClick={() => this.toggleDoAction(value)} className="ddoaction">Do Action</div>
+                    <div onClick={() => this.toggleExecuteAction(value)} className="ddoaction">Execute Action</div>
+                    <div onClick={() => this.toggleQuitAction(value)} className="ddoaction">Quit Action</div>
+                </li>
+            ))
+            )
+        }
 
         return (
             <div className="challenges-page-inner">
@@ -196,6 +246,86 @@ class ViewChallenge extends React.Component {
                                     <ul>
                                       { ActionList() }
                                     </ul>
+                                    <ReactModal
+                                        isOpen={this.state.openDoAction}
+                                        contentLabel="Example Modal"
+                                        className="do_action_modal"
+                                        ariaHideApp={false}
+                                    >
+                                        <div className="ms-watch-modal">
+                                            <div className='do-action-inner'>
+                                                <div className='do-action-challenge-image'>
+                                                    <img src={this.state.challengeDetails.challenge_image} alt="" />
+                                                </div>
+                                                <h3>{this.state.selectedAction.name}</h3>
+                                                <div className='do-action-message'>
+                                                    <div className='do-action-instructions'>{this.state.selectedAction.description}</div>
+                                                </div>
+                                                <div className='do-action-verification'>
+                                                    <div>This action requires you to submit proof when done.</div>
+                                                    <div>Challenge creator will require you to submit a link to your action for verification</div>
+                                                </div>
+                                                <div className='do-action-options'>
+                                                    <button className='cancel-button' onClick={() => this.closeDoAction()}>Cancel</button>
+                                                    <button className='start-button' onClick={() => this.confirmUserToPerformTask(this.state.selectedAction)}>Start Action</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ReactModal>
+                                    <ReactModal
+                                        isOpen={this.state.openExecuteAction}
+                                        contentLabel="Example Modal"
+                                        className="do_action_modal"
+                                        ariaHideApp={false}
+                                    >
+                                        <div className="ms-watch-modal">
+                                            <div className='do-action-inner'>
+                                                <div className='do-action-challenge-image'>
+                                                    <img src={this.state.challengeDetails.challenge_image} alt="" />
+                                                </div>
+                                                <h3>{this.state.selectedExecution.name}</h3>
+                                                <div className='do-action-message'>
+                                                    <div className='do-action-instructions'>{this.state.selectedExecution.description}</div>
+                                                </div>
+                                                <div className='do-action-verification'>
+                                                    <div className='do-action-veridy-text'>To mark this action as done. Please send the link here</div>
+                                                    <div className='do-action-veridy-input'><input type="text" placeholder='https://actions.execution/have-done-my-action' /></div>
+                                                    <div className=''>Challenge creator will recieve your link and verify if you have execured the action.</div>
+                                                </div>
+                                                <div className='do-action-options'>
+                                                    <button className='cancel-button' onClick={() => this.closeExecuteAction()}>Cancel</button>
+                                                    <button className='start-button' onClick={() => this.confirmUserToPerformTask(this.state.selectedExecution)}>Finish Action</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ReactModal>
+
+                                    <ReactModal
+                                        isOpen={this.state.openQuitAction}
+                                        contentLabel="Example Modal"
+                                        className="do_action_modal"
+                                        ariaHideApp={false}
+                                    >
+                                        <div className="ms-watch-modal">
+                                            <div className='do-action-inner'>
+                                                <div className='do-action-challenge-image'>
+                                                    <img src={this.state.challengeDetails.challenge_image} alt="" />
+                                                </div>
+                                                <h3>{this.state.selectedExecution.name}</h3>
+                                                <div className='do-action-message'>
+                                                    <div className='do-action-instructions'>{this.state.selectedExecution.description}</div>
+                                                </div>
+                                                <div className='do-action-verification'>
+                                                    <div>Quiting the action will cause you to lose all<br />progress for this action.</div>
+                                                    <div><strong>Are you sure you want to quit action?</strong></div>
+                                                </div>
+                                                <div className='do-action-options'>
+                                                    <button className='cancel-button' onClick={() => this.closeQuitAction()}>Cancel</button>
+                                                    <button className='quit-button' onClick={() => this.confirmUserToQuitTask(this.state.selectedExecution)}>Quit Action</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ReactModal>
                                 </div>
                             </div>
                         </div>

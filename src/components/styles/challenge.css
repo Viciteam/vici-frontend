@@ -1507,7 +1507,7 @@
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dtextlist {
     display: inline-block;
     vertical-align: middle;
-    width: 80%;
+    width: 40%;
     font-size: 13px;
 }
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction {
@@ -4558,4 +4558,100 @@ button.inactive-save-templete-button {
     text-align: center;
     font-weight: bold;
     margin-top: 20px;
+}
+
+.do-action-inner {
+    width: 450px;
+    margin: 10% auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 12px #ccc;
+    font-family: nunito, sans-serif;
+    overflow: hidden;
+}
+
+.do-action-inner .do-action-challenge-image {
+    height: 150px;
+    overflow: hidden;
+}
+
+.do-action-inner h3 {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1em;
+    margin: 20px 0;
+}
+
+.do-action-inner .do-action-message {
+    padding: 0 30px;
+}
+
+.do-action-verification {
+    margin: 0 30px;
+    border-top: 1px solid #ccc;
+    padding: 20px 0;
+    font-size: 14px;
+    line-height: 1.3em;
+    text-align: center;
+    background: whitesmoke;
+}
+
+.do-action-verification .do-action-veridy-text {
+    margin-bottom: 5px;
+}
+
+.do-action-verification .do-action-veridy-input{
+    margin-bottom: 10px;
+}
+
+.do-action-verification .do-action-veridy-input input {
+    width: 90%;
+    border: 1px solid #ccc;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.do-action-inner .do-action-message .do-action-instructions {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.do-action-inner .do-action-options {
+    margin: 0px 30px;
+    padding: 15px 0;
+    text-align: right;
+    border-top: 1px solid #ccc;
+}
+
+.do-action-inner .do-action-options .cancel-button {
+    font-size: 14px;
+}
+
+.do-action-inner .do-action-options .start-button {
+    color: #fff;
+    background: #FFCA28;
+    border: 2px solid #FFCA28;
+    line-height: 1em;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-left: 15px;
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.do-action-inner .do-action-options .quit-button {
+    color: #fff;
+    background: #ff1717;
+    border: 2px solid #bd0000;
+    line-height: 1em;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-left: 15px;
+    letter-spacing: 1px;
+    font-size: 14px;
 }

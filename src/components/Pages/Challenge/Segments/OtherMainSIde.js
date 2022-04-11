@@ -47,6 +47,7 @@ class OtherMainSIde extends React.Component {
             allParticipants: '',
             isUserParticipant: false,
             challengeInfo: [],
+            challengeOwner: []
         }
 
         this.watchChallenge = this.watchChallenge.bind(this);
@@ -140,12 +141,30 @@ class OtherMainSIde extends React.Component {
         });
     }
 
+    getChallengeOwner(id){
+        let self = this;
+        api.get('userprofile/'+id).then((response) => {
+            let cinfo = response.data.user;
+
+            console.log('get user info -> ', cinfo);
+            // filter values
+            // 
+            // cinfo.challenge_details.map((item, i) => { cinfo[item.field] = item.data; })
+            // console.log('updated info -> ', cinfo);
+            self.setState({challengeOwner: cinfo});
+            
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+
     getChallengeInfo(id){
         let self = this;
         api.get('challenge/'+id).then((response) => {
             let cinfo = response.data.challenges[0];
             // filter values
             // 
+            self.getChallengeOwner(cinfo.owner_id);
             cinfo.challenge_details.map((item, i) => { cinfo[item.field] = item.data; })
             console.log('updated info -> ', cinfo);
             self.setState({challengeInfo: cinfo});
@@ -402,12 +421,12 @@ class OtherMainSIde extends React.Component {
                                 
                                 <div className="dinfoitem">
                                     <div className="din-left">CREATED BY:</div>
-                                    <div className="din-right"><span className="dimagepart"><img src="/img/dummy/1.png" alt="" /></span><span className="dtextpart">John S. White</span></div>
+                                    <div className="din-right"><span className="dimagepart"><img src={this.state.challengeOwner.profpic_link} alt="" /></span><span className="dtextpart">{this.state.challengeOwner.name}</span></div>
                                 </div>
-                                <div className="dinfoitem">
+                                {/* <div className="dinfoitem">
                                     <div className="din-left">PEOPLE JOINED:</div>
                                     <div className="din-right"><img src="/img/dummy/Group.png" alt="" /></div>
-                                </div>
+                                </div> */}
                                 <div className="dinfoitem">
                                     <div className="din-left">DURATION:</div>
                                     <div className="din-right">{duration()}</div>
