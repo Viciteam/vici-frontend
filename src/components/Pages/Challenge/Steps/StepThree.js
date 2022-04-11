@@ -25,7 +25,7 @@ class StepThree extends React.Component {
             showState: false,
             showCity: false,
             enableFormAfterJoining: false,
-            showformPart: 3,
+            showformPart: 1,
             maxItems: 3,
             startDate: '',
             endDate: '',
