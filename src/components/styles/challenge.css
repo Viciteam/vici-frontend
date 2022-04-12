@@ -1496,7 +1496,9 @@
 }
 
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li {
-    margin-bottom: 25px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dradiobutton {
@@ -1507,17 +1509,58 @@
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dtextlist {
     display: inline-block;
     vertical-align: middle;
-    width: 40%;
+    width: 60%;
     font-size: 13px;
 }
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dtextlist .d-activity-name {
+    font-weight: bold;
+    text-transform: capitalize;
+    line-height: 1em;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dtextlist .d-activity-description {
+    padding-left: 10px;
+    font-size: 13px;
+    font-style: italic;
+}
+
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction {
     display: inline-block;
     vertical-align: middle;
-    width: 16%;
+    width: 35%;
     font-size: 11px;
     text-align: right;
     cursor: pointer;
     color: #303C6C;
+}
+
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction .do-inner-action {
+    display: inline-block;
+    margin-left: 10px;
+    background: #25345c;
+    color: #fff;
+    line-height: 1em;
+    padding: 5px 15px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction .do-inner-action.quit-button {
+    background: #f0391a;
+}
+
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction .do-for-action-confirmation {
+    background: #00d506;
+    display: inline-block;
+    line-height: 1em;
+    font-size: 11px;
+    color: #fff;
+    font-weight: bold;
+    padding: 7px 15px;
+    letter-spacing: 1px;
+    border-radius: 26px;
 }
 
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dleftpart {
@@ -4580,7 +4623,23 @@ button.inactive-save-templete-button {
     font-size: 26px;
     font-weight: bold;
     line-height: 1em;
-    margin: 20px 0;
+    margin: 20px 0 5px;
+}
+
+.do-action-taglines {
+    margin: 0px 0 20px;
+    text-align: center;
+}
+
+.do-action-taglines span {
+    font-size: 11px;
+    font-weight: bold;
+    background: #17377a;
+    margin-left: 5px;
+    border-radius: 26px;
+    line-height: 1em;
+    padding: 5px 10px;
+    color: #fff;
 }
 
 .do-action-inner .do-action-message {
@@ -4641,6 +4700,13 @@ button.inactive-save-templete-button {
     margin-left: 15px;
     letter-spacing: 1px;
     font-size: 14px;
+    opacity: 1;
+}
+
+.do-action-inner .do-action-options .start-button.disabled-button {
+    /* background: #6e6139;
+    border: 2px solid #6e6139; */
+    opacity: .3;
 }
 
 .do-action-inner .do-action-options .quit-button {

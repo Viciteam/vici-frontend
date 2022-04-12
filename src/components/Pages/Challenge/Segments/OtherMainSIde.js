@@ -146,7 +146,7 @@ class OtherMainSIde extends React.Component {
         api.get('userprofile/'+id).then((response) => {
             let cinfo = response.data.user;
 
-            console.log('get user info -> ', cinfo);
+            // console.log('get user info -> ', cinfo);
             // filter values
             // 
             // cinfo.challenge_details.map((item, i) => { cinfo[item.field] = item.data; })
@@ -166,7 +166,7 @@ class OtherMainSIde extends React.Component {
             // 
             self.getChallengeOwner(cinfo.owner_id);
             cinfo.challenge_details.map((item, i) => { cinfo[item.field] = item.data; })
-            console.log('updated info -> ', cinfo);
+            // console.log('updated info -> ', cinfo);
             self.setState({challengeInfo: cinfo});
             
         }).catch((error) => {
@@ -187,7 +187,7 @@ class OtherMainSIde extends React.Component {
         // get challenge details
         this.getChallengeInfo(challenge_id);
 
-        console.log('challenge info ->', this.state.challengeInfo);
+        // console.log('challenge info ->', this.state.challengeInfo);
 
     }
 

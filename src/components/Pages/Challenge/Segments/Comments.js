@@ -90,7 +90,7 @@ class Comments extends React.Component {
 
         api.post('/challenge_comment', comment_info)
         .then((response) => {
-            console.log('challenge comment-> ', response.data.challenge_comment);
+            // console.log('challenge comment-> ', response.data.challenge_comment);
             self.getComments(challenge_id);
             self.setState({buildComment: ''});
             self.setState({fileComment: ''});
@@ -102,7 +102,7 @@ class Comments extends React.Component {
         let self = this;
         api.get('/getchallenge_comments/'+id, {})
         .then((response) => {
-            console.log('challenge commetns for '+id+' -> ', response.data.comments.data);
+            // console.log('challenge commetns for '+id+' -> ', response.data.comments.data);
             self.setState({challengeComments: response.data.comments.data});
             self.setState({showLoading: false});
         }).catch((error) => {
@@ -130,7 +130,7 @@ class Comments extends React.Component {
         let challenge_id = challenge_path[challenge_path.length - 1];
 
         this.getComments(challenge_id);
-        console.log('challenge id -> ', challenge_id);
+        // console.log('challenge id -> ', challenge_id);
     }
 
     render () {
