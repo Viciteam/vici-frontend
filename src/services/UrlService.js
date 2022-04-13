@@ -28,6 +28,10 @@ class UrlService {
     static follow() {
         return apiDomain + "api/friend/follow";
     }
+
+    static getComments(id){
+        return apiDomain + `api/getchallenge_comments/${id}`;
+    }
 }
 
 export default UrlService

@@ -6,13 +6,21 @@ import moment from 'moment';
 import ActivityChart from '../Dashboard/ActivityChart';
 import auth from '../../../../services/auth';
 import CookieService from '../../../../services/CookieService';
-
+import Comments from '../Segments/Comments';
+import '../../../styles/challenge.css';
+import ChallengeComments from './Comments/ChallengeComments';
+import ChallengeService from '../../../../services/ChallengeService';
 class Overview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectRange: false,
             selectedDate: 'Select Date',
+            message: [],
+            Comments: [],
+            post_comment: null,
+            fileUploader: null,
+            fileComment: '',
             selectionRange: {
                 startDate: new Date(),
                 endDate: new Date(),
@@ -22,7 +30,20 @@ class Overview extends React.Component {
         this.handleSelectRange = this.handleSelectRange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.handleSubmitSelected = this.handleSubmitSelected.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
+        this.inputFileRef = React.createRef();
     }
+
+    uploadFile() {
+        this.inputFileRef.current.click();
+    }
+
+    async setFile(event) {
+        const objectUrl = URL.createObjectURL(event.target.files[0])
+        this.setState({fileComment: objectUrl});
+        console.log('my file', objectUrl)
+    }
+
     handleSelectRange() {
         console.log('details', this.props.details)
         if(this.state.selectRange){
@@ -50,6 +71,73 @@ class Overview extends React.Component {
         let dateEnd = moment(ranges.selection.endDate).format("DD MMM YYYY");
         this.setState({ selectedDate: dateStart + ' - ' +  dateEnd});
         console.log('date start', dateStart)
+    }
+
+
+    profile_main_image(){
+        let show_image = '';
+        const user_profile = CookieService.get("user_profile");
+        if(user_profile !== undefined ){
+            if(user_profile.fb_user_id !== undefined){
+                console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
+            } else {
+                return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+            }
+        } else {
+            return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';
+        }
+    }
+
+    processCommentSend(e){
+        if(e.key === 'Enter'){
+            if(e.shiftKey){
+                // console.log('has shift key pressed');
+            } else {
+                if(this.state.message.length > 0 || this.state.fileComment){
+                    this.processComment();
+                }
+                e.preventDefault();
+            }
+        }
+    }
+
+    async getComments(){
+        let challenge_path = window.location.pathname.split("/");
+        let challenge_id = challenge_path[challenge_path.length - 1];
+        const comments = await ChallengeService.getComments(challenge_id);
+        this.setState({Comments: comments.comments.data});
+    }
+
+    async processComment(){
+        let comment_to_add = this.state.message;
+        let newCommentContent = comment_to_add.replace(/(?:\r\n|\r|\n)/g, '\n');
+        let challenge_path = window.location.pathname.split("/");
+        let challenge_id = challenge_path[challenge_path.length - 1];
+        let userid = auth.user();
+        let comment_info = {
+            "user_id": userid.id,
+            "challenge_id": challenge_id,
+            "time":"0 mins ago",
+            "post_media": this.state.fileComment,
+            "post_message": newCommentContent,
+            "likes":"0",
+            "dislikes":"0",
+            "islikeselected": "",
+            "isPrivate":"0"
+        };
+
+        const comments = await ChallengeService.postComment(comment_info);
+        console.log('post comment', comments.challenge_comment)
+        if(comments){
+            this.setState({message: ''});
+            this.setState({fileComment: ''});
+            this.getComments();
+        }
+    }
+
+    componentDidMount(){
+        this.getComments();
     }
 
     render () {
@@ -97,14 +185,14 @@ class Overview extends React.Component {
                     </div>
                 </div>
                 <div className="shadow-vici mt-6 p-6 flex">
-                    <div className="w-1/6 border-r border-bottom_gray py-3">
+                    <div className="w-1/4 border-r border-bottom_gray py-3">
                         <div className="text-xl font-bold text-other_challenges">{ this.props.details.name }</div>
                         <div className="flex mt-2">
                             <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6 rounded-full" />
                             <div className="text-xs font-bold pl-2 pt-1">{auth.userProfile() ? auth.userProfile().name : auth.user().name}</div>
                         </div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                    <div className="w-1/4 pt-4">
                         <div className="flex justify-center">
                             <div className="font-bold text-2xl text-other_challenges">0</div>
                             <button className="ml-1">
@@ -115,7 +203,7 @@ class Overview extends React.Component {
                         </div>
                         <div className="text-sm text-center">Visitors</div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                    <div className="w-1/4 pt-4">
                         <div className="flex justify-center">
                             <div className="font-bold text-2xl text-other_challenges">0</div>
                             <button className="ml-1">
@@ -126,7 +214,7 @@ class Overview extends React.Component {
                         </div>
                         <div className="text-sm text-center">Joined</div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                    <div className="w-1/4 pt-4">
                         <div className="flex justify-center">
                             <div className="font-bold text-2xl">0%</div>
                             <button className="ml-1">
@@ -137,7 +225,7 @@ class Overview extends React.Component {
                         </div>
                         <div className="text-sm text-center">Completion rate</div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                    {/* <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
                             <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
@@ -148,9 +236,9 @@ class Overview extends React.Component {
                             <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
                         <div className="text-sm text-center">Squads</div>
-                    </div>
+                    </div> */}
                 </div>
-                <div className="mt-6">
+                {/* <div className="mt-6">
                     <div className="flex justify-between px-6 py-2 bg-vici_light_gray rounded-2xl">
                         <div className="flex pt-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-other_challenges" viewBox="0 0 20 20" fill="currentColor">
@@ -205,7 +293,7 @@ class Overview extends React.Component {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className="mt-6">
                     <div className="flex justify-between rounded-t-3xl px-8 py-2 bg-other_challenges">
                         <div className="text-xl text-white_color">Activity</div>
@@ -237,6 +325,9 @@ class Overview extends React.Component {
                         </div>
                         <ActivityChart />
                     </div>
+                   {/*  <div className="mt-6 mx-12 dvr-item dvr-main-comments no-shadow">
+                        <Comments />
+                    </div> */}
                     <div className="mt-6 mx-12">
                         <div className="flex justify-between">
                             <div className="text-xl font-bold">Updates & Comments</div>
@@ -254,40 +345,38 @@ class Overview extends React.Component {
                         <div className="mt-6">
                             <div className="flex">
                                 <div>
-                                    <img src="/img/user_main.jpg" width={44} />
+                                    <img src={this.profile_main_image()} width={44} />
                                 </div>
                                 <div className="w-full pl-4">
-                                    <textarea className="w-full" placeholder="Write Something.."></textarea>
+                                    <textarea value={this.state.message} onKeyPress={(event) => this.processCommentSend(event)} onChange={event => this.setState({message: event.target.value})} className="w-full p-2" placeholder="Write Something.."></textarea>
                                 </div>
                             </div>
+                            {
+                                this.state.fileComment &&
+                                <div className="py-3">
+                                    <img src={this.state.fileComment} width="50" />
+                                </div>
+                            }
+                            
                             <div className="flex justify-between p-3">
                                 <div>
-                                    <button>
+                                    <button onClick={this.uploadFile}>
                                         <img alt="" src="/img/addimage.png"/>
                                     </button>
-                                    <button className="ml-6">
+                                    <button onClick={this.uploadFile} className="ml-6">
                                         <img alt="" src="/img/clip.png"/>
                                     </button>
                                 </div>
+                                <input type="file" id="commentfile" onChange={this.setFile.bind(this)}  ref={this.inputFileRef} style={{display: "none"}}/>
                                 <div>
-                                    <button className="ml-6">
+                                    <button onClick={() => this.state.message.length > 0 ? this.processComment(): ''} className="ml-6">
                                         <img alt="" src="/img/send.png"/>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div className="mt-6">
-                            <div className="flex border-b pb-3 border-medium_gray">
-                                <div>
-                                    <img src="/img/user_main.jpg" width={44} />
-                                </div>
-                                <div>
-                                    <div className="text-vici_secondary_text pl-6">Daphne Winter - Joined the challenge</div>
-                                    <div className="text-sm pl-6 text-medium_gray">5 min ago</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="mt-6">
+                        <ChallengeComments comments={this.state.Comments}/>
+                        {/* <div className="mt-6">
                             <div className="flex border-b pb-3 border-medium_gray">
                                 <div>
                                     <img src="/img/explore/Input fields2.png" width={44} />
@@ -341,7 +430,7 @@ class Overview extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

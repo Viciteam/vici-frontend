@@ -45,7 +45,7 @@ class ChallengeService {
             (response) => {
                 let today = new Date().toISOString().split('T')[0]
                 response.data.challenges.forEach(item=>{
-                    if(item.created_at.split('T')[0] == today){
+                    if(item.created_at.split('T')[0] === today){
                         todays_challenges.push(item)
                     }
                 })
@@ -55,6 +55,25 @@ class ChallengeService {
           });
         return todays_challenges
     }
+
+    async getComments(id){
+        try {
+            const response = await api.get('getchallenge_comments/' + id);
+            return response.data
+        } catch (error) {
+            return false
+        }
+    }
+
+    async postComment(data){
+        try {
+            const response = await api.post('challenge_comment', data);
+            return response.data
+        } catch (error) {
+            return false
+        }
+    }
+
 }
 
 export default new ChallengeService();
