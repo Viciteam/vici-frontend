@@ -115,7 +115,7 @@ class Comments extends React.Component {
         const user_profile = CookieService.get("user_profile");
         if(user_profile !== undefined ){
             if(user_profile.fb_user_id !== undefined){
-                console.log('user profile from sideber -> ', user_profile.fb_user_id);
+                // console.log('user profile from sideber -> ', user_profile.fb_user_id);
                 return "https://graph.facebook.com/"+user_profile.fb_user_id+"/picture?type=large&width=320&height=320";
             } else {
                 return auth.userProfile() ? auth.userProfile().profpic_link : '/img/avatarguest.png';

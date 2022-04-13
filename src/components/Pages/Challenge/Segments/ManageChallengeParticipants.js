@@ -22,29 +22,39 @@ class ManageChallengeParticipants extends React.Component {
         super(props);
         this.state = {
             isactive: this.props.isactive,
-            allParicipants: [],
+            allParicipants: '',
             showLoading: false,
         }
     }
 
     getParticipants(id){
         // console.log('get participants ->', id);
-        this.setState({showLoading: true});
-        let self = this;
-        api.get('getallchallengeparticipants/'+id).then((response) => {
-            console.log('get participants -> ', response.data.participants.data);
-            self.setState({allParicipants: response.data.participants.data});
-            self.setState({showLoading: false});
-        }).catch((error) => {
-            console.log('error -> ', error);
-        });
+        // this.setState({showLoading: true});
+        // let self = this;
+        // api.get('getallchallengeparticipants/'+id).then((response) => {
+        //     // console.log('get participants -> ', response.data.participants.data);
+        //     self.setState({allParicipants: response.data.participants.data});
+        //     self.setState({showLoading: false});
+        // }).catch((error) => {
+        //     console.log('error -> ', error);
+        // });
     }
 
     componentDidMount(){
         let challenge_path = window.location.pathname.split("/");
         let challenge_id = challenge_path[challenge_path.length - 1];
 
-        this.getParticipants(challenge_id);
+        // console.log('participans -> ', this.props.participants);
+        // this.getParticipants(challenge_id);
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        // console.log('prevprops -> ', prevProps.participants);
+        // console.log('prevState -> ', prevState.allParicipants);
+        if(prevProps.participants.length !== prevState.allParicipants.length){
+            // console.log('it has changed');
+            this.setState({allParicipants: this.props.participants});
+        }
     }
 
     render () {

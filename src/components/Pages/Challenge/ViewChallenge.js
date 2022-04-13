@@ -10,7 +10,7 @@ import DoAction from './Modals/DoAction';
 
 import OtherChallenges from './Segments/OtherChallenges'
 import ManageChallengeParticipants from './Segments/ManageChallengeParticipants'
-import OtherMainSIde from './Segments/OtherMainSIde'
+import ViewChallengeRightDetails from './Segments/ViewChallengeRightDetails'
 import ManageChallenge from './Segments/ManageChallenge';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -50,7 +50,9 @@ class ViewChallenge extends React.Component {
             selectedAction: [],
             selectedExecution: [],
             isActionContent: '',
-            verificationLink: ''
+            verificationLink: '',
+            ChallengeParticipants: [],
+            isCurrentUserParticipant: false
         }
 
         this.toggleOpenAction = this.toggleOpenAction.bind(this)
@@ -62,10 +64,34 @@ class ViewChallenge extends React.Component {
     }
 
     componentDidMount(){
-        // console.log('user info -> ', auth.userProfile());
+        console.log('is authenticated -> ', auth.isAuthenticated());
+        if(!auth.isAuthenticated()){
+            window.location.href = "/";
+        }
         // console.log('props', this.props)
         this.getChallengeData();
+        
     }
+    getParticipants(){
+        let currentUser = auth.userProfile().user_id;
+        console.log('get challenge id -> ', this.state.challengeID);
+        this.setState({showLoading: true});
+        let self = this;
+        api.get('getallchallengeparticipants/'+this.state.challengeID).then((response) => {
+            console.log('d current user -> ', currentUser);
+            console.log('get participants -> ', response.data.participants.data);
+            self.setState({ChallengeParticipants: response.data.participants.data});
+            response.data.participants.data.map((item, i) => {
+                if(currentUser == item.user_id){
+                    self.setState({isCurrentUserParticipant: true});
+                }
+            });
+            self.setState({showLoading: false});
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+
 
     getChallengeData(){
         let self = this;
@@ -94,6 +120,8 @@ class ViewChallenge extends React.Component {
             }else{
                 self.setState({isOwner: false});
             }
+            // get participants
+            self.getParticipants();
             // challenge actions
         }).catch((error) => {
             console.log('error -> ', error);
@@ -264,8 +292,7 @@ class ViewChallenge extends React.Component {
                 <div className="dview-left">
                     <div className="dv-left-inner">
                         <div className="dvl-main-sidebar">
-
-                            <OtherMainSIde details={this.state.challengeDetails} />
+                            <ViewChallengeRightDetails details={this.state.challengeDetails} participants={this.state.ChallengeParticipants} />
                         </div>
                         {/* <div className="dvl-main-sidebar">
                             <WatchRewards />
@@ -312,14 +339,23 @@ class ViewChallenge extends React.Component {
                                                     {/* <div className='d-activity-tracking-items'>{value.custom_tracking_items.split(',').map((item, i) => (<span key={i}>{item}</span>))}</div> */}
                                                 </div>
                                                 {
-                                                    (this.userActionStatus(value) == 'open_do_action' ? <div className="ddoaction"><div onClick={() => this.toggleOpenAction(value, 'do_action')} className="do-inner-action">Do Action</div></div> : 
-                                                    (this.userActionStatus(value) == 'open_confirm_action' ?
-                                                        <div className="ddoaction">
-                                                            <div onClick={() => this.toggleOpenAction(value, 'execute_action')} className="do-inner-action">Finish Action</div>
-                                                            <div onClick={() => this.toggleOpenAction(value, 'quit_action')} className="do-inner-action quit-button">Quit Action</div>
-                                                        </div>
-                                                    : (this.userActionStatus(value) == 'open_for_confirmation_action' ? <div className="ddoaction"><div className='do-for-action-confirmation'>For Valiation</div></div> : <div></div> ))
+                                                    (this.state.isCurrentUserParticipant ?
+                                                        (this.userActionStatus(value) == 'open_do_action' ? <div className="ddoaction"><div onClick={() => this.toggleOpenAction(value, 'do_action')} className="do-inner-action">Do Action</div></div> : 
+                                                        (this.userActionStatus(value) == 'open_confirm_action' ?
+                                                            <div className="ddoaction">
+                                                                <div onClick={() => this.toggleOpenAction(value, 'execute_action')} className="do-inner-action">Finish Action</div>
+                                                                <div onClick={() => this.toggleOpenAction(value, 'quit_action')} className="do-inner-action quit-button">Quit Action</div>
+                                                            </div>
+                                                        : (this.userActionStatus(value) == 'open_for_confirmation_action' ? <div className="ddoaction"><div className='do-for-action-confirmation'>For Valiation</div></div> : <div></div> ))
+                                                        )
+                                                    :
+                                                        (this.state.isOwner ?
+                                                            <div className='ddoaction'>For Validations</div>
+                                                        :
+                                                            <div className='ddoaction'>Join Challenge</div>
+                                                        )
                                                     )
+                                                    
                                                 }
                                                     
                                                 
@@ -379,7 +415,7 @@ class ViewChallenge extends React.Component {
                                 </div>
                             </div>
                         </div> */}
-                        <ManageChallengeParticipants />
+                        <ManageChallengeParticipants participants={this.state.ChallengeParticipants} />
                         
                         <div className="dvr-item dvr-main-comments no-shadow">
                             <Comments />
