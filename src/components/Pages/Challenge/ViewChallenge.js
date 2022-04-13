@@ -1,12 +1,15 @@
 import './../../styles/challenge.css';
 import React from 'react';
+import ReactModal from 'react-modal';
 
 import { withRouter } from 'react-router-dom'
 
 import WatchRewards from './Segments/WatchRewards'
 import Comments from './Segments/Comments'
+import DoAction from './Modals/DoAction';
 
 import OtherChallenges from './Segments/OtherChallenges'
+import ManageChallengeParticipants from './Segments/ManageChallengeParticipants'
 import OtherMainSIde from './Segments/OtherMainSIde'
 import ManageChallenge from './Segments/ManageChallenge';
 
@@ -15,6 +18,7 @@ import { faCheckCircle, faEye, faTimes } from '@fortawesome/free-solid-svg-icons
 
 import axios from 'axios'
 import auth from '../../../services/auth';
+import { act } from 'react-dom/test-utils';
 
 const api = axios.create({
   baseURL: 'https://api.vici.life/api/',
@@ -37,97 +41,223 @@ class ViewChallenge extends React.Component {
             isWatchingText: 'Watch Challenge',
             challengeDetails: [],
             challengeActions: [],
+            actionsItem: [],
+            toggleDoAction: false,
             isOwner: false,
+            openDoAction: false,
+            openExecuteAction: false,
+            openQuitAction: false,
+            selectedAction: [],
+            selectedExecution: [],
+            isActionContent: '',
+            verificationLink: ''
         }
 
-        // this.getChallengeInfo();
-
-
-        this.watchChallenge = this.watchChallenge.bind(this);
+        this.toggleOpenAction = this.toggleOpenAction.bind(this)
+        this.closeAction = this.closeAction.bind(this)
+        this.userActionStatus = this.userActionStatus.bind(this)
+        this.confirmUserToQuitTask = this.confirmUserToQuitTask.bind(this)
+        this.confirmFinishAction = this.confirmFinishAction.bind(this)
+        this.addVerificationLink = this.addVerificationLink.bind(this)
     }
 
     componentDidMount(){
-        console.log('props', this.props)
-      api.get('challenge/'+this.state.challengeID).then(
-        (response) => {
-          console.log('response -> ', response.data.challenges);
-          let challenges = response.data.challenges[0];
-
-          let challenge_details = [];
-          challenge_details['name'] = challenges.name;
-          challenge_details['description'] = challenges.description;
-          challenge_details['id'] = challenges.id;
-          this.setState({challengeDetails: challenge_details});
-        
-          // set actioms
-          // let actions = [];
-          // challenges.actions.map((item, index) => {
-          //   let info = [];
-          //
-          //   // conert trackings
-          //   info.push(item);
-          //   console.log('info ->', info);
-          //   actions.push(info);
-          // })
-          // console.log('actions ->', actions);
-          this.setState({challengeActions: challenges.actions});
-          if(challenges.owner_id == auth.user().id){
-            this.setState({isOwner: true});
-          }else{
-            this.setState({isOwner: false});
-          }
-          // challenge actions
-        }
-      ).catch((error) => {
-        console.log('error -> ', error);
-      });
+        // console.log('user info -> ', auth.userProfile());
+        // console.log('props', this.props)
+        this.getChallengeData();
     }
 
-    // getChallengeInfo = async () => {
-    //   console.log('get challenge');
-    //   let self = this;
-    //
-    //   // get challenge
-    //   api.get('challenge/'+this.state.challengeID).then(
-    //     (response) => {
-    //       console.log('response -> ', response.data.challenges);
-    //       this.setState({challengeDetails: response.data.challenges});
-    //
-    //     }
-    //   ).catch((error) => {
-    //     console.log('error -> ', error);
-    //   });
-    // }
+    getChallengeData(){
+        let self = this;
+        api.get('challenge/'+this.state.challengeID).then((response) => {
+            // console.log('challegne info frm api -> ', response.data.challenges[0]);
+            let challenges = response.data.challenges[0];
 
-    watchChallenge(){
+            let challenge_details = [];
+            challenge_details['name'] = challenges.name;
+            challenge_details['description'] = challenges.description;
+            challenge_details['id'] = challenges.id;
+            challenges.challenge_details.map((item, i) => { challenge_details[item.field] = item.data; })
 
-        this.setState({ isWatching: !this.state.isWatching });
+            self.setState({challengeDetails: challenge_details});
+            
+            let challenge_actions_sanitize = [];
+            challenges.actions.map((item, i) => {
+                let oneAction = item;
+                oneAction.action_details.map((item, i) => { oneAction[item.field] = item.data; })
+                challenge_actions_sanitize.push(oneAction)
+            });
+            self.setState({challengeActions: challenge_actions_sanitize});
 
-        if(this.state.isWatching){
-            this.setState({ isWatchingText: 'Watch Challenge'});
-        } else {
-            this.setState({ isWatchingText: 'Stop Watching'});
+            if(challenges.owner_id == auth.user().id){
+                self.setState({isOwner: true});
+            }else{
+                self.setState({isOwner: false});
+            }
+            // challenge actions
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+
+    userActionStatus(actions){
+        // console.log('actions -> ', actions);
+        let currentUser = auth.userProfile().user_id;
+
+        // console.log('current user id -> ', currentUser);
+        let userActionCommited = [];
+        actions.trackings.map((item, i) => {
+            if(item.description == currentUser){ userActionCommited.push(item); }
+        });
+
+        if(userActionCommited.length === 0){ return 'open_do_action'; }
+
+        // get last action from action list
+        let lastAction = userActionCommited.at(-1);
+        // console.log('action status -> ', lastAction);
+
+        if(lastAction.name == "start_action"){ return 'open_confirm_action'; }
+
+        if(lastAction.name == "quit_action"){ return 'open_do_action'; }
+
+        if(lastAction.name == "confirmation_sent_action"){ return 'open_for_confirmation_action'; }
+
+        if(lastAction.name == "confirmed_action"){ return 'open_confirmed_action'; }
+    }
+    
+    addVerificationLink(e){
+        this.setState({verificationLink: e});
+    }
+
+    toggleOpenAction(item, action) {
+        // console.log('selected action ->', item);
+        this.setState({isActionContent: action});
+        this.setState({selectedAction: item});
+        this.setState({openDoAction: true});
+    }
+    
+    closeAction(){
+        this.setState({selectedAction: []});
+        this.setState({openDoAction: false});
+    }
+    
+
+    confirmUserToPerformTask(task){
+        // prep data
+        const data = {
+            name: 'start_action',
+            description: auth.userProfile().user_id,
+            action_id: task.id,
+            details: [
+                {
+                    "field": "comment",
+				    "data": auth.userProfile().name+' started the action'
+                }
+            ],
+        }
+        this.saveAction(data);
+    }
+
+    confirmUserToQuitTask(task){
+        const data = {
+            name: 'quit_action',
+            description: auth.userProfile().user_id,
+            action_id: task.id,
+            details: [
+                {
+                    "field": "comment",
+				    "data": auth.userProfile().name+' quitted the action'
+                }
+            ],
+        }
+        this.saveAction(data);
+    }
+
+    confirmFinishAction(task){
+
+        console.log('the task -> ', task);
+        const data = {
+            name: 'confirmation_sent_action',
+            description: auth.userProfile().user_id,
+            action_id: task.id,
+            details: [
+                {
+                    "field": "comment",
+				    "data": auth.userProfile().name+' has performed the action and is for verification'
+                },
+                {
+                    "field": "verification",
+				    "data": this.state.verificationLink
+                }
+            ],
         }
 
+        this.saveAction(data);
 
-
-        // this.state.isWatching = !this.state.isWatching;
     }
+
+    saveAction(taskData){
+        let self = this;
+        api.post('/tracking', taskData)
+        .then((response) => {
+            console.log('Actions response -> ', response.data);
+            self.closeAction();
+            self.getChallengeData();
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+    
 
     render () {
 
-      const ActionList = () => {
+        const ActionsContents = () => {
+            if(this.state.isActionContent == "do_action"){
+                return (
+                    <div className='do-action-content-main'>
+                        <div className='do-action-verification'>
+                            <div>This action requires you to submit proof when done.</div>
+                            <div>Challenge creator will require you to submit a link to your action for verification</div>
+                        </div>
+                        <div className='do-action-options'>
+                            <button className='cancel-button' onClick={() => this.closeAction()}>Cancel</button>
+                            <button className='start-button' onClick={() => this.confirmUserToPerformTask(this.state.selectedAction)}>Start Action</button>
+                        </div>
+                    </div>
+                );
+            }
 
-        return (
-          Object.entries(this.state.challengeActions).map(([key, value]) => (
-              <li key={key}>
-                <div className="dradiobutton"><input type="radio" name="" id="" /></div>
-                <div className="dtextlist">{value.name}</div>
-                <div className="ddoaction">Do Action</div>
-              </li>
-          ))
-        )
-      }
+            if(this.state.isActionContent == "execute_action"){
+                return (
+                    <div className='do-action-content-main'>
+                        <div className='do-action-verification'>
+                            <div className='do-action-veridy-text'>To mark this action as done. Please send the link here</div>
+                            <div className='do-action-veridy-input'><input type="text" onChange={(e) => this.addVerificationLink(e.target.value)} placeholder='https://actions.execution/have-done-my-action' /></div>
+                            <div className=''>Challenge creator will recieve your link and verify if you have execured the action.</div>
+                        </div>
+                        <div className='do-action-options'>
+                            <button className='cancel-button' onClick={() => this.closeAction()}>Cancel</button>
+                            <button className={'start-button '+(this.state.verificationLink == '' ? 'disabled-button' : '')} onClick={() => this.confirmFinishAction(this.state.selectedAction)} disabled={(this.state.verificationLink == '' ? true : false)}>Finish Action</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            if(this.state.isActionContent == "quit_action"){
+                return (
+                    <div className='do-action-content-main'>
+                        <div className='do-action-verification'>
+                            <div>Quiting the action will cause you to lose all<br />progress for this action.</div>
+                            <div><strong>Are you sure you want to quit action?</strong></div>
+                        </div>
+                        <div className='do-action-options'>
+                            <button className='cancel-button' onClick={() => this.closeAction()}>Cancel</button>
+                            <button className='quit-button' onClick={() => this.confirmUserToQuitTask(this.state.selectedAction)}>Quit Action</button>
+                        </div>
+                    </div>
+                );
+            }
+        }
 
         return (
             <div className="challenges-page-inner">
@@ -137,10 +267,10 @@ class ViewChallenge extends React.Component {
 
                             <OtherMainSIde details={this.state.challengeDetails} />
                         </div>
-                        <div className="dvl-main-sidebar">
+                        {/* <div className="dvl-main-sidebar">
                             <WatchRewards />
-                        </div>
-                        <div className="dvl-main-sidebar">
+                        </div> */}
+                        {/* <div className="dvl-main-sidebar">
                             <div className="dvl-invite-link">
                                 <h2>Invite link</h2>
                                 <div className="dlinkfield">
@@ -152,7 +282,7 @@ class ViewChallenge extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="dview-right">
@@ -163,33 +293,67 @@ class ViewChallenge extends React.Component {
                                 <ManageChallenge challenge={this.state.challengeDetails} />
                             </div>
                         }
-                        <div className="dvr-notif-bar">
+                        {/* <div className="dvr-notif-bar">
                             <span className="dvr-notif-eye"><FontAwesomeIcon icon={faEye} /></span>
                             <span className="dvr-notif-text">You are watching the challenge with 230 other people.</span>
                             <span className="dvr-notif-close"><FontAwesomeIcon icon={faTimes} /></span>
-                        </div>
+                        </div> */}
                         <div className="dvr-item dvr-main-action">
                             <div className="dvr-action-inner">
                                 <h2>Actions</h2>
                                 <div className="dvr-item-content">
                                     <ul>
-                                      { ActionList() }
+                                        {
+                                          Object.entries(this.state.challengeActions).map(([key, value]) => (
+                                            <li key={key}>
+                                                <div className="dtextlist">
+                                                    <div className='d-activity-name'>{value.name}</div>
+                                                    <div className='d-activity-description'>{value.description}</div>
+                                                    {/* <div className='d-activity-tracking-items'>{value.custom_tracking_items.split(',').map((item, i) => (<span key={i}>{item}</span>))}</div> */}
+                                                </div>
+                                                {
+                                                    (this.userActionStatus(value) == 'open_do_action' ? <div className="ddoaction"><div onClick={() => this.toggleOpenAction(value, 'do_action')} className="do-inner-action">Do Action</div></div> : 
+                                                    (this.userActionStatus(value) == 'open_confirm_action' ?
+                                                        <div className="ddoaction">
+                                                            <div onClick={() => this.toggleOpenAction(value, 'execute_action')} className="do-inner-action">Finish Action</div>
+                                                            <div onClick={() => this.toggleOpenAction(value, 'quit_action')} className="do-inner-action quit-button">Quit Action</div>
+                                                        </div>
+                                                    : (this.userActionStatus(value) == 'open_for_confirmation_action' ? <div className="ddoaction"><div className='do-for-action-confirmation'>For Valiation</div></div> : <div></div> ))
+                                                    )
+                                                }
+                                                    
+                                                
+                                            </li>
+                                        ))
+                                      }
                                     </ul>
+                                    <ReactModal isOpen={this.state.openDoAction} contentLabel="Example Modal" className="do_action_modal" ariaHideApp={false} >
+                                        <div className="ms-watch-modal">
+                                            <div className='do-action-inner'>
+                                                <div className='do-action-challenge-image'>
+                                                    <img src={this.state.challengeDetails.challenge_image} alt="" />
+                                                </div>
+                                                <h3>{this.state.selectedAction.name}</h3>
+                                                <div className='do-action-taglines'>
+                                                    { (this.state.selectedAction.custom_tracking_items !== null ? this.state.selectedAction.custom_tracking_items?.split(',').map((item, i) => (<span key={i}>{item}</span>)) : <span>{this.state.selectedAction.custom_tracking_items}</span>) }
+                                                </div>
+                                                <div className='do-action-message'>
+                                                    <div className='do-action-instructions'>{this.state.selectedAction.description}</div>
+                                                </div>
+                                                { ActionsContents() }
+                                            </div>
+                                        </div>
+                                    </ReactModal>
+
                                 </div>
                             </div>
                         </div>
-                        <div className="dvr-item dvr-main-progress">
+                        {/* <div className="dvr-item dvr-main-progress">
                             <div className="dleftpart">
                                 <img src="/img/user_main.jpg" alt="" />
                             </div>
                             <div className="drightpart">
                                 <div className="dchartpart">
-                                    {/* <div className="donut-chart-block">
-                                        <div className="donut-chart" style={{backgroundColor: this.state.selectedColor+"70"}}>
-                                            <div id="part1" className="portion-block"><div className="circle" style={{backgroundColor: this.state.selectedColor}}></div></div>
-                                            <p className="center"><span className="dnum">0</span><br /><span className="dsubtext">Actions</span></p>
-                                        </div>
-                                    </div> */}
                                     <div className="watch-pie-chart wpc-progress">
                                         <h6>
                                             <span className="dnumbs">0</span>
@@ -214,87 +378,22 @@ class ViewChallenge extends React.Component {
                                     <div className="dpi-join-button">Join Challenge</div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="dvr-item dvr-main-participants-progress">
-                            <div className="dvr-participants-inner">
-                                <h2><span className="dheadertitle">Participant Progress</span><span className="dviewall">View All ></span></h2>
-                                <div className="dvr-item-content">
-                                    <div className="dvr-participants-list">
-                                        <div className="dvr-participants-header">
-                                            <div className="dvr-title-participants">Participant</div>
-                                            <div className="dvr-title-clan">Clan</div>
-                                            <div className="dvr-title-progress">Progress</div>
-                                        </div>
-                                        <div className="dvr-participant-items">
-                                            <div className="dvr-participant dvr-done-item">
-                                                <div className="dvr-item-participant">
-                                                    <div className="dvr-participant-photo">
-                                                        <img src="/img/prof_icon.png" alt="" />
-                                                    </div>
-                                                    <div className="dvr-participant-name">Lorem Ipsum</div>
-                                                </div>
-                                                <div className="dvr-item-clan">Sample Clan</div>
-                                                <div className="dvr-item-progress">
-                                                    <div className="dprogressbar">
-                                                        <div className="dprogressbase">
-                                                            <div className="dprogressvalues" style={{width: 100 + '%'}}>&nbsp;</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="dvectorpagrt"><FontAwesomeIcon icon={faCheckCircle} /></div>
-                                                </div>
-                                            </div>
-                                            <div className="dvr-participant dvr-failed-item">
-                                                <div className="dvr-item-participant">
-                                                    <div className="dvr-participant-photo">
-                                                        <img src="/img/prof_icon.png" alt="" />
-                                                    </div>
-                                                    <div className="dvr-participant-name">Lorem Ipsum</div>
-                                                </div>
-                                                <div className="dvr-item-clan">Sample Clan</div>
-                                                <div className="dvr-item-progress">
-                                                    <div className="dprogressbar">
-                                                        <div className="dprogressbase">
-                                                            <div className="dprogressvalues" style={{width: 75 + '%'}}>&nbsp;</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="dvectorpagrt">failed</div>
-                                                </div>
-                                            </div>
-                                            <div className="dvr-participant">
-                                                <div className="dvr-item-participant">
-                                                    <div className="dvr-participant-photo">
-                                                        <img src="/img/prof_icon.png" alt="" />
-                                                    </div>
-                                                    <div className="dvr-participant-name">Lorem Ipsum</div>
-                                                </div>
-                                                <div className="dvr-item-clan">Sample Clan</div>
-                                                <div className="dvr-item-progress">
-                                                    <div className="dprogressbar">
-                                                        <div className="dprogressbase">
-                                                            <div className="dprogressvalues" style={{width: 75 + '%'}}>&nbsp;</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="dvectorpagrt">2/5</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </div> */}
+                        <ManageChallengeParticipants />
+                        
                         <div className="dvr-item dvr-main-comments no-shadow">
                             <Comments />
                         </div>
                     </div>
                 </div>
-                <div className="dotherinfo">
+                {/* <div className="dotherinfo">
                     <div className="dohterinner">
                         <h2 className="dotherheader">Other challenges</h2>
                         <div className="dotheritems">
                             <OtherChallenges />
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
         )
     }

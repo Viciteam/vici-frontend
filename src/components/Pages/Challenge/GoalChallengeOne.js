@@ -45,8 +45,8 @@ class GoalChallengeOne extends React.Component {
             challengeID: this.props.match.params.id,
             uinfo: this.props.uinfo,
             activepart: 'title',
-            stepnumber: 0,
-            menuActive: 1,
+            stepnumber:0,
+            menuActive:1,
             activityList: [{"activity": ""}],
             checked: false,
             showOptionOne: true,
@@ -290,7 +290,7 @@ class GoalChallengeOne extends React.Component {
         let parameters = {};
         parameters['name'] = finalvalues.title;
         parameters['description'] = finalvalues.tagline;
-        parameters['is_template'] = (this.state.isSaveasTemplate ? 'Yes': 'No');
+        parameters['is_template'] = (finalvalues.save_as_template ? 'Yes': 'No');
         parameters['owner_id'] = auth.user().id;
         parameters['details'] = [];
 
@@ -317,7 +317,7 @@ class GoalChallengeOne extends React.Component {
             console.log('API response -> ', response.data.challenge.id);
                 
             self.addAction(response.data.challenge.id);
-            self.addPenalty(response.data.challenge.id);
+            // self.addPenalty(response.data.challenge.id);
             self.setState({newChallengeID: response.data.challenge.id});
             self.setState({showLoading: false});
         });
@@ -431,12 +431,25 @@ class GoalChallengeOne extends React.Component {
                                                 </div>
                                                 :
                                                 <div className='publish-modal'>
-                                                    <div className='dpublish-image'>
-                                                        <img src="/img/green_check.png" alt="" />
+                                                    <div className='header-image'>
+                                                        <img src={this.state.finalValues.challenge_image} alt="" />
                                                     </div>
-                                                    <h3>Your Challenge has been published!</h3>
-                                                    <div className='d-confirm-saving'>
-                                                        <button onClick={() => ( window.location.href = "/challenge/"+this.state.newChallengeID )}>View Challenge</button>
+                                                    {
+                                                        (this.state.finalValues.challenge_duration == 'ranged' ?
+                                                            <div className='d-pop-freq'>{this.state.finalValues.challenge_duration_ranged_frequency} | {this.state.finalValues.challenge_duration_ranged_repeat} {this.state.finalValues.challenge_duration_ranged_start_time}</div>
+                                                        :
+                                                            <div className='d-pop-freq'>{this.state.finalValues.challenge_duration} Duration</div>
+                                                        )
+                                                    }
+                                                    <div className='pop-chllenge-title'>{this.state.finalValues.title}</div>
+                                                    <div className='pop-chllenge-tagline'>{this.state.finalValues.tagline}</div>
+                                                    <div className='pop-chllenge-instructions'>{this.state.finalValues.instructions}</div>
+                                                    <div className='pop-chllenge-scope'>A {this.state.finalValues.main_goal} type of challenge that focus {this.state.finalValues.locations_country}</div>
+                                                    <div className='pop-additional-info'>
+                                                        <h3>Your Challenge has been published!</h3>
+                                                        <div className='d-confirm-saving'>
+                                                            <button onClick={() => ( window.location.href = "/challenge/"+this.state.newChallengeID )}>View Challenge</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )
@@ -449,7 +462,7 @@ class GoalChallengeOne extends React.Component {
                         </div>
                     </div>
                     <div className="cgoal-right">
-                        <div className="cgoal-right-inner" style={{display: this.state.stepnumber < 2 ? 'block' : 'none' }} >
+                        <div className="cgoal-right-inner" style={{display: this.state.stepnumber < 3 ? 'block' : 'none' }} >
                             <div className="dimage"><img src={tip_images[this.state.stepnumber]} alt="" /></div>
                             <div className="dtipbase">Tip { this.state.stepnumber + 1}</div>
                             <div className="dtextinfo">{tip_message[this.state.stepnumber]}</div>

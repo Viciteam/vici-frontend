@@ -3,9 +3,24 @@ import React from 'react';
 import ReactModal from 'react-modal';
 
 import Switch from "react-switch";
+import moment from 'moment';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faExclamationCircle} from '@fortawesome/free-solid-svg-icons'
+
+import axios from 'axios'
+import auth from '../../../../services/auth';
+
+const api = axios.create({
+    baseURL: 'https://api.vici.life/api/',
+    headers: {
+        'Content-Type' : 'application/json',
+        'Accept' : 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization' : 'Bearer '+auth.getAccessToken(),
+    }
+})
+
 
 class OtherMainSIde extends React.Component {
     constructor(props){
@@ -25,7 +40,14 @@ class OtherMainSIde extends React.Component {
             joinChallengeSelectedClan: 'Please select a Clan',
             quitChallengeModal: false,
             quitChallengeStep: 1,
-            quitChallengeType: 1
+            quitChallengeType: 1,
+
+            // challenge get data
+            challengeID: '',
+            allParticipants: '',
+            isUserParticipant: false,
+            challengeInfo: [],
+            challengeOwner: []
         }
 
         this.watchChallenge = this.watchChallenge.bind(this);
@@ -53,7 +75,7 @@ class OtherMainSIde extends React.Component {
     }
 
     handleChange(item){
-        console.log('changed -> ', item);
+        // console.log('changed -> ', item);
         if(item === 'one'){ this.setState({ switchOne: !this.state.switchOne}); }
         if(item === 'two'){ this.setState({ switchTwo: !this.state.switchTwo}); }
         if(item === 'three'){ this.setState({ switchThree: !this.state.switchThree}); }
@@ -92,6 +114,85 @@ class OtherMainSIde extends React.Component {
 
     confirmQuitChallenge(){
         this.setState({ quitChallengeStep: 2 });
+    }
+
+    isUserParticipant(){
+        // let current user id
+        let userID = auth.userProfile().user_id;
+        
+        // if user is part of participants
+        this.state.allParticipants.forEach((item) => {
+            // console.log('participant item -> ', item);
+            if(userID == item.user_id){
+                this.setState({isUserParticipant: true});
+            }
+        });
+    }
+
+    getChallengeParticipants(id){
+        // console.log('get participants ->', id);
+        let self = this;
+        api.get('getallchallengeparticipants/'+id).then((response) => {
+            // console.log('get participants -> ', response.data.participants.data);
+            self.setState({allParticipants: response.data.participants.data});
+            self.isUserParticipant();
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+
+    getChallengeOwner(id){
+        let self = this;
+        api.get('userprofile/'+id).then((response) => {
+            let cinfo = response.data.user;
+
+            // console.log('get user info -> ', cinfo);
+            // filter values
+            // 
+            // cinfo.challenge_details.map((item, i) => { cinfo[item.field] = item.data; })
+            // console.log('updated info -> ', cinfo);
+            self.setState({challengeOwner: cinfo});
+            
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+
+    getChallengeInfo(id){
+        let self = this;
+        api.get('challenge/'+id).then((response) => {
+            let cinfo = response.data.challenges[0];
+            // filter values
+            // 
+            self.getChallengeOwner(cinfo.owner_id);
+            cinfo.challenge_details.map((item, i) => { cinfo[item.field] = item.data; })
+            // console.log('updated info -> ', cinfo);
+            self.setState({challengeInfo: cinfo});
+            
+        }).catch((error) => {
+            console.log('error -> ', error);
+        });
+    }
+
+    getChallengeDetails(){
+        // get challenge id
+        let challenge_path = window.location.pathname.split("/");
+        let challenge_id = challenge_path[challenge_path.length - 1];
+        this.setState({challengeID: challenge_id});
+
+        // get participants
+        this.getChallengeParticipants(challenge_id);
+        
+
+        // get challenge details
+        this.getChallengeInfo(challenge_id);
+
+        // console.log('challenge info ->', this.state.challengeInfo);
+
+    }
+
+    componentDidMount(){
+        this.getChallengeDetails();
     }
 
     render () {
@@ -143,6 +244,7 @@ class OtherMainSIde extends React.Component {
                                             <div className="d-select-squad-item create-a-squad">Create a squad</div>
                                         </div>
                                     </div>
+        
                                 </div>
                             </div>
                         );
@@ -281,48 +383,81 @@ class OtherMainSIde extends React.Component {
             }
         };
 
+        let duration = () => {
+            if(this.state.challengeInfo != ''){
+                if(this.state.challengeInfo.challenge_duration == "ranged"){
+                    return (
+                        <div className="dfreq">{this.state.challengeInfo.challenge_duration_ranged_repeat} {this.state.challengeInfo.challenge_duration_ranged_frequency} @ {this.state.challengeInfo.challenge_duration_ranged_start_time}</div>
+                    );
+                } else if(this.state.challengeInfo.challenge_duration == "fixed"){
+                    return (
+                        <div className="dfreq">{moment(this.state.challengeInfo.challenge_duration_fixed_end_date).format('MMMM D, YYYY')} to {moment(this.state.challengeInfo.challenge_duration_fixed_start_date).format('MMMM D, YYYY')} @ {this.state.challengeInfo.challenge_duration_fixed_end_time}</div>
+                    );
+                }
+            } else {
+                return 'loading...';
+            }
+        }
+
         return (
             <div className="main-sidebar-inner">
-                <div className="dshageimage">
-                    <img src="/img/share.png" alt="" />
-                </div>
-                <h2>{this.props.details['name']}</h2>
-                <div className="subtitle">Goal</div>
-                <div className="ms-main-image">
-                    <img src="/img/watch_main.png" alt="" />
-                </div>
-                <div className="ms-sub-title">{this.props.details['description']}</div>
-                <div className="dinfodetails">
-                    <div className="dinfoitem">
-                        <div className="din-left">CREATED BY:</div>
-                        <div className="din-right"><span className="dimagepart"><img src="/img/dummy/1.png" alt="" /></span><span className="dtextpart">John S. White</span></div>
-                    </div>
-                    <div className="dinfoitem">
-                        <div className="din-left">PEOPLE JOINED:</div>
-                        <div className="din-right"><img src="/img/dummy/Group.png" alt="" /></div>
-                    </div>
-                    <div className="dinfoitem">
-                        <div className="din-left">DURATION:</div>
-                        <div className="din-right">Daily</div>
-                    </div>
-                    <div className="dinfoitem">
-                        <div className="din-left">INSTRUCTIONS:</div>
-                        <div className="din-right">Do the completed set of actions daily</div>
-                    </div>
-                </div>
-                <div className="ms-join-button">
-                    <button onClick={() => this.openJoinChallenge()}>Join Challenge</button>
-                    <button className="quit-challenge" onClick={() => this.openQuitChallenge()}>Quit Challenge</button>
-                </div>
+                {
+                    (this.state.challengeInfo == '' ? 
+                        <div className='showLoading'>
+                            <img src="/img/load_line.gif" alt="" />
+                        </div>
+                    :
+                        <div>
+                            <div className="dshageimage">
+                                <img src="/img/share.png" alt="" />
+                            </div>
+                            <h2>{this.state.challengeInfo.name}</h2>
+                            <div className="subtitle">Goal</div>
+                            <div className="ms-main-image">
+                                <img src={this.state.challengeInfo.challenge_image} alt="" />
+                            </div>
+                            <div className="ms-sub-title">{this.state.challengeInfo.description}</div>
+                            <div className="dinfodetails">
+                                
+                                <div className="dinfoitem">
+                                    <div className="din-left">CREATED BY:</div>
+                                    <div className="din-right"><span className="dimagepart"><img src={this.state.challengeOwner.profpic_link} alt="" /></span><span className="dtextpart">{this.state.challengeOwner.name}</span></div>
+                                </div>
+                                {/* <div className="dinfoitem">
+                                    <div className="din-left">PEOPLE JOINED:</div>
+                                    <div className="din-right"><img src="/img/dummy/Group.png" alt="" /></div>
+                                </div> */}
+                                <div className="dinfoitem">
+                                    <div className="din-left">DURATION:</div>
+                                    <div className="din-right">{duration()}</div>
+                                </div>
+                                <div className="dinfoitem">
+                                    <div className="din-left">INSTRUCTIONS:</div>
+                                    <div className="din-right">{this.state.challengeInfo.instructions}</div>
+                                </div>
+                            </div>
+                            <div className="ms-join-button">
+                                {(this.state.isUserParticipant ? 
+                                    <button className="quit-challenge" onClick={() => this.openQuitChallenge()}>Quit Challenge</button>
+                                :
+                                    <button onClick={() => this.openJoinChallenge()}>Join Challenge</button>
+                                )}
+                                
+                                
+                            </div>
+                        </div>
+                    )   
+                }
+                
 
-                <div className="ms-button-options">
+                {/* <div className="ms-button-options">
                     <div className="ms-button-optleft">
                         <button onClick={() => this.watchChallenge()}><span className="diconbase"><FontAwesomeIcon icon={faEye} /></span><span className="dtextbase">{this.state.isWatchingText}</span></button>
                     </div>
                     <div className="ms-button-optright">
                         <button>Invite Friends</button>
                     </div>
-                </div>
+                </div> */}
                 <ReactModal
                     isOpen={this.state.isModalOpen}
                     contentLabel="Example Modal"

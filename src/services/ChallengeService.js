@@ -24,13 +24,13 @@ class ChallengeService {
               });
               challenges = response.data.challenges
 
-              challenges.forEach(item=> {
-                  api.get('/userprofile/'+item.owner_id, {})
-                    .then((response) => {
-                        item.owner_name = response.data.user.name   
-                        item.onwer_picture = response.data.user.profpic_link    
-                    });
-              })
+            //   challenges.forEach(item=> {
+            //       api.get('/userprofile/'+item.owner_id, {})
+            //         .then((response) => {
+            //             item.owner_name = response.data.user.name   
+            //             item.onwer_picture = response.data.user.profpic_link    
+            //         });
+            //   })
 
             }
           ).catch((error) => {

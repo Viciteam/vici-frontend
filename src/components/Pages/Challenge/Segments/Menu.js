@@ -51,14 +51,14 @@ class Menu extends React.Component {
                     </div>
                 </div>
                 <div className="dsideoptions">
-                    <div className="dsitem">
+                    {/* <div className="dsitem">
                         <div className="ds-item-icon no-icon">
                             &nbsp;
                         </div>
                         <div className="ds-item-text" onClick={() => this.saveAsTemplate()}>
-                            <button className={(this.state.isSaveStatus ? 'active-save-templete-button': 'inactive-save-templete-button')}>Save as Termplate</button>
+                            <button className={(this.state.isSaveStatus ? 'active-save-templete-button': 'inactive-save-templete-button')}>Save as Template</button>
                         </div> 
-                    </div>
+                    </div> */}
                     <div className="dsitem" onClick={() => this.backToNewChallenge()}>
                         <div className="ds-item-icon">
                             <span><FontAwesomeIcon icon={faArrowLeft} /></span>

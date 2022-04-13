@@ -4,6 +4,8 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faEllipsisV, faThumbsUp, faThumbsDown, faCommentAlt} from '@fortawesome/free-solid-svg-icons'
 
+import moment from 'moment';
+
 class ShowComment extends React.Component {
     constructor(props){
         super(props);
@@ -18,18 +20,18 @@ class ShowComment extends React.Component {
                 <div className="dpost-list-item">
                     <div className="dpost-list-item-header">
                         <div className="dpost-list-image">
-                            <img src="/img/user_main.jpg" alt="" />
+                            <img src={this.props.info.profpic_link} alt="" />
                         </div>
                         <div className="dpost-list-text">
-                            <h3>Daphne Winter - Joined the challenge</h3>
-                            <div className="dnumber">1hr ago</div>
+                            <h3>{this.props.info.name_of_user}</h3>
+                            <div className="dnumber">{moment(this.props.info.created_at).fromNow()}</div>
                         </div>
-                        <div className="dpost-list-dots">
+                        {/* <div className="dpost-list-dots">
                             <FontAwesomeIcon icon={faEllipsisV} />
-                        </div>
+                        </div> */}
                     </div>
                     <div className="dpost-list-item-post">
-                        Morning Routine let’s go!
+                        {this.props.info.comment_message}
                     </div>
                     <div className="dpost-list-item-ops">
                         <div className="dpost-list-left">
@@ -42,9 +44,9 @@ class ShowComment extends React.Component {
                                 <span className="dnum">0</span>
                             </div>
                         </div>
-                        <div className="dpost-list-right">
+                        {/* <div className="dpost-list-right">
                             <FontAwesomeIcon icon={faCommentAlt} />
-                        </div>
+                        </div> */}
                     </div>
                 </div> 
             </div> 

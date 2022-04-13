@@ -26,6 +26,8 @@ class StepTwo extends React.Component {
             social_list: [],
             penalty: [],
             showformPart: 1,
+            maxItems: 3,
+            ifIsHasError: false
         }
 
         this.createActive = this.createActive.bind(this);
@@ -72,6 +74,7 @@ class StepTwo extends React.Component {
     }
 
     proceedToNext(){
+        this.setState({ifIsHasError: false});
         let finalInfo = {
             'main_goal': this.state.mainGoalValue,
             'actions': this.state.actionList,
@@ -80,6 +83,13 @@ class StepTwo extends React.Component {
             'penalty': this.state.penalty,
             'convert_actions_to_points': this.state.convertActionToPoints,
         }
+
+        if(this.state.actionList.length === 0){
+            this.setState({ifIsHasError: true});
+            return;
+        }
+
+        // console.log('triggered here');
         this.props.callBack(finalInfo);
     }
 
@@ -169,11 +179,11 @@ class StepTwo extends React.Component {
                     <ChallengeGoalActions getData={this.pullChallengeAction} />
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'two_social_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_social_actions') }>
+                {/* <div className={"cg-item " + (this.state.activepart === 'two_social_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_social_actions') }>
                     <AddSocialAction getData={this.pullSocialAction} />
-                </div>
+                </div> */}
 
-                <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 4 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_convert_actions') }>
+                <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} style={(this.state.showformPart >= 3 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_convert_actions') }>
                     <div className="cg-label">
                         <div className="cgl-name">Do you want to convert all actions into points?</div>
                         <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleConvertActionToPoints} checked={this.state.convertActionToPoints} /></div>
@@ -183,24 +193,32 @@ class StepTwo extends React.Component {
                     </div>
                 </div>
 
-                <div className={"cg-item " + (this.state.activepart === 'two_penalty' ? 'active_item' : '')} style={(this.state.showformPart >= 5 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_penalty') }>
+                {/* <div className={"cg-item " + (this.state.activepart === 'two_penalty' ? 'active_item' : '')} style={(this.state.showformPart >= 5 ? {} : {display: 'none'})} onFocus={() => this.createActive('two_penalty') }>
                     <div className="cg-label">
                         <div className="cgl-name">Would you like to set Penalty rules?</div>
                         <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleAllowPenalty} checked={this.state.allowPenalty} /></div>
                     </div>
                     <ChallengePenalties getData={this.pullPenalties} showPenalties={this.state.allowPenalty} />
-                </div>
+                </div> */}
 
-                <div className="step-by-step-options" style={(this.state.showformPart < 5 ? {} : {display: 'none'})}>
+{
+                (this.state.ifIsHasError ?
+                    <div className='d-errors-show'>
+                        Challenge Actions is required, please add atleast one action for you to proceed.
+                    </div>
+                : <div>&nbsp;</div>)
+                }
+
+                <div className="step-by-step-options" style={(this.state.showformPart < this.state.maxItems ? {} : {display: 'none'})}>
                     <div className='step-show-all'>
                         <input type="checkbox" onChange={(e) => this.showAllSteps(e, 'show_all')} /> show all steps
                     </div>
                     <div className='step-show-once'>
-                        <button onClick={() => this.openIdentifySteps()}>{this.state.showformPart}/5 <FontAwesomeIcon icon={faArrowDown} /></button>
+                        <button onClick={() => this.openIdentifySteps()}>{this.state.showformPart}/{this.state.maxItems} <FontAwesomeIcon icon={faArrowDown} /></button>
                     </div>
                 </div>
 
-                <div className="dnext-button" style={(this.state.showformPart >= 5 ? {} : {display: 'none'})}>
+                <div className="dnext-button" style={(this.state.showformPart >= this.state.maxItems ? {} : {display: 'none'})}>
                     <button className="prev-arrow" onClick={() => this.proceedToPrev()}>Back</button>
                     <button className="next-arrow" onClick={() => this.proceedToNext()}>Next &rarr;</button>
                 </div>

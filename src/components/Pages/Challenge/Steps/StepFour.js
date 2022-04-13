@@ -3,10 +3,23 @@ import React, {useRef } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faImage, faCrosshairs} from '@fortawesome/free-solid-svg-icons'
-
+import Switch from "react-switch";
 import { HexColorPicker } from "react-colorful";
 
 // const inputFile = useRef(null) 
+import auth from '../../../../services/auth';
+import axios from 'axios'
+
+const api = axios.create({
+  baseURL: 'https://api.vici.life/api/',
+  headers: {
+    'content-type': 'multipart/form-data',
+    'Accept' : 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Authorization' : `Bearer ${auth.getAccessToken()}`,
+    'X-CSRF-TOKEN': auth.getAccessToken()
+  }
+})
 
 class StepFour extends React.Component {
     constructor(props){
@@ -26,15 +39,19 @@ class StepFour extends React.Component {
         this.state = {
             isactive: this.props.isactive,
             activepart: 'four_change_photo',
-            selectedPreviewHeaderImage: '',
+            selectedPreviewHeaderImage: 'https://vici.life/img/prev-header.png',
             selectedColor: '#03488d',
-            stepFourValues:[],
+            stepFourValues: {
+                "challenge_image": 'https://vici.life/img/prev-header.png',
+                "challenge_color": '#03488d',
+            },
             newUploadedImage: '',
+            saveAsTemplate: false,
             listofimages: [
-                '/img/prev-header.png',
-                '/img/prev-header1.png',
-                '/img/prev-header2.png',
-                '/img/prev-header3.png',
+                'https://vici.life/img/prev-header.png',
+                'https://vici.life/img/prev-header1.png',
+                'https://vici.life/img/prev-header2.png',
+                'https://vici.life/img/prev-header3.png',
             ]
         }
 
@@ -45,11 +62,21 @@ class StepFour extends React.Component {
         this.proceedUploadImage = this.proceedUploadImage.bind(this);
         this.processFileInput = this.processFileInput.bind(this);
         this.submitChallengeForm = this.submitChallengeForm.bind(this);
+        this.toogleSaveAsTemplate = this.toogleSaveAsTemplate.bind(this);
     }
 
     createActive(setactive){
         // console.log('Type ->', setactive);
         this.setState({activepart: setactive})
+    }
+
+    toogleSaveAsTemplate(){
+        let newSaveTempalteVals = !this.state.saveAsTemplate;
+        
+        let dform = this.state.stepFourValues;
+        dform['save_as_template'] = newSaveTempalteVals;
+        this.setState({stepFourValues: dform});
+        this.setState({saveAsTemplate: newSaveTempalteVals});
     }
 
     changeColor(vals){
@@ -83,10 +110,19 @@ class StepFour extends React.Component {
         var reader = new FileReader();
         var url = reader.readAsDataURL(thefile);
 
+        let self = this;
+        const formData = new FormData();
+        formData.append('image',thefile)
+        api.post('/uploadFile', formData)
+        .then((response) => {
+            console.log(response.data);
+            let newimage = self.state.listofimages;
+            newimage.push(response.data.image_url);
+            self.setState({ newUploadedImage: newimage})
+        });
+
         reader.onloadend = function (e) {
-            let newimage = this.state.listofimages;
-            newimage.push(reader.result);
-            this.setState({ newUploadedImage: newimage})
+            
         }.bind(this);
 
         // console.log('iamge url ->', url);
@@ -105,10 +141,10 @@ class StepFour extends React.Component {
 
     render () {
         const challenge_photo = [
-            '/img/prev-header.png',
-            '/img/prev-header1.png',
-            '/img/prev-header2.png',
-            '/img/prev-header3.png',
+            'https://vici.life/img/prev-header.png',
+            'https://vici.life/img/prev-header1.png',
+            'https://vici.life/img/prev-header2.png',
+            'https://vici.life/img/prev-header3.png',
         ];
 
         const todoItems = this.state.listofimages.map((todo, index) =>
@@ -157,6 +193,15 @@ class StepFour extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className={"cg-item " + (this.state.activepart === 'two_convert_actions' ? 'active_item' : '')} onFocus={() => this.createActive('two_convert_actions') }>
+                        <div className="cg-label">
+                            <div className="cgl-name">Do you want also save this as a template?</div>
+                            <div className="cgl-doptions"><Switch onColor='#FFCA28' height={20} width={40} onChange={this.toogleSaveAsTemplate} checked={this.state.saveAsTemplate} /></div>
+                        </div>
+                        <div className="cg-input dactivity">
+                            <div className="subheader">By saving as a template, you can reuse this same flow for another challenge.</div>
                         </div>
                     </div>
                 </div>

@@ -638,6 +638,15 @@
     cursor: pointer;
 }
 
+.challenges-goal-page-inner .dlp-item.ddown_list.select_location_by_country {
+    width: 80%;
+    border: 0 none;
+}
+
+.challenges-goal-page-inner .dlp-item.ddown_list.select_location_by_country .react-drop-base {
+    width: 100%;
+}
+
 .challenges-goal-page-inner .ddown_list .dlocationlist .dll-item .dll-item-dropdown .dinputselect {
     margin-bottom: 20px;
 }
@@ -1487,7 +1496,9 @@
 }
 
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li {
-    margin-bottom: 25px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dradiobutton {
@@ -1498,17 +1509,58 @@
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dtextlist {
     display: inline-block;
     vertical-align: middle;
-    width: 80%;
+    width: 60%;
     font-size: 13px;
 }
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dtextlist .d-activity-name {
+    font-weight: bold;
+    text-transform: capitalize;
+    line-height: 1em;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .dtextlist .d-activity-description {
+    padding-left: 10px;
+    font-size: 13px;
+    font-style: italic;
+}
+
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction {
     display: inline-block;
     vertical-align: middle;
-    width: 16%;
+    width: 35%;
     font-size: 11px;
     text-align: right;
     cursor: pointer;
     color: #303C6C;
+}
+
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction .do-inner-action {
+    display: inline-block;
+    margin-left: 10px;
+    background: #25345c;
+    color: #fff;
+    line-height: 1em;
+    padding: 5px 15px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction .do-inner-action.quit-button {
+    background: #f0391a;
+}
+
+.challenges-page-inner .dview-right .dview-right-inner .dvr-item .dvr-item-content ul li .ddoaction .do-for-action-confirmation {
+    background: #00d506;
+    display: inline-block;
+    line-height: 1em;
+    font-size: 11px;
+    color: #fff;
+    font-weight: bold;
+    padding: 7px 15px;
+    letter-spacing: 1px;
+    border-radius: 26px;
 }
 
 .challenges-page-inner .dview-right .dview-right-inner .dvr-item .dleftpart {
@@ -1623,7 +1675,7 @@
 
 .dvr-participants-list .dvr-participants-header .dvr-title-participants {
     display: inline-block;
-    width: 30%;
+    width: 40%;
     font-size: 13px;
     font-weight: bold;
     line-height: 1em;
@@ -1645,7 +1697,7 @@
 
 .dvr-participants-list .dvr-participants-header .dvr-title-progress {
     display: inline-block;
-    width: 39%;
+    width: 59%;
     font-size: 13px;
     font-weight: bold;
     line-height: 1em;
@@ -1656,7 +1708,7 @@
 
 .dvr-participants-list .dvr-participant .dvr-item-participant {
     display: inline-block;
-    width: 30%;
+    width: 40%;
 }
 
 .dvr-participants-list .dvr-participant .dvr-item-clan {
@@ -1667,7 +1719,7 @@
 
 .dvr-participants-list .dvr-participant .dvr-item-progress {
     display: inline-block;
-    width: 39%;
+    width: 59%;
 }
 
 .dvr-participants-list .dvr-participant .dvr-item-participant .dvr-participant-photo {
@@ -1858,6 +1910,11 @@
 .challenges-page-inner .dview-left .main-sidebar-inner {
     padding: 20px 25px;
     position: relative;
+}
+
+.challenges-page-inner .dview-left .main-sidebar-inner .ms-main-image img {
+    width: 100%;
+    border-radius: 20px;
 }
 
 .challenges-page-inner .dview-left .main-sidebar-inner .dshageimage {
@@ -2113,6 +2170,7 @@
 .challenges-page-inner .updates-comments-inner .dpostlist .dpost-list-item.comment-item {
     padding: 0 20px 15px;
     box-shadow: 0px 4px 10px #bdbdbd40;
+    margin-bottom: 15px;
 }
 
 .challenges-page-inner .updates-comments-inner .dpostlist .dpost-list-item .dpost-list-item-post {
@@ -4354,6 +4412,9 @@
 .step-by-step-options .step-show-all {
     display: inline-block;
     width: 48%;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 1em;
 }
 
 .step-by-step-options .step-show-once {
@@ -4363,13 +4424,12 @@
 }
 
 .publish-challenge-modal {
-    width: 450px;
+    width: 345px;
 }
 
 .publish-challenge-main {
     box-shadow: 0 0 12px #ccc;
     border-radius: 10px;
-    padding: 40px;
     text-align: center;
 }
 
@@ -4438,4 +4498,226 @@ button.inactive-save-templete-button {
     font-weight: bold;
     background: #fff7dd;
     color: #111;
+}
+
+.publish-modal .header-image img {
+    width: 100%;
+}
+.publish-modal .header-image {
+    margin-bottom: 25px;
+}
+.publish-modal {
+    font-family: nunito, sans-serif;
+}
+
+.publish-modal .d-pop-freq {
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    line-height: 1em;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+.publish-modal .pop-chllenge-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 1em;
+    text-transform: uppercase;
+}
+
+.publish-modal .pop-chllenge-tagline {
+    font-size: 14px;
+    line-height: 1.3em;
+    padding: 0 20px;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.publish-modal .pop-chllenge-instructions {
+    font-size: 14px;
+    line-height: 1.3em;
+    padding: 0 20px;
+    margin-bottom: 10px;
+}
+
+.publish-modal .pop-chllenge-scope {
+    font-size: 14px;
+    line-height: 1.3em;
+    padding: 0 20px;
+    margin-bottom: 10px;
+}
+
+.publish-modal .pop-additional-info  {
+    text-align: center;
+    background: #DFDFE1;
+    
+    padding: 12px 0;
+    line-height: 1em;
+}
+
+.publish-modal .pop-additional-info h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.publish-modal .pop-additional-info button {
+    font-family: nunito, sans-serif;
+    background: #FFCA28;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1em;
+    padding: 15px 25px;
+    display: inline-block;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.dstep .d-errors-show {
+    background: #ffbcbc;
+    font-size: 12px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    line-height: 1.3em;
+    border: 1px solid #f50000;
+}
+
+.d-no-participants-yet {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 15px 0;
+}
+
+.d-no-comments-yet {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.do-action-inner {
+    width: 450px;
+    margin: 10% auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 12px #ccc;
+    font-family: nunito, sans-serif;
+    overflow: hidden;
+}
+
+.do-action-inner .do-action-challenge-image {
+    height: 150px;
+    overflow: hidden;
+}
+
+.do-action-inner h3 {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1em;
+    margin: 20px 0 5px;
+}
+
+.do-action-taglines {
+    margin: 0px 0 20px;
+    text-align: center;
+}
+
+.do-action-taglines span {
+    font-size: 11px;
+    font-weight: bold;
+    background: #17377a;
+    margin-left: 5px;
+    border-radius: 26px;
+    line-height: 1em;
+    padding: 5px 10px;
+    color: #fff;
+}
+
+.do-action-inner .do-action-message {
+    padding: 0 30px;
+}
+
+.do-action-verification {
+    margin: 0 30px;
+    border-top: 1px solid #ccc;
+    padding: 20px 0;
+    font-size: 14px;
+    line-height: 1.3em;
+    text-align: center;
+    background: whitesmoke;
+}
+
+.do-action-verification .do-action-veridy-text {
+    margin-bottom: 5px;
+}
+
+.do-action-verification .do-action-veridy-input{
+    margin-bottom: 10px;
+}
+
+.do-action-verification .do-action-veridy-input input {
+    width: 90%;
+    border: 1px solid #ccc;
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.do-action-inner .do-action-message .do-action-instructions {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.do-action-inner .do-action-options {
+    margin: 0px 30px;
+    padding: 15px 0;
+    text-align: right;
+    border-top: 1px solid #ccc;
+}
+
+.do-action-inner .do-action-options .cancel-button {
+    font-size: 14px;
+}
+
+.do-action-inner .do-action-options .start-button {
+    color: #fff;
+    background: #FFCA28;
+    border: 2px solid #FFCA28;
+    line-height: 1em;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-left: 15px;
+    letter-spacing: 1px;
+    font-size: 14px;
+    opacity: 1;
+}
+
+.do-action-inner .do-action-options .start-button.disabled-button {
+    /* background: #6e6139;
+    border: 2px solid #6e6139; */
+    opacity: .3;
+}
+
+.do-action-inner .do-action-options .quit-button {
+    color: #fff;
+    background: #ff1717;
+    border: 2px solid #bd0000;
+    line-height: 1em;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-left: 15px;
+    letter-spacing: 1px;
+    font-size: 14px;
 }
