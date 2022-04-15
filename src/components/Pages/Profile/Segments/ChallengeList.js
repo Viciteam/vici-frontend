@@ -563,17 +563,16 @@ class ChallengeList extends React.Component {
                                             <div className="dorange">&nbsp;</div>
                                         </div>
                                     </div>
-                                    <div className="dbuttons">
-                                        <button onClick={() => this.goViewChallenge(this.props.challenge_id.id)}>View Challenge</button>
-                                        {
-                                            (this.state.hasUserLogin ? 
+                                    {
+                                        (this.state.hasUserLogin ? 
+                                            <div className="dbuttons">
                                                 <button className="dwhitebg" onClick={() => this.openJoinChallenge()}>Join Challenge</button>
-                                            :
-                                                <div>&nbsp;</div>
-                                            )
-                                        }
-                                        
-                                    </div>
+                                                <button onClick={() => this.goViewChallenge(this.props.challenge_id.id)}>View Challenge</button>
+                                            </div>
+                                        :
+                                            <div>&nbsp;</div>
+                                        )
+                                    }
                                 </div>
                             </div>
                         </div>

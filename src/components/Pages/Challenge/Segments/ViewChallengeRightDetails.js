@@ -1,7 +1,7 @@
 import './../../../styles/challenge.css';
 import React from 'react';
 import ReactModal from 'react-modal';
-
+import { withRouter } from 'react-router-dom'
 import Switch from "react-switch";
 import moment from 'moment';
 
@@ -196,8 +196,9 @@ class ViewChallengeRightDetails extends React.Component {
 
     getChallengeDetails(){
         // get challenge id
-        let challenge_path = window.location.pathname.split("/");
-        let challenge_id = challenge_path[challenge_path.length - 1];
+        // let challenge_path = window.location.pathname.split("/");
+        // let challenge_id = challenge_path[challenge_path.length - 1];
+        let challenge_id = this.props.match.params.id;
         this.setState({challengeID: challenge_id});
 
         // get participants
@@ -587,4 +588,4 @@ class ViewChallengeRightDetails extends React.Component {
     }
 }
 
-export default ViewChallengeRightDetails
+export default withRouter(ViewChallengeRightDetails)

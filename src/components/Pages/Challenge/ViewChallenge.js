@@ -52,7 +52,10 @@ class ViewChallenge extends React.Component {
             isActionContent: '',
             verificationLink: '',
             ChallengeParticipants: [],
-            isCurrentUserParticipant: false
+            isCurrentUserParticipant: false,
+            openForValidation: false,
+            forConfirmationActions: [],
+            forConfirmationselectedActions: [],
         }
 
         this.toggleOpenAction = this.toggleOpenAction.bind(this)
@@ -61,6 +64,7 @@ class ViewChallenge extends React.Component {
         this.confirmUserToQuitTask = this.confirmUserToQuitTask.bind(this)
         this.confirmFinishAction = this.confirmFinishAction.bind(this)
         this.addVerificationLink = this.addVerificationLink.bind(this)
+        this.openValidation = this.openValidation.bind(this)
     }
 
     componentDidMount(){
@@ -235,6 +239,23 @@ class ViewChallenge extends React.Component {
             console.log('error -> ', error);
         });
     }
+
+    openValidation(item){
+        console.log('selected for validation -> ', item);
+        
+
+        let forConfirmations = [];
+        item.trackings.map((item, i) => {
+            if(item.name == "confirmation_sent_action"){
+                item.tracking_detail.map((innetitem, i) => ( item[innetitem.field] = innetitem.data))
+                forConfirmations.push(item);
+            }
+        });
+
+        console.log('selected for validation -> ', forConfirmations);
+        this.setState({forConfirmationselectedActions: item});
+        this.setState({forConfirmationActions: forConfirmations});
+    }
     
 
     render () {
@@ -325,6 +346,30 @@ class ViewChallenge extends React.Component {
                             <span className="dvr-notif-text">You are watching the challenge with 230 other people.</span>
                             <span className="dvr-notif-close"><FontAwesomeIcon icon={faTimes} /></span>
                         </div> */}
+                        
+                        <div className='dvr-item dvr-main-validation'>
+                            <div className="dvr-action-inner">
+                                <h2>Action: {this.state.forConfirmationselectedActions.name} Validations</h2>
+                                <div className='dvr-item-content'>
+                                        {
+                                            (this.state.forConfirmationActions.map((item,i) => (
+                                                <div className='d-for-confirmation' key={i}>
+                                                    <div className='d-for-label'>
+                                                        <div className='d-for-info'>{item.comment}</div>
+                                                        <div className='d-for-info'>
+                                                            <button>Validate</button>
+                                                            <button>Decline</button>
+                                                        </div>
+                                                    </div>
+                                                    <div className='d-for-options'>
+                                                    <a href={item.verification} target="_blank">View Evidence</a>
+                                                    </div>
+                                                </div>
+                                            )))
+                                        }
+                                </div>
+                            </div>
+                        </div>
                         <div className="dvr-item dvr-main-action">
                             <div className="dvr-action-inner">
                                 <h2>Actions</h2>
@@ -350,7 +395,7 @@ class ViewChallenge extends React.Component {
                                                         )
                                                     :
                                                         (this.state.isOwner ?
-                                                            <div className='ddoaction'>For Validations</div>
+                                                            <div className='ddoaction' onClick={() => this.openValidation(value)}>For Validations</div>
                                                         :
                                                             <div className='ddoaction'>Join Challenge</div>
                                                         )
@@ -380,7 +425,27 @@ class ViewChallenge extends React.Component {
                                             </div>
                                         </div>
                                     </ReactModal>
-
+                                    <ReactModal isOpen={this.state.openForValidation} contentLabel="Example Modal" className="do_action_modal" ariaHideApp={false} >
+                                        <div className="ms-watch-modal">
+                                            <div className='do-validation-inner'>
+                                                <div className='do-validation-left'>
+                                                    <h3>{this.state.forConfirmationselectedActions.name}</h3>
+                                                    <div className='do-action-taglines'>
+                                                        { (this.state.forConfirmationselectedActions.custom_tracking_items !== null ? this.state.forConfirmationselectedActions.custom_tracking_items?.split(',').map((item, i) => (<span key={i}>{item}</span>)) : <span>{this.state.forConfirmationselectedActions.custom_tracking_items}</span>) }
+                                                    </div>
+                                                    <div className='do-action-message'>
+                                                        <div className='do-action-instructions'>{this.state.forConfirmationselectedActions.description}</div>
+                                                    </div>
+                                                </div>
+                                                <div className='do-validation-right'>
+                                                    <h3>Users for Verification</h3>
+                                                    <div className='d-for-validation-list'>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ReactModal>
                                 </div>
                             </div>
                         </div>

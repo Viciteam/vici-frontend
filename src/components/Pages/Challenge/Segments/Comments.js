@@ -1,6 +1,6 @@
 import './../../../styles/challenge.css';
 import React from 'react';
-
+import { withRouter } from 'react-router-dom'
 import ShowComment from './ShowComment'; 
 import ShowActivity from './ShowActivity'; 
 
@@ -98,6 +98,7 @@ class Comments extends React.Component {
     }
 
     getComments(id){
+        console.log('challenge id from comments -> ', id);
         this.setState({showLoading: true});
         let self = this;
         api.get('/getchallenge_comments/'+id, {})
@@ -126,8 +127,9 @@ class Comments extends React.Component {
     }
 
     componentDidMount(){
-        let challenge_path = window.location.pathname.split("/");
-        let challenge_id = challenge_path[challenge_path.length - 1];
+        // let challenge_path = window.location.pathname.split("/");
+        // // let challenge_id = challenge_path[challenge_path.length - 1];
+        let challenge_id = this.props.match.params.id;
 
         this.getComments(challenge_id);
         // console.log('challenge id -> ', challenge_id);
@@ -196,4 +198,4 @@ class Comments extends React.Component {
     }
 }
 
-export default Comments
+export default withRouter(Comments)

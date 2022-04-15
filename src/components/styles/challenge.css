@@ -4613,6 +4613,16 @@ button.inactive-save-templete-button {
     overflow: hidden;
 }
 
+.do-validation-inner {
+    width: 850px;
+    margin: 10% auto;
+    /* background: #fff; */
+    /* border-radius: 10px; */
+    /* box-shadow: 0 0 12px #ccc; */
+    font-family: nunito, sans-serif;
+    overflow: hidden;
+}
+
 .do-action-inner .do-action-challenge-image {
     height: 150px;
     overflow: hidden;
@@ -4726,4 +4736,8 @@ button.inactive-save-templete-button {
     text-align: center;
     font-size: 14px;
     font-weight: bold;
+}
+
+.d-for-validation-list {
+    margin: 0 20px 20px;
 }
