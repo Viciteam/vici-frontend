@@ -19,6 +19,7 @@ class Overview extends React.Component {
             message: [],
             Comments: [],
             post_comment: null,
+            joined: 0,
             fileUploader: null,
             fileComment: '',
             selectionRange: {
@@ -102,6 +103,14 @@ class Overview extends React.Component {
         }
     }
 
+    async getParticipants(){
+        let challenge_path = window.location.pathname.split("/");
+        let challenge_id = challenge_path[challenge_path.length - 1];
+        const participants = await ChallengeService.getChallengeParticipants(challenge_id);
+        console.log('participants', participants.participants.data)
+        this.setState({joined: participants ? participants.participants.data.length : 0});
+    }
+
     async getComments(){
         let challenge_path = window.location.pathname.split("/");
         let challenge_id = challenge_path[challenge_path.length - 1];
@@ -138,6 +147,7 @@ class Overview extends React.Component {
 
     componentDidMount(){
         this.getComments();
+        this.getParticipants();
     }
 
     render () {
@@ -205,7 +215,7 @@ class Overview extends React.Component {
                     </div>
                     <div className="w-1/4 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">0</div>
+                            <div className="font-bold text-2xl text-other_challenges">{ this.state.joined }</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />

@@ -5,12 +5,14 @@ import { DateRangePicker } from 'react-date-range';
 import moment from 'moment';
 import auth from '../../../../services/auth';
 import CookieService from '../../../../services/CookieService';
+import ChallengeService from '../../../../services/ChallengeService';
 class Participants extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectRange: false,
             selectedDate: 'Select Date',
+            participants: [],
             selectionRange: {
                 startDate: new Date(),
                 endDate: new Date(),
@@ -20,6 +22,15 @@ class Participants extends React.Component {
         this.handleSelectRange = this.handleSelectRange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.handleSubmitSelected = this.handleSubmitSelected.bind(this);
+    }
+
+
+    async getParticipants(){
+        let challenge_path = window.location.pathname.split("/");
+        let challenge_id = challenge_path[challenge_path.length - 1];
+        const participants = await ChallengeService.getChallengeParticipants(challenge_id);
+        console.log('participants', participants.participants.data)
+        this.setState({participants: participants.participants.data.length > 0 ? participants.participants.data : []});
     }
 
     handleSelectRange() {
@@ -49,6 +60,12 @@ class Participants extends React.Component {
         this.setState({ selectedDate: dateStart + ' - ' +  dateEnd});
         console.log('date start', dateStart)
     }
+
+
+    componentDidMount(){
+        this.getParticipants();
+    }
+
     render () {
 
         const profile_main_image = () => {
@@ -93,16 +110,16 @@ class Participants extends React.Component {
                     </div>
                 </div>
                 <div className="shadow-vici mt-6 p-6 flex">
-                    <div className="w-1/6 border-r border-bottom_gray py-3">
+                    <div className="w-1/4 border-r border-bottom_gray py-3">
                         <div className="text-xl font-bold text-other_challenges">{ this.props.details.name }</div>
                         <div className="flex mt-2">
                             <img src={profile_main_image() ? profile_main_image() : '/img/avatarguest.png'} className="w-6 rounded-full" />
                             <div className="text-xs font-bold pl-2 pt-1">{auth.userProfile() ? auth.userProfile().name : auth.user().name}</div>
                         </div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                    <div className="w-1/4 pt-4">
                         <div className="flex justify-center">
-                            <div className="font-bold text-2xl text-other_challenges">0</div>
+                            <div className="font-bold text-2xl text-other_challenges">{ this.state.participants.length }</div>
                             <button className="ml-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-vici_success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
@@ -111,7 +128,7 @@ class Participants extends React.Component {
                         </div>
                         <div className="text-sm text-center">Participants</div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                    <div className="w-1/4 pt-4">
                         <div className="flex justify-center">
                             <div className="font-bold text-2xl text-other_challenges">0</div>
                             <button className="ml-1">
@@ -122,7 +139,7 @@ class Participants extends React.Component {
                         </div>
                         <div className="text-sm text-center">Failed Participants</div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                    <div className="w-1/4 pt-4">
                         <div className="flex justify-center">
                             <div className="font-bold text-2xl">0%</div>
                             <button className="ml-1">
@@ -133,7 +150,7 @@ class Participants extends React.Component {
                         </div>
                         <div className="text-sm text-center">Completion rate</div>
                     </div>
-                    <div className="w-1/6 pt-4">
+                   {/*  <div className="w-1/6 pt-4">
                         <div className="flex justify-center">
                             <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
@@ -144,9 +161,9 @@ class Participants extends React.Component {
                             <div className="font-bold text-2xl text-other_challenges">0</div>
                         </div>
                         <div className="text-sm text-center">Squads</div>
-                    </div>
+                    </div> */}
                 </div>
-                <div className="mt-6 flex justify-between">
+                {/* <div className="mt-6 flex justify-between">
                     <div className="flex">
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -167,7 +184,7 @@ class Participants extends React.Component {
                             </div>
                         </label>
                     </div>
-                </div>
+                </div> */}
                 <div className="mt-6">
                     <div className="flex justify-between rounded-t-3xl px-8 py-3 bg-other_challenges">
                         <div className="text-xl text-white_color">Participants</div>
@@ -203,154 +220,47 @@ class Participants extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className="py-3">
-                                    <div className="flex">
-                                        <img src="/img/explore/avatar.png" width={30} />
-                                        <span className="text-sm pl-3 pt-1">John S. White</span>
-                                    </div>
-                                </td>
-                                <td>-</td>
-                                <td>
-                                    <div className="flex">
-                                        <div className="h-3 rounded-full bg-other_challenges w-10/12 mt-1"></div>
-                                        <div className="bg-other_challenges rounded-full ml-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white_color" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <img src="/img/manage_challenge/facebook.png" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <div className="flex">
-                                            <img src="/img/manage_challenge/Path.png" />
-                                            <button className="ml-3 text-sm text-other_challenges font-bold">View</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3">
-                                    <div className="flex">
-                                        <img src="/img/explore/avatar.png" width={30} />
-                                        <span className="text-sm pl-3 pt-1">Caren Smith</span>
-                                    </div>
-                                </td>
-                                <td className="text-sm">Fitness Clan</td>
-                                <td>
-                                    <div className="flex">
-                                        <div className="h-3 rounded-full bg-vici_gray w-full mt-1">
-                                            <div className="h-3 rounded-full bg-other_challenges  w-10/12"></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <img src="/img/manage_challenge/facebook.png" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <div className="flex">
-                                            <img src="/img/manage_challenge/Path.png" />
-                                            <button className="ml-3 text-sm text-other_challenges font-bold">View</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3">
-                                    <div className="flex">
-                                        <img src="/img/explore/avatar.png" width={30} />
-                                        <span className="text-sm pl-3 pt-1">Philippe Anthony</span>
-                                    </div>
-                                </td>
-                                <td className="text-sm">Fitness Clan</td>
-                                <td>
-                                    <div className="flex">
-                                        <div className="h-3 rounded-full bg-vici_gray w-full mt-1">
-                                            <div className="h-3 rounded-full bg-other_challenges  w-10/12"></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <img src="/img/manage_challenge/facebook.png" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <div className="flex">
-                                            <img src="/img/manage_challenge/Path.png" />
-                                            <button className="ml-3 text-sm text-other_challenges font-bold">View</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3">
-                                    <div className="flex">
-                                        <img src="/img/explore/avatar.png" width={30} />
-                                        <span className="text-sm pl-3 pt-1">Kenneth Lopez</span>
-                                    </div>
-                                </td>
-                                <td className="text-sm">Fitness Clan</td>
-                                <td>
-                                    <div className="flex">
-                                        <div className="h-3 rounded-full bg-vici_gray w-full mt-1">
-                                            <div className="h-3 rounded-full bg-other_challenges  w-10/12"></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <img src="/img/manage_challenge/facebook.png" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <div className="flex">
-                                            <img src="/img/manage_challenge/Path.png" />
-                                            <button className="ml-3 text-sm text-other_challenges font-bold">View</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3">
-                                    <div className="flex">
-                                        <img src="/img/explore/avatar.png" width={30} />
-                                        <span className="text-sm pl-3 pt-1">Angela Monday</span>
-                                    </div>
-                                </td>
-                                <td className="text-sm">Fitness Clan</td>
-                                <td>
-                                    <div className="flex">
-                                        <div className="h-3 rounded-full bg-vici_gray w-full mt-1">
-                                            <div className="h-3 rounded-full bg-other_challenges  w-10/12"></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <img src="/img/manage_challenge/facebook.png" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <div className="flex">
-                                            <img src="/img/manage_challenge/Path.png" />
-                                            <button className="ml-3 text-sm text-other_challenges font-bold">View</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            {
+                                this.state.participants.length > 0 ?
+                                this.state.participants.map((item, i) => (
+                                    <tr>
+                                        <td className="py-3">
+                                            <div className="flex">
+                                                <img src={item.profpic_link} width={30} className="rounded-full"/>
+                                                <span className="text-sm pl-3 pt-1 capitalize">{ item.name_of_user }</span>
+                                            </div>
+                                        </td>
+                                        <td>-</td>
+                                        <td>
+                                            <div className="flex">
+                                                <div className="h-3 rounded-full bg-other_challenges w-10/12 mt-1"></div>
+                                                <div className="bg-other_challenges rounded-full ml-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white_color" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="flex justify-center">
+                                                <img src="/img/manage_challenge/facebook.png" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="flex justify-center">
+                                                <div className="flex">
+                                                    <img src="/img/manage_challenge/Path.png" />
+                                                    <button className="ml-3 text-sm text-other_challenges font-bold">View</button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                                :
+                                <tr>
+                                    <td colSpan={5}><div className="text-center w-full py-3">No Participant</div></td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

@@ -74,6 +74,15 @@ class ChallengeService {
         }
     }
 
+    async getChallengeParticipants(id){
+        try {
+            const response = await api.get('getallchallengeparticipants/' + id);
+            return response.data
+        } catch (error) {
+            return false
+        }
+    }
+
 }
 
 export default new ChallengeService();
